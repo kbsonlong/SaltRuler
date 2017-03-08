@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}物理服务器信息添加{% endblock %}
+
+{% block content %}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">物理服务器信息</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li><a href="/cmdb/asset_table/">服务器列表</a>
+                </li>
+                <li><a href="/cmdb/asset_add/">添加服务器</a>
+                </li>
+                <li><a href="/cmdb/asset_update/">修改服务器</a>
+                </li>
+            </ul>
+            {% block main %}
+
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

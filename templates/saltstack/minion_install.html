@@ -1,0 +1,38 @@
+{% extends 'saltstack/saltstack.html' %}
+{% block title %}自动化部署minion{% endblock %}
+
+
+{% block main %}
+        <div class="tab-content">
+                <div class="tab-pane fade in active">
+                    <div class="row">
+                    <br>
+                        <form action="/saltstack/minion_install/" method="get" role="form">
+                        <div class="col-lg-3">
+                            <ul>
+                            <div class="form-group">
+                                <label style="color: green">输入远程IP：</label>
+                                <input class="form-control" name="ip_list" placeholder="多个IP以逗号分隔">
+                    <!--<label style="color: green">输入模块名称：</label>
+                    <input class="form-control" name="exec_module">-->
+                                <input class="btn btn-primary btn-xs" type="submit" value="部署">
+                            </div>
+                            </ul>
+            <!--<button class="btn btn-primary btn-xs" type="submit">测试</button>-->
+                        </div>
+                        <div class="col-lg-1"></div>
+                        <div class="col-lg-8">
+                            <ul>
+                            <div class="form-group">
+                                <label style="color: green">执行结果：</label>
+                                <textarea rows="18" style="background-color: black;color: green" class="form-control">[root@salt-master ~]#
+{{ minion_install_result }}
+                                </textarea>
+                            </div>
+                            </ul>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

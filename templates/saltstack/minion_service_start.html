@@ -1,0 +1,36 @@
+{% extends 'saltstack/saltstack.html' %}
+{% block title %}管理minion服务{% endblock %}
+
+
+{% block main %}
+        <div class="tab-content">
+                <div class="tab-pane fade in active">
+                    <div class="row">
+                    <br>
+                        <form action="/saltstack/minion_service_start/" method="post" role="form">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                         <label for="minions_up">Minions</label>
+                                         <select style="background-color: black;color: green" name="match" class="form-control" size="23"  id="minions_up" >
+                                             {% for u in minion_list %}
+                                            <option value="{{ u }}">{{ u }}</option>
+                                            {% endfor %}
+                                         </select>
+                                        <input class="btn btn-primary btn-xs" type="submit" value="启动">
+                                     </div>
+                                </div>
+                                <div class="col-lg-9">
+                                    <div class="form-group">
+                                        <label for="result" > </label>
+                                        <textarea rows="20" style="background-color: black;color: green" class="form-control" id="result" readonly>root@salt-master ~]#
+{{ret}}
+                                        </textarea>
+                                     </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

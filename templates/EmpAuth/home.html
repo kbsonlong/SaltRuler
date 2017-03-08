@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% block title %}运维管理平台{% endblock %}
+
+{% block content %}
+	<script src="/static/echarts/echarts.min.js"></script>
+    <script src="/static/echarts/guangdong.js"></script>
+    <script src="/static/echarts/customed.js"></script>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            {% block main %}
+                <div class="row">
+						<div class="col-lg-4">
+							<h4>SaltMaster基本信息</h4>
+							<hr/>
+							<table class="no-style full">
+								<tbody>
+								  <tr>
+										<td>主机名：</td>
+										<td class="ta-right" ><a  href="javascript:void(0) ">{{hostname}}</a></td>
+									</tr>
+									<tr>
+										<td>IP地址：</td>
+										<td class="ta-right"><a href="javascript:void(0) ">{{ip}}</a></td>
+									</tr>
+									<tr>
+										<td>操作系统：</td>
+										<td class="ta-right"><a href="javascript:void(0) ">{{os}}</a></td>
+									</tr>
+									<tr>
+										<td>服务器型号：</td>
+										<td class="ta-right"><a href="javascript:void(0) ">{{Manufacturer}} {{Product_Name}}</a></td>
+									</tr>
+									<tr>
+										<td>SaltStack：</td>
+										<td class="ta-right"><a href="javascript:void(0) ">{{salt_version}}</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-lg-4">
+							<h4>运行状态</h4>
+							<hr/>
+							<table>
+								<tbody>
+									<tr>
+										<td >系统负载：</td>
+										<td class="ta-right"><a href="javascript:void(0) ">1分钟：{{loadavg_1}} | 5分钟：{{loadavg_5}} | 15分钟：{{loadavg_15}}</a></td>
+									</tr>
+									<tr>
+										<td>进程数量：</td>
+										<td class="ta-right"><a href="javascript:void(0) ">总进程数：{{process_num}} | 运行：{{process_R}} | 睡眠：{{process_S}}| 僵尸： {{process_Z}}</a></td>
+									</tr>
+									<tr>
+										<td>登录用户：</td>
+										<td class="ta-right"><a href="javascript:void(0) ">{{login_user_num}}</a></td>
+									</tr>
+									<tr>
+										<td>网络流量：</td>
+										<td class="ta-right"><a href="javascript:void(0) ">流出：{{net_out}} MB | 流入：{{net_in}} MB</a></td>
+									</tr>
+									<tr>
+										<td>运行时间：</td>
+										<td class="ta-right"><a href="javascript:void(0) ">{{uptime}}</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+                <div class="row">
+						<div class="col-lg-4">
+							<h4>系统资源</h4>
+							<hr/>
+							<table class="tab-pane">
+								<tbody>
+									<tr>
+										<td>CPU：</td>
+										<td class="ta-right">{{cpu_physical_num}} x {{cpu_logical_cores}}</td>
+										<td><div id="cpu" class="progress full progress-green"><span><b></b></span></div></td>
+									</tr>
+									<tr>
+										<td>硬盘：</td>
+										<td class="ta-right">{{disk_used}} / {{disk_all}} GB</td>
+										<td><div id="disk" class="progress full progress-blue"><span><b></b></span></div></td>
+									</tr>
+									<tr>
+										<td>内存：</td>
+										<td class="ta-right"> {{mem_total}} MB</td>
+										<td><div id="mem" class="progress full progress-red"><span><b></b></span></div></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<aside class="col-lg-4">
+							<div id="rightmenu">
+								<header>
+									<h3>SaltStack状态</h3>
+								</header>
+								<dl class="first">
+									<img width="16" height="16" alt="" src="/static/images/information.png">
+                                    <b>Minions状态</b>
+									<dd class="last"><b>总数量： </b><span id="minions_all">{{ minions_totle}}</span><br /><font color='green'><b>在　线： </b><span id="minions_online">{{minion_online}}</span></font><br /><font color='red'><b>离　线： </b><span id="minions_down"><a href="/saltstack/key_list/0/"> {{minion_offline}}</a></span></font></dd>
+
+									<img width="16" height="16" alt="" src="/static/images/key.png">
+									<b>Key认证状态</b>
+									<dd class="last"><b>已认证： </b><span id="keys_ok">{{a_n}}</span><br /><font color='green'><b>未认证： </b><span id="keys_pre">{{u_n}}</span></font><br /><font color='red'><b>已拒绝： </b><span id="keys_rej">{{r_n}}</span></font></dd>
+
+								</dl>
+							</div>
+						</aside>
+
+
+					</div>
+                <div class="row">
+                    <div class="col-lg-8"  id="map" style="height: 400px;"></div>
+                </div>
+
+                <script>
+                var chart = echarts.init(document.getElementById('map'),'customed');
+                var option = {
+                title: {
+                    text: '主机分布',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    inactiveColor: '#A020F0',
+{#                    selectedMode:'single',#}
+                    data:[
+                        {
+                        name:'广州：'+ {{ gz }},
+                        icon:'roundRect',
+                        textStyle: {
+                            color: '#FF3030'
+                        }
+                    },
+                        {
+                        name:'北京：'+ {{ bj }},
+                        icon:'roundRect',
+                        textStyle: {
+                            color: 'blue'
+                        }
+                        },
+                        {
+                        name:'深圳：'+ {{ sz }},
+                        icon:'roundRect',
+                        textStyle: {
+                            color: 'green'
+                        }
+                        },
+                        {
+                        name:'其他：'+ {{ qt }},
+                        icon:'roundRect',
+                        textStyle: {
+                            color: 'green'
+                        }
+                        }
+                    ]
+                },
+                visualMap: {
+                    min: 0,
+                    max: 100,
+                    left: 'left',
+                    top: 'bottom',
+                    text: ['高','低'],           // 文本，默认为数值文本
+                    calculable: true
+                },
+                toolbox: {
+                    show: true,
+                    orient : 'vertical',
+                    x: 'right',
+                    y: 'center',
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                roamController: {
+                    show: true,
+                    x: 'right',
+                    mapTypeControl: {
+                        '广东': true
+                    }
+                },
+                series: [
+                    {
+                        name: '广州：'+ {{ gz }},
+                        type: 'map',
+                        mapType: '广东',
+                        data:[
+                            {
+                                name: '广州市',
+                                value: {{ gz }},
+                                label: {
+                                    normal: {
+                                        show: true
+                                    },
+                                    emphasis: {
+                                        show: true
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        name: '北京：'+ {{ bj }},
+                        type: 'map',
+                        mapType: '广东',
+                        data:[
+                            {
+                                name: '北京市',
+                                value: {{ bj }}
+                            }
+                        ]
+                    },
+                    {
+                        name: '深圳：'+ {{ sz }},
+                        type: 'map',
+                        mapType: '广东',
+                        label: {
+                            normal: {
+                                show: true
+                            },
+                            emphasis: {
+                                show: true
+                            }
+                        },
+                        data:[
+                            {
+                                name: '深圳市',
+                                value: {{ sz }}
+                            }
+                        ]
+                    },
+                    {
+                        name: '其他：'+ {{ qt }},
+                        type: 'map',
+                        mapType: '广东',
+                        label: {
+                            normal: {
+                                show: true
+                            },
+                            emphasis: {
+                                show: true
+                            }
+                        },
+                        data:[]
+                    }
+                    ]
+                };
+                chart.setOption(option);
+            </script>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

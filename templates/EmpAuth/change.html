@@ -1,0 +1,37 @@
+{% extends 'EmpAuth/user.html' %}
+{% block title %}首页{% endblock %}
+
+{% block main %}
+    <form action="/accounts/change" method="post" class="navbar-form navbar-left"  role="search">
+        <ul class="nav nav-third-level">
+            <li>
+                <div class="input-group input-group-lg">
+                  <span class="input-group-addon">用户名</span>
+                  <input name="username" type="text" value="{{ request.session.username }}" class="form-control" placeholder="Username">
+                </div>
+            </li>
+            <li>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon">旧密码</span>
+                    <input name="oldpass" type="password" class="form-control" placeholder="">
+                </div>
+            </li>
+            <li>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon">新密码</span>
+                    <input name="newpass" type="password" class="form-control" placeholder="">
+                </div>
+            </li>
+            <li>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon">新密码确认</span>
+                    <input name="confpass" type="password" class="form-control" placeholder="">
+                    <h5 style="color:red">{{info}}</h5>
+                </div>
+            </li>
+        </ul>
+        <input type="submit" value="修改" class="btn btn-success">
+    </form>
+
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'EmpAuth/user.html' %}
+{% block title %}首页{% endblock %}
+
+{% block main %}
+    <form action="/EmpAuth/userdel" method="post" class="navbar-form navbar-left" role="search">
+        <ul class="nav nav-third-level">
+            <li>
+                <div class="input-group input-group-lg">
+                  <span class="input-group-addon">用户名</span>
+                  <input name="username" type="text" value="" class="form-control" placeholder="Username">
+                </div>
+            </li>
+            <li>
+                <div class="input-group input-group-lg">
+                    <h5 style="color:red">{{info}}</h5>
+                </div>
+            </li>
+        </ul>
+        <input type="submit" value="删除" class="btn btn-success">
+    </form>
+{% endblock %}

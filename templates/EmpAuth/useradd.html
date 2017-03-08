@@ -1,0 +1,29 @@
+{% extends 'EmpAuth/user.html' %}
+{% block title %}首页{% endblock %}
+
+{% block main %}
+    <form action="/EmpAuth/useradd" method="post" class="navbar-form navbar-left" role="search">
+        <ul class="nav nav-third-level">
+            <li>
+                <div class="input-group input-group-lg">
+                  <span class="input-group-addon">用户名</span>
+                  <input name="username" type="text" value="" class="form-control" placeholder="Username">
+                </div>
+            </li>
+            <li>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon">&nbsp密&nbsp&nbsp码</span>
+                    <input name="password1" type="password" class="form-control" placeholder="Password">
+                </div>
+            </li>
+            <li>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon">密码确认</span>
+                    <input name="password2" type="password" class="form-control" placeholder="Password">
+
+                </div>
+            </li>
+        </ul>
+        <input type="submit" value="添加" class="btn btn-success"><h5 style="color:red">{{info}}</h5>
+    </form>
+{% endblock %}

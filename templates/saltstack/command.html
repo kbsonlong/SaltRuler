@@ -1,0 +1,48 @@
+{% extends 'saltstack/saltstack.html' %}
+{% block title %}执行系统命令{% endblock %}
+
+
+{% block main %}
+        <div class="tab-content">
+                <div class="tab-pane fade in active">
+                    <div class="row">
+                    <br>
+                        <form action="/saltstack/cmd_exec/{{ salt_server.id }}/" method="post" role="form">
+                        <div class="col-lg-3">
+                            <ul>
+                            <div class="row">
+                                    <div class="form-group">
+                                        <h3 style="color:red">{{info}}</h3>
+                                         <label for="minions_up">Minions</label>
+                                        <input class="form-control" type="text" value="{{tgt}}" id="minions" name="minions" placeholder="多个IP以逗号分隔" >
+                                         <select style="background-color: black;color: green" name="minion" class="form-control" size="10"  id="minions_up" >
+                                             {% for u in minion_list %}
+                                            <option value="{{ u }}">{{ u }}</option>
+                                            {% endfor %}
+                                         </select>
+
+                                        <label for="minions_up">Command</label>
+                                        <input class="form-control" type="text" value="{{arg}}" id="arg" name="arg">
+                                        <input class="btn btn-primary btn-xs" type="submit" value="执行  ">
+                                     </div>
+                                </div>
+                            </ul>
+            <!--<button class="btn btn-primary btn-xs" type="submit">测试</button>-->
+                        </div>
+                        <div class="col-lg-1"></div>
+                        <div class="col-lg-8">
+                            <ul>
+                            <div class="form-group">
+                                <label style="color: green">执行结果：</label>
+                                <textarea rows="18" style="background-color: black;color: green" class="form-control">[root@salt-master ~]#{% for key, value in cmd_exec_result.items %}
+{{ key }}:
+{{ value }}
+{% endfor %}</textarea>
+                            </div>
+                            </ul>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

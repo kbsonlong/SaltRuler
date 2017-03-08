@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}用户管理{% endblock %}
+
+{% block content %}
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">用户管理</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li><a href="/EmpAuth/userinfo">用户列表</a>
+                </li>
+                <li><a href="/EmpAuth/useradd">添加用户</a>
+                </li>
+                <li><a href="/EmpAuth/change">修改密码</a>
+                </li>
+            </ul>
+            {% block main %}
+
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

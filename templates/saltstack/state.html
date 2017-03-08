@@ -1,0 +1,94 @@
+{% extends 'saltstack/saltstack.html' %}
+{% block title %}执行States模块{% endblock %}
+
+<script>
+function copyText()
+{
+document.getElementById("statev").value=document.getElementById("state").value;
+}
+</script>
+
+{% block main %}
+
+        <div class="tab-content">
+                <div class="tab-pane fade in active">
+                    <div class="row">
+                    <br>
+                        <div class="col-lg-4">
+                            <form action="/saltstack/state_exec/{{ salt_server.id }}/" method="post" role="form">
+                                <div class="form-group">
+                                <div class="col-lg-12">
+                                    <label style="color: green">目标主机：</label>
+                                    <input class="text" size="25" value="{{ minion }}">
+                                </div>
+                                    <select size="8"  class="form-control" multiple="" name="tgt" style="background-color: black;color: green">
+                                    {% for i in minion_list %}
+                                        <option>{{ i }}</option>
+                                    {% empty %}
+                                        <option>null</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                <div class="col-lg-12">
+                                    <label style="color: green">环境列表：</label>
+                                    <input class="text" size="25" value="{{ env }}">
+                                </div>
+                                    <select size="3" class="form-control" multiple="" name="env" style="background-color: black;color: green">
+                                    {% for i in envs %}
+                                        <option>{{ i }}</option>
+                                    {% empty %}
+                                        <option>null</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-lg-12">
+                                    <button  class="btn btn-primary btn-xs" type="submit">刷新模块</button>
+                                    <button  class="btn btn-primary btn-xs" type="submit">执行模块</button>
+                                </div>
+
+                                <div class="form-group">
+                                <div class="col-lg-12">
+                                    <label style="color: green">State模块:</label>
+                                    <input id="statev" class="text" size="25" value="{{ state }}">
+                                </div>
+                                    <select ondblclick="copyText()" id="state" size="8"  class="form-control" multiple="" name="state" style="background-color: black;color: green">
+                                    {% for i in states %}
+                                        <option>{{ i }}</option>
+                                    {% empty %}
+                                        <option>null</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="col-lg-8">
+                            <ul>
+                            <div class="form-group">
+                                <label style="color: green">执行结果：</label>
+                                <textarea rows="23" style="background-color: black;color: green" class="form-control">[root@salt-master ~]#
+{% for key, value in ret.items %}
+{{ key }}:
+-------------------------{% for i in value.values %}
+Comment:    {{ i.comment }}
+Result:         {{ i.result }}
+Pid:            {{ i.changes.pid }}
+Retcode:        {{ i.changes.retcode }}
+stderr:         {{ i.changes.stderr }}
+stdout:
+{{ i.changes.stdout }}
+-------------------------{% endfor %}
+#####################################################################
+{% endfor %}</textarea>
+                            </div>
+                            </ul>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+{% endblock %}

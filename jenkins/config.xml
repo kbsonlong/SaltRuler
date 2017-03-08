@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.0.5">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/kbsonlong/salt_ruler.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <com.waytta.SaltAPIBuilder plugin="saltstack@2.0.0">
+      <servername>http://192.168.62.200:8000</servername>
+      <authtype>pam</authtype>
+      <clientInterface class="com.waytta.clientinterface.LocalClient">
+        <jobPollTime>10</jobPollTime>
+        <blockbuild>false</blockbuild>
+        <target>192.168.62.200,192.168.62.200</target>
+        <targetType>list</targetType>
+        <function>svn.checkout</function>
+        <arguments>/data/  http://192.168.62.110/svn/ /data/svndata/  root kbson kbsonlong</arguments>
+      </clientInterface>
+      <saveEnvVar>true</saveEnvVar>
+      <credentialsId>saltstack</credentialsId>
+    </com.waytta.SaltAPIBuilder>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

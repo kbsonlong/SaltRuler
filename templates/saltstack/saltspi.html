@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}添加API{% endblock %}
+
+{% block content %}
+<link href="/static/bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+<div class="row mt">
+    <div class="col-lg-12">
+        <div class="form-panel">
+            <form class="form-horizontal style-form" method="get">
+                <div class="form-group">
+                      <label class="col-sm-2 col-sm-2 control-label">所属机房</label>
+                      <div class="col-sm-2">
+                          <input name="idc" type="text" class="form-control">
+                      </div>
+                </div>
+                <div class="form-group">
+                      <label class="col-sm-2 col-sm-2 control-label">API地址</label>
+                      <div class="col-sm-2">
+                          <input name="api" type="text" class="form-control">
+                          <span class="help-block">Eg: https://localhost:8000</span>
+                      </div>
+                </div>
+                <div class="form-group">
+                      <label class="col-sm-2 col-sm-2 control-label">用户名</label>
+                      <div class="col-sm-2">
+                          <input name="username" type="text" class="form-control round-form">
+                      </div>
+                </div>
+                <div class="form-group">
+                      <label class="col-sm-2 col-sm-2 control-label">密码</label>
+                      <div class="col-sm-2">
+                          <input name="password" class="form-control" id="focusedInput" type="password" >
+                      </div>
+                </div>
+                <div class="form-group">
+                      <label class="col-sm-2 col-sm-2 control-label">角色</label>
+                      <div class="col-sm-5">
+                          <select class="btn">
+                              <option class="btn ">Master</option>
+                              <option class="btn ">Backend</option>
+                          </select>
+                      </div>
+                </div>
+                <div class="form-group">
+                      <label class="col-sm-2 col-sm-2 control-label"></label>
+                      <div class="col-sm-2">
+                          <input type="submit" value="添加" class="btn btn-success">
+                      </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>{% endblock %}
+

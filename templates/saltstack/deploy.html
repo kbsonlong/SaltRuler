@@ -1,0 +1,106 @@
+{% extends "saltstack/svn.html" %}
+{#{% load staticfiles %}#}
+{% block title %}代码发布{% endblock %}
+{% block main %}
+    <h2>代码发布
+        <small class="text-danger">{{ salt_server.idc }} -- {{ salt_server.url }} -- {{ salt_server.role }}</small>
+        <div class="btn-group pull-right">
+            <a class="btn btn-info" href="/admin/saltstack/saltserver/add/" target="_blank" title="添加Saltmaster"><span class="glyphicon glyphicon-plus"></span>添加API</a>
+            <a class="btn btn-info" href="/admin/saltstack/svnproject/add/" target="_blank" title="新建项目"><span class="glyphicon glyphicon-plus"></span>新建项目</a>
+    {#            Server选择#}
+            <div class="btn-group pull-right dropdown">
+                <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    &nbsp;SaltServer&nbsp;<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    {% for s in server_list %}
+                        <li><a href="/saltstack/deploy/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </h2>
+
+    {% if error %}<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ error }}</div>{% endif %}
+    {% if success %}<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ success }}</div>{% endif %}
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>项目名称</th>
+                            <th>项目主机</th>
+                            <th>本地地址</th>
+                            <th>SVN账号</th>
+                            <th>创建日期</th>
+                            <th>项目</th>
+                            <th>状态</th>
+                            <th>启动脚本</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <script>
+    function svn(active,project_id){
+        $.getJSON("{% url 'saltstack:deploy_fun' salt_server.id %}", {active:active,project_id:project_id}, function (result) {
+            alert(result['msg']);
+            if(result['add']){
+                window.open("/admin/saltstack/svnproject/add/");
+            }
+        });
+    }
+
+    function service(active,project_id){
+        $.getJSON("{% url 'saltstack:service_fun' salt_server.id %}", {active:active,project_id:project_id}, function (result) {
+            alert(result['msg']);
+        });
+    }
+    function checkout(active,project_id){
+        $.getJSON("{% url 'saltstack:checkout' salt_server.id %}", {active:active,project_id:project_id}, function (result) {
+            alert(result['msg']);
+        });
+    }
+
+    </script>
+                    {% for project in project_list %}
+                        <tbody>
+                            <tr>
+                                <td>{{ project.name }}</td>
+                                <td>{{ project.host }}</td>
+                                <td><a href="{{ project.url }}" target="_blank" title="{{ project.url }}">{{ project.path }}/{{ project.target }}</a></td>
+                                <td>{{ project.username }}</td>
+                                <td>{{ project.create_date }}</td>
+                                <td>{{ project.info|linebreaks }}</td>
+                                <td>{% if project.status == "新建" %}<a href="{% url 'saltstack:deploy' salt_server.id %}?project_id={{ project.id }}">{{ project.status }}</a>{% else %}{{ project.status }}{% endif %}</td>
+                                <td>{{ project.script }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-info btn-xs" href="/admin/saltstack/svnproject/{{ project.id }}/" target="_blank">
+                                            <span class="glyphicon glyphicon-edit">&nbsp;修改</span></a>
+
+                                        <button class="btn btn-info btn-xs" type="button" onclick="checkout('checkout','{{ project.id }}')" >
+                                            <span class="glyphicon glyphicon-send">检出代码</span></button>
+
+                                        <button class="btn btn-info btn-xs" type="button" onclick="svn('commit','{{ project.id }}')" >
+                                            <span class="glyphicon glyphicon-send">&nbsp;提交</span></button>
+                                        <button class="btn btn-info btn-xs" type="button" onclick="svn('update','{{ project.id }}')" >
+                                            <span class="glyphicon glyphicon-refresh">&nbsp;更新</span></button>
+                                        <button class="btn btn-info btn-xs" type="button" onclick="service('stop','{{ project.id }}')" >
+                                            <span class="glyphicon glyphicon-refresh">&nbsp;关闭应用</span></button>
+                                        <button class="btn btn-info btn-xs" type="button" onclick="service('start','{{ project.id }}')" >
+                                            <span class="glyphicon glyphicon-refresh">&nbsp;启动应用</span></button>
+                                        <button class="btn btn-info btn-xs" type="button" onclick="service('status','{{ project.id }}')" >
+                                            <span class="glyphicon glyphicon-refresh">&nbsp;应用状态</span></button>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
