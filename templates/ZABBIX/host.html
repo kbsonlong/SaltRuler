@@ -1,0 +1,123 @@
+{% extends "AUTH/navbar.html" %}
+{% load staticfiles %}
+{% load pagination_tags %}
+{% block title %}
+    <title>Zabbix主机</title>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2>
+            Zabbix主机列表
+{#            <div class="btn-group pull-right">#}
+{#                <div class="btn-group " >#}
+{#                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#}
+{#                        <span class="glyphicon glyphicon-filter"></span>&nbsp;模块&nbsp;<span class="caret"></span></a>#}
+{#                    <ul class="dropdown-menu">#}
+{#                        <li><a href="{% url 'salt:command' %}">所有模块</a></li>#}
+{#                        {% for module in module_list %}#}
+{#                        <li><a href="{% url 'salt:command' %}?module_id={{ module.id }}">{{ module }}</a></li>#}
+{#                        {% endfor %}#}
+{#                    </ul>#}
+{#                </div>#}
+{#                <a class="btn btn-info " href="/admin/SALT/module/add/" target="_blank">#}
+{#                    <span class="glyphicon glyphicon-plus"></span>&nbsp;模块</a>#}
+{#                <a class="btn btn-info " href="/admin/SALT/command/add/" target="_blank">#}
+{#                    <span class="glyphicon glyphicon-plus"></span>&nbsp;命令</a>#}
+{#                <a class="btn btn-info " href="{% url 'salt:command' %}?active=collect">#}
+{#                    <span class="glyphicon glyphicon-cloud-download"></span>&nbsp;采集信息</a>#}
+{#            </div>#}
+        </h2>
+        {% if error %}<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ error }}</div>{% endif %}
+        {% if success %}<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ success }}</div>{% endif %}
+        <div class="row">
+            <div class="col-xs-2 col-md-2 col-lg-2">
+                <label for="name" class="sr-only"></label>
+                <input class="form-control" type="text" id="name" placeholder="输入主机名称">
+            </div>
+            <div class="col-xs-2 col-md-2 col-lg-2">
+                <label  for="ip" class="sr-only"></label>
+                <input class="form-control" type="text" id="ip" placeholder="输入主机IP地址">
+            </div>
+            <div class="col-xs-3 col-md-3 col-lg-3">
+                <label for="group" class="sr-only"></label>
+                <select class="form-control" id="group">
+                    <option value="">选择分组</option>
+                    {% for group in group_list %}
+                    <option value="{{ group.groupid }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-xs-3 col-md-3 col-lg-3">
+                <label for="template" class="sr-only"></label>
+                <select class="form-control" id="template">
+                    <option value="">选择模板</option>
+                    {% for template in template_list %}
+                    <option value="{{ template.templateid }}">{{ template.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-xs-2 col-md-2 col-lg-2">
+                <button class="btn btn-default pull-right" type="button" id="create">添加主机</button>
+            </div>
+        </div>
+    <br>
+        {% if host_list %}
+        {% autopaginate host_list 20 %}
+            <div class="table-responsive">
+                 <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Host</th>
+                            <th>Interfaces</th>
+                            <th>Groups</th>
+                            <th>Templates</th>
+                            <th>Items</th>
+                            <th>Triggers</th>
+                            <th>Graphs</th>
+                            <th>Screens</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    {% for host in host_list %}
+                        <tbody>
+                            <tr>
+                                <td>{{ host.host }}</td>
+                                <td>{% for h in host.interfaces  %}
+                                    {{ h.ip }}<br>
+                                    {% endfor %}</td>
+                                <td>{% for h in host.groups  %}
+                                    {{ h.name }}<br>
+                                    {% endfor %}</td>
+{#                                <td>{% for h in host.parentTemplates  %}#}
+{#                                    {{ h.name }}<br>#}
+{#                                    {% endfor %}</td>#}
+                                <td><a href="{% url 'zabbix:template' %}?hostid={{ host.hostid }}">Templates&nbsp;<span class="badge">{{ host.parentTemplates|length }}</span></td>
+                                <td><a href="{% url 'zabbix:item' %}?hostid={{ host.hostid }}">Items&nbsp;<span class="badge">{{ host.items|length }}</span></a></td>
+                                <td><a href="{% url 'zabbix:item' %}?hostid={{ host.hostid }}">Triggers&nbsp;<span class="badge">{{ host.triggers|length }}</span></a></td>
+                                <td><a href="{% url 'zabbix:graph' %}?hostid={{ host.hostid }}">Graphs&nbsp;<span class="badge">{{ host.graphs|length }}</span></a></td>
+                                <td><a href="{% url 'zabbix:item' %}?hostid={{ host.hostid }}">Screens&nbsp;<span class="badge">{{ host.screens|length }}</span></a></td>
+                                <td>{% if host.status == '0' %}<label class="label label-success">Enable</label>
+                                    {% else %}<label class="label label-danger">Disable</label>{% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+            {% paginate %}
+        {% endif %}
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        $('#create').click(function(){
+            var name=$('#name').val();
+            var ip=$('#ip').val();
+            var groupid=$('#group').val();
+            var templateid=$('#template').val();
+            $.getJSON("{% url 'zabbix:host_create' %}",{name:name,ip:ip,groupid:groupid,templateid:templateid},function(result){
+                alert(result);
+            });
+        });
+    </script>
+{% endblock %}
