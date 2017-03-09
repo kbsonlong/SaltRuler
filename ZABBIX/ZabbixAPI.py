@@ -5,18 +5,18 @@ import urllib2
 
 class ZabbixAPI:
     def __init__(self):
-        # cf = ConfigParser.ConfigParser()
-        # cf.read("OMS/config.ini")
-        # self.__url = cf.get("zabbix_server","url")
-        # self.__user= cf.get("zabbix_server","user")
-        # self.__password = cf.get("zabbix_server","password")
-        # self.__header = {"Content-Type": "application/json-rpc"}
-        # self.__token_id = self.UserLogin()
-        self.__url = "http://192.168.234.167/api_jsonrpc.php"
-        self.__user = "Admin"
-        self.__password = "pcgames2016"
+        cf = ConfigParser.ConfigParser()
+        cf.read("OMS/config.ini")
+        self.__url = cf.get("zabbix_server","url")
+        self.__user= cf.get("zabbix_server","user")
+        self.__password = cf.get("zabbix_server","password")
         self.__header = {"Content-Type": "application/json-rpc"}
         self.__token_id = self.UserLogin()
+        # self.__url = "http://192.168.xx.167/api_jsonrpc.php"
+        # self.__user = "Admin"
+        # self.__password = "zabbix"
+        # self.__header = {"Content-Type": "application/json-rpc"}
+        # self.__token_id = self.UserLogin()
     #登陆获取token
     def UserLogin(self):
         data = {
