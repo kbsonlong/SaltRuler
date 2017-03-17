@@ -21,7 +21,7 @@ def deploy(request,server_id):
     project_list=SvnProject.objects.filter(salt_server=salt_server).order_by('host')
     contexts = {'server_list':server_list,'salt_server':salt_server,'project_list':project_list}
     # print contexts
-    return render(request,'saltstack/deploy.html',contexts)
+    return render(request, 'saltstack/deploy.html', contexts)
 
 
 
