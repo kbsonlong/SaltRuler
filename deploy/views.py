@@ -39,38 +39,39 @@ class UserForm(forms.Form):
     headImg = forms.FileField()
 
 
-@login_required
-def file_upload(request,server_id):
-    server_list = SaltServer.objects.all()
-    try:
-        salt_server = SaltServer.objects.get(id=server_id)
-    except:  # id不存在时返回第一个
-        salt_server = SaltServer.objects.all()
-        if salt_server:
-            salt_server=salt_server[0]
-        else:
-            return render(request, 'deploy/fileupload.html',{'apiinfo':u'请先添加API'})
-    sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
-    minions = sapi.key_list('key.list_all')['return'][0]['data']['return']['minions']
-    tgt = info = cmd_args = cmd_exec_result = ''
-    exec_module = "cp.get_url"
-    if request.method == 'POST':
-        ip_list = request.POST.get('minion')
-        ip_lists = request.POST.get('minions')
-        path=''
-        dest = request.POST.get('dest')
-        if ip_list is None and not ip_lists:
-            info = '目标主机不能为空'
-        elif not dest:
-            info = '请输入目标主机存放完整路径，目录必须存在！'
-        elif ip_list:
-            tgt=ip_list
-            upload_result = sapi.SaltCmd(tgt=tgt, fun="cp.get_url", arg=path,arg1=dest)
-        elif ip_lists:
-            tgt = ip_lists
-            upload_result = sapi.SaltCmd(tgt=tgt, fun="cp.get_url", arg=path,arg1=dest)
-    return render(request, 'deploy/fileupload.html', {'upload_result': upload_result,'minion_list':minions,'info':info,'arg':cmd_args,'tgt':tgt,'salt_server':salt_server,'server_list':server_list,'url':'cmd_exec'})
+# @login_required
+# def file_upload(request,server_id):
+#     server_list = SaltServer.objects.all()
+#     try:
+#         salt_server = SaltServer.objects.get(id=server_id)
+#     except:  # id不存在时返回第一个
+#         salt_server = SaltServer.objects.all()
+#         if salt_server:
+#             salt_server=salt_server[0]
+#         else:
+#             return render(request, 'deploy/fileupload.html',{'apiinfo':u'请先添加API'})
+#     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
+#     minions = sapi.key_list('key.list_all')['return'][0]['data']['return']['minions']
+#     tgt = info = cmd_args = cmd_exec_result = ''
+#     exec_module = "cp.get_url"
+#     if request.method == 'POST':
+#         ip_list = request.POST.get('minion')
+#         ip_lists = request.POST.get('minions')
+#         path=''
+#         dest = request.POST.get('dest')
+#         if ip_list is None and not ip_lists:
+#             info = '目标主机不能为空'
+#         elif not dest:
+#             info = '请输入目标主机存放完整路径，目录必须存在！'
+#         elif ip_list:
+#             tgt=ip_list
+#             upload_result = sapi.SaltCmd(tgt=tgt, fun="cp.get_url", arg=path,arg1=dest)
+#         elif ip_lists:
+#             tgt = ip_lists
+#             upload_result = sapi.SaltCmd(tgt=tgt, fun="cp.get_url", arg=path,arg1=dest)
+#     return render(request, 'deploy/fileupload.html', {'upload_result': upload_result,'minion_list':minions,'info':info,'arg':cmd_args,'tgt':tgt,'salt_server':salt_server,'server_list':server_list,'url':'cmd_exec'})
 
+@login_required
 def upload_file(request,server_id):
     server_list = SaltServer.objects.all()
     try:
