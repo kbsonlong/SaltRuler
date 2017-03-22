@@ -202,10 +202,10 @@ def main():
     # from models import SaltServer
     # salt_server = SaltServer.objects.get(idc=idc)
     # sapi = SaltAPI(url=salt_server.url,username=salt_server.username,password=salt_server.password)
-    sapi = SaltAPI(url="http://192.168.62.200:8000",username="kbson",password="kbson")
+    sapi = SaltAPI(url="https://192.168.62.200:8000",username="kbson",password="kbson")
     print "token=",sapi.SaltLogin()
     # result = sapi.SaltCmd(tgt=tgt,fun=fun,arg=arg)
-    result = sapi.SaltCmd(tgt="192.168.62.200",fun="cmd.run",arg="free -m")
+    result = sapi.SaltCmd(tgt="192.168.62.164",fun="cmd.run",arg="ls /tmp")
     print result
     # jid = result['return'][0]['jid']
     # print jid

@@ -23,8 +23,8 @@ pyOpenSSL
 python-dateutil
 PyYAML
 pyzmq
-salt
+#salt
 six
 supervisor
-uWSGI
+#uWSGI
 Pillow

@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import  PasswordChangeForm
 from models import *
-from CMDB.models import *
+from cmdb.models import *
 from ZabbixAPI import ZabbixAPI
 import json
 from django.forms.models import model_to_dict
