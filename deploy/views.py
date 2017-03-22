@@ -3,7 +3,7 @@ from EmpAuth.decorators import login_required
 from SaltRuler.glob_config import glob_config
 from saltstack.saltapi import *
 from saltstack.models import SaltServer,State
-
+from django import forms
 # Create your views here.
 
 
@@ -30,6 +30,11 @@ def compute_deploy(request):
     script_args = request.GET['compute']
     compute_deploy_result = api_exec('%s' %(ip_list), '%s' %(exec_module) , arg='%s' %(script_args), arg_num=1)['return'][0]
     return render(request, 'deploy/compute_deploy.html', {'compute_deploy_result': compute_deploy_result})
+
+
+class UserForm(forms.Form):
+    username = forms.CharField()
+    headImg = forms.FileField()
 
 
 @login_required

@@ -28,3 +28,4 @@ six
 supervisor
 #uWSGI
 Pillow
+pyftpdlib
