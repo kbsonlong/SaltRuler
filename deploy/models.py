@@ -7,3 +7,6 @@ class User(models.Model):
 
     def __unicode__(self):
         return self.username
+
+class Upload(models.Model):
+    headImg = models.ImageField(upload_to='./upload/')

@@ -1,76 +1,40 @@
-#coding:utf-8
-import logging
+#coding=utf-8
+from SaltRuler.glob_config import glob_config
+from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
+import cgi
+class   PostHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        form = cgi.FieldStorage(
+            fp=self.rfile,
+            headers=self.headers,
+            environ={'REQUEST_METHOD':'POST',
+                     'CONTENT_TYPE':self.headers['Content-Type'],
+                     }
+        )
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write('Client: %sn ' % str(self.client_address) )
+        self.wfile.write('User-agent: %sn' % str(self.headers['user-agent']))
+        self.wfile.write('Path: %sn'%self.path)
+        self.wfile.write('Form data:n')
+        # upload_dir = '../upload/'
+        upload_dir = glob_config('ftp','upload_dir')
+        for field in form.keys():
+            field_item = form[field]
+            filename = field_item.filename
+            filevalue  = field_item.value
+            filesize = len(filevalue)#文件大小(字节)
+            with open(upload_dir+filename.decode('utf-8'),'wb') as f:
+                f.write(filevalue)
+        return
 
-from pyftpdlib.authorizers import DummyAuthorizer
-from pyftpdlib.handlers import FTPHandler, ThrottledDTPHandler
-from pyftpdlib.servers import FTPServer
 
-from SaltRuler import ftp_settings
-
-
-def get_user(userfile):
-    # 定义一个用户列表
-    user_list = []
-    with open(userfile) as f:
-        for line in f:
-            if not line.startswith('#') and line:
-                if len(line.split()) == 4:
-                    user_list.append(line.split())
-                else:
-                    print("user.conf配置错误")
-
-    return user_list
-
-
-def ftp_server():
-    # 实例化虚拟用户，这是FTP验证首要条件
-    authorizer = DummyAuthorizer()
-
-    # 添加用户权限和路径，括号内的参数是(用户名， 密码， 用户目录， 权限)
-    # authorizer.add_user('user', '12345', '/home/', perm='elradfmw')
-    user_list = get_user('../SaltRuler/ftp_user.ini')
-    print user_list
-    for user in user_list:
-        name, passwd, permit, homedir = user
-        try:
-            authorizer.add_user(name, passwd, homedir, perm=permit)
-        except Exception as e:
-            print(e)
-
-    # 添加匿名用户 只需要路径
-    if ftp_settings.enable_anonymous == 'on':
-        authorizer.add_anonymous(ftp_settings.anonymous_path)
-
-    # 下载上传速度设置
-    dtp_handler = ThrottledDTPHandler
-    dtp_handler.read_limit = ftp_settings.max_download
-    dtp_handler.write_limit = ftp_settings.max_upload
-
-    # 初始化ftp句柄
-    handler = FTPHandler
-    handler.authorizer = authorizer
-
-    # 日志记录
-    if ftp_settings.enable_logging == 'on':
-        logging.basicConfig(filename=ftp_settings.loging_name, level=logging.INFO)
-
-    # 欢迎信息
-    handler.banner = ftp_settings.welcome_msg
-
-    # 添加被动端口范围
-    handler.passive_ports = range(ftp_settings.passive_ports[0], ftp_settings.passive_ports[1])
-
-    # 监听ip 和 端口
-    server = FTPServer((ftp_settings.ip, ftp_settings.port), handler)
-
-    # 最大连接数
-    server.max_cons = ftp_settings.max_cons
-    server.max_cons_per_ip = ftp_settings.max_per_ip
-
-    # 开始服务
-    print('开始服务')
+def main():
+    ftp_host = glob_config('ftp', 'host')
+    ftp_port = int(glob_config('ftp','port'))
+    server = HTTPServer((ftp_host,ftp_port),PostHandler)
+    print 'Starting server, use <Ctrl-C> to stop'
     server.serve_forever()
 
-
-if __name__ == "__main__":
-    ftp_server()
+if __name__=='__main__':
+    main()

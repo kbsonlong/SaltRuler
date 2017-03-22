@@ -121,12 +121,12 @@ class SaltAPI:
                     params['arg%s'%(a.index(i)+100)]=i
         if kwargs:
             params=dict(params.items()+kwargs.items())
-        print 'params::',params
+
         obj = urllib.urlencode(params)
-        print obj
+
         res = self.PostRequest(obj)
-        print res
-        return res['return'][0][tgt]
+
+        return res
         #{u'return': [{u'jid': u'20160331104340284003', u'minions': [u'saltminion01-41.ewp.com']}]}
     #runner=salt-run=master本地执行
     def SaltRun(self,fun,client='runner_async',arg=None,**kwargs):

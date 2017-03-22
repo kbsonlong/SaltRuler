@@ -1,9 +1,11 @@
-from django.shortcuts import render
+#coding:utf-8
+from django.shortcuts import render,HttpResponse
 from EmpAuth.decorators import login_required
 from SaltRuler.glob_config import glob_config
 from saltstack.saltapi import *
 from saltstack.models import SaltServer,State
 from django import forms
+import os
 # Create your views here.
 
 
@@ -69,3 +71,33 @@ def file_upload(request,server_id):
             upload_result = sapi.SaltCmd(tgt=tgt, fun="cp.get_url", arg=path,arg1=dest)
     return render(request, 'deploy/fileupload.html', {'upload_result': upload_result,'minion_list':minions,'info':info,'arg':cmd_args,'tgt':tgt,'salt_server':salt_server,'server_list':server_list,'url':'cmd_exec'})
 
+def upload_file(request,server_id):
+    server_list = SaltServer.objects.all()
+    try:
+        salt_server = SaltServer.objects.get(id=server_id)
+    except:  # id不存在时返回第一个
+        salt_server = SaltServer.objects.all()
+    contexts = {'server_list': server_list, 'salt_server': salt_server}
+    if salt_server:
+        salt_server = salt_server
+    else:
+        return render(request,'deploy/file.html',contexts)
+    if request.method == "POST":    # 请求方法为POST时，进行处理
+        myFile =request.FILES.get("myfile", None)    # 获取上传的文件，如果没有文件，则默认为None
+        server = request.POST.get("server",None)
+        dest = request.POST.get('dest','/tmp/')
+        if not myFile:
+            contexts.update({'error':'no files for upload!'})
+            return render(request, 'deploy/file.html', contexts)
+        if not server:
+            pass
+        destination = open(os.path.join(r"upload",myFile.name),'wb+')    # 打开特定的文件进行二进制的写操作
+        for chunk in myFile.chunks():      # 分块写入文件
+            destination.write(chunk)
+        destination.close()
+        path = 'http://192.168.52.1:8080/'+myFile.name
+        #sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
+        upload_result=''
+        #upload_result = sapi.SaltCmd(tgt=server, fun="cp.get_url", arg=path, arg1=dest)
+        contexts.update({'success': 'upload %s ok!' % upload_result})
+    return render(request,'deploy/file.html',contexts)

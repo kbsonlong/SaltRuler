@@ -6,7 +6,8 @@ from django.shortcuts import render
 from EmpAuth.decorators import login_required
 from SaltRuler.glob_config import glob_config
 from saltstack.saltapi import *
-from .models import Assetmanage, Hostinfo,Upload
+from .models import Assetmanage, Hostinfo
+from deploy.models import Upload
 from django import forms
 
 class UpForm(forms.Form):
