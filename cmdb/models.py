@@ -38,6 +38,5 @@ class Hostinfo(models.Model):
         return self.local_ip
 
 
-class Upload(models.Model):
-    headImg = models.ImageField(upload_to='./upload/')
+
 
