@@ -14,7 +14,7 @@ def upload_file(request,server_id):
     try:
         salt_server = SaltServer.objects.get(id=server_id)
     except:  # id不存在时返回第一个
-        salt_server = SaltServer.objects.all()
+        salt_server = SaltServer.objects.all()[0]
         if not salt_server:
             return render(request, 'deploy/uploadfile.html', contexts)
     contexts.update({'salt_server': salt_server})
