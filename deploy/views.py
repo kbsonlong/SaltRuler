@@ -10,13 +10,14 @@ import os,time
 @login_required
 def upload_file(request,server_id):
     server_list = SaltServer.objects.all()
+    contexts = {'server_list': server_list, 'server_id': server_id}
     try:
         salt_server = SaltServer.objects.get(id=server_id)
     except:  # id不存在时返回第一个
-        salt_server = SaltServer.objects.all()[0]
-    contexts = {'server_list': server_list, 'salt_server': salt_server,'server_id':server_id}
-    if not salt_server:
-        return render(request,'deploy/file.html',contexts)
+        salt_server = SaltServer.objects.all()
+        if not salt_server:
+            return render(request, 'deploy/uploadfile.html', contexts)
+    contexts.update({'salt_server': salt_server})
     if request.method == "POST":    # 请求方法为POST时，进行处理
         myFile =request.FILES.get("myfile", None)    # 获取上传的文件，如果没有文件，则默认为None
         server = request.POST.get("server",None)
@@ -24,10 +25,10 @@ def upload_file(request,server_id):
         mdir = request.POST.get('mdir',None)
         if not myFile:
             contexts.update({'error':u'请选择上传文件!'})
-            return render(request, 'deploy/file.html', contexts)
+            return render(request, 'deploy/uploadfile.html', contexts)
         if not server:
             contexts.update({'error': u'目标主机不能为空！！'})
-            return render(request, 'deploy/file.html', contexts)
+            return render(request, 'deploy/uploadfile.html', contexts)
 
         ##将文件上传到平台所在服务器
         upload_dir = glob_config('nginx','upload_dir')
@@ -52,4 +53,4 @@ def upload_file(request,server_id):
         # upload_results = {'return': [{'192.168.62.200': '/tmp/along_logo.png', '192.168.62.201': '/tmp/along_logo.png'}]}['return'][0]
         # print server.split(',')
         contexts.update({'success': u'%s 上传成功!' % upload_results})
-    return render(request,'deploy/file.html',contexts)
+    return render(request, 'deploy/uploadfile.html', contexts)
