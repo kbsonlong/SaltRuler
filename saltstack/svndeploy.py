@@ -13,10 +13,8 @@ def deploy(request,server_id):
     try:
         salt_server = SaltServer.objects.get(id=server_id)
     except:#id不存在时返回第一个
-        salt_server = SaltServer.objects.all()
-    if salt_server:
-        salt_server = salt_server[0]
-    else:
+        salt_server = SaltServer.objects.all()[0]
+    if not salt_server:
         return render(request, 'saltstack/svn.html')
     project_list=SvnProject.objects.filter(salt_server=salt_server).order_by('host')
     contexts = {'server_list':server_list,'salt_server':salt_server,'project_list':project_list}

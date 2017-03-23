@@ -27,13 +27,14 @@
 {% if error %}<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ error }}</div>{% endif %}
 {% if success %}<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ success }}</div>{% endif %}
 
-                <form enctype="multipart/form-data" action="/deploy/uploadFile/0/" method="post">
+                <form enctype="multipart/form-data" action="/deploy/uploadFile/{{server_id}}/" method="post">
                    <input type="file" name="myfile" />
-                    <input type="text" name="server" value="目标主机" />
-                    <input type="text" name="dest" value="目标目录" />
+                    <li>目标主机：<input type="text" name="server" value="" /></li>
+                    <li>上传路径：<input type="text" name="dest" value="/tmp/" /></li>
                    <br/>
-                   <input type="submit" value="upload"/>
+                   <input type="submit" value="上传"/>
                 </form>
+
             {% endblock %}
         </div>
     </div>

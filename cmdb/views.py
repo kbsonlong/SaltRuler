@@ -17,6 +17,9 @@ url = glob_config('salt_api','url')
 username = glob_config('salt_api','username')
 password = glob_config('salt_api','password')
 device0 = glob_config('server','dervice0')
+print url
+print username
+print password
 sapi=SaltAPI(url,username,password)
 
 @login_required

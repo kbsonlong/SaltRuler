@@ -101,9 +101,7 @@ class SaltAPI:
             data, number = re.subn("arg\d*", 'arg', obj) #将arg1 arg2这些关键字都替换成arg，number为替换次数
         else:
             data=None
-        print url,data,headers
         req = urllib2.Request(url, data, headers)  # obj为传入data参数字典，data为None 则方法为get，有date为post方法
-        print "req=",req
         opener = urllib2.urlopen(req)
         content = json.loads(opener.read())
         return content
@@ -121,11 +119,8 @@ class SaltAPI:
                     params['arg%s'%(a.index(i)+100)]=i
         if kwargs:
             params=dict(params.items()+kwargs.items())
-
         obj = urllib.urlencode(params)
-
         res = self.PostRequest(obj)
-
         return res
         #{u'return': [{u'jid': u'20160331104340284003', u'minions': [u'saltminion01-41.ewp.com']}]}
     #runner=salt-run=master本地执行
@@ -204,10 +199,10 @@ def main():
     # from models import SaltServer
     # salt_server = SaltServer.objects.get(idc=idc)
     # sapi = SaltAPI(url=salt_server.url,username=salt_server.username,password=salt_server.password)
-    sapi = SaltAPI(url="https://192.168.234.158:8000",username="salt",password="pcgames2016")
+    sapi = SaltAPI(url="https://192.168.62.200:8000",username="kbson",password="kbson")
     print "token=",sapi.SaltLogin()
     # result = sapi.SaltCmd(tgt=tgt,fun=fun,arg=arg)
-    result = sapi.SaltCmd(tgt="192.168.234.158",fun="cp.get_url",arg='http://192.168.234.169/yum/CentOs_5.11.repo',arg1='dest="/data/ansible/kbsonlong2.repo"')
+    result = sapi.SaltCmd(tgt="192.168.62.200",fun="cp.get_url",arg='http://192.168.62.1/upload/jd-gui.cfg',arg1='dest=/tmp/jd-gui.cfg')
     print 'result::',result
     # jid = result['return'][0]['jid']
     # print jid
