@@ -1,5 +1,5 @@
 #!/bin/sh
-NAME="salt_runler"
+NAME="SaltRuler"
 if [ ! -n "$NAME" ];then
     echo "no arguments"
     exit;
@@ -15,7 +15,7 @@ do
     echo "kill $id"
 done
 echo  "################################################"
-echo >/data/PRG/salt_runler/uwsgi.log
-#/usr/local/python27/bin/uwsgi --ini /data/PRG/salt_runler/uwsgi.ini
+echo >/data/PRG/SaltRuler/uwsgi.log
+#/usr/local/python27/bin/uwsgi --ini /data/PRG/SaltRuler/uwsgi.ini
 
-su - mysql -c "/usr/local/python27/bin/uwsgi --ini /data/PRG/salt_runler/uwsgi.ini"
+su - mysql -c "/usr/local/python27/bin/uwsgi --ini /data/PRG/SaltRuler/uwsgi.ini"
