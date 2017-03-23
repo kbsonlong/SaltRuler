@@ -1,42 +1,58 @@
 {% extends 'base.html' %}
+
 {% block title %}文件分发{% endblock %}
+
+
 
 {% block content %}
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
             {% block main %}
-                <h2>
-    文件上传
-    <small style="color: red" class="text-danger">{{ salt_server.idc }} -- {{ salt_server.url }} -- {{ salt_server.role }}</small>
-    <div class="btn-group pull-right">
-        <a class="btn btn-info" href="/admin/saltstack/saltserver/add/" target="_blank" title="添加Saltmaster"><span class="glyphicon glyphicon-plus"></span> 添加API</a>
-{#        <a class="btn btn-info" href="/admin/saltstack/svnproject/add/" target="_blank" title="新建项目"><span class="glyphicon glyphicon-plus"></span>新建项目</a>#}
-{#            Server选择#}
-        <div class="btn-group pull-right dropdown">
-            <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                &nbsp;SaltServer&nbsp;<span class="caret"></span></a>
-            <ul class="dropdown-menu">
-                {% for s in server_list %}
-                    <li><a href="/deploy/uploadFile/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-</h2>
-{% if error %}<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ error }}</div>{% endif %}
-{% if success %}<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ success }}</div>{% endif %}
+                <h2>文件上传
+                    <small style="color: red" class="text-danger">{{ salt_server.idc }} -- {{ salt_server.url }} -- {{ salt_server.role }}</small>
+                    <div class="btn-group pull-right">
+                        <a class="btn btn-info" href="/admin/saltstack/saltserver/add/" target="_blank" title="添加Saltmaster"><span class="glyphicon glyphicon-plus"></span> 添加API</a>
+                {#        <a class="btn btn-info" href="/admin/saltstack/svnproject/add/" target="_blank" title="新建项目"><span class="glyphicon glyphicon-plus"></span>新建项目</a>#}
+                {#            Server选择#}
+                        <div class="btn-group pull-right dropdown">
+                            <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                &nbsp;SaltServer&nbsp;<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                {% for s in server_list %}
+                                    <li><a href="/deploy/uploadFile/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </h2>
+                {% if error %}
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        {{ error }}
+                    </div>
+                {% endif %}
+                {% if success %}
+                    <div class="alert alert-success">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                            {{ success }}
+                    </div>
+                {% endif %}
 
                 <form enctype="multipart/form-data" action="/deploy/uploadFile/{{server_id}}/" method="post">
-                   <input type="file" name="myfile" />
-                    <li>目标主机：<input type="text" name="server" value="" /></li>
-                    <li>上传路径：<input type="text" name="dest" value="/tmp/" /></li>
+                    <a href="javascript:;" class="file">选择文件<input type="file" name="myfile" onchange="fileChange(this);" /></a>
+                    <br/>
+                    <li class="nav">目标主机：<input type="text" name="server" value="" /> <small style="color: red">多个目标主机以英文逗号(,)分隔</small></li>
+                    <br/>
+                    <li class="nav">上传路径：<input type="text" name="dest" value="/tmp/" /> <small style="color: red">目标主机必须存在的目录，默认/tmp/</small> </li>
                    <br/>
+                    <li class="nav"><input type="checkbox" name="mdir"  >是否创建目录</li>
+                    <br/>
                    <input type="submit" value="上传"/>
                 </form>
-
             {% endblock %}
         </div>
     </div>
 </div>
 {% endblock %}
+

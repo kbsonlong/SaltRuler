@@ -102,9 +102,9 @@ def state_exec(request,server_id):
         if minion and state:
             ret=sapi.SaltCmd(minion,fun='state.sls',client='local',arg=state)['return'][0]
     roots = sapi.SaltRun(client='wheel', fun='file_roots.list_roots')['return'][0]['data']['return']
-    print roots
+
     dirs = roots[env][0]
-    print dirs
+
     states = []
     for root, dirs in dirs.items():  # root="/srv/salt/prod/"  dirs={"init":{"epel.sls":"f",}}
         for dir, files in dirs.items():  # dir='init' or 'top.sls'    files={"epel.sls":"f",}
