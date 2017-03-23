@@ -11,7 +11,7 @@ enum34
 idna
 ipaddress
 Jinja2
-MarkupSafe
+#MarkupSafe
 meld3
 msgpack-pure
 msgpack-python
