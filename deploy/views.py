@@ -40,9 +40,11 @@ def upload_file(request,server_id):
         sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
         nginx_url = 'http://'+ glob_config('nginx','host') +':' + glob_config('nginx','port') + '/' + upload_dir + '/'
         ##文件上传后静态服务地址
-        path = nginx_url + myFile.name
+        path = u'%s%s'% (nginx_url ,myFile.name)
+        print path
         ##目标存放绝对路径
-        arg1=u'dest='+dest+myFile.name
+        arg1=u'dest=%s%s'% (dest,myFile.name)
+        print arg1
         upload_results = sapi.SaltCmd(tgt=server, fun="cp.get_url",expr_form='list', arg=path, arg1=arg1)['return'][0]
         for upload_result in upload_results:
             contexts.update({'success': u'%s 上传成功!' % upload_result})
