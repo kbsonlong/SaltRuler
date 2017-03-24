@@ -11,7 +11,6 @@ device0 = glob_config('server','dervice0')
 def saltinfo(tgt):
     sapi=SaltAPI(url,username,password)
     grains = sapi.SaltCmd(tgt=tgt,fun='grains.items',client='local')['return'][0]
-    print grains
     disk = sapi.SaltCmd(tgt=tgt,fun='disk.usage',client='local')['return'][0]
     info = sapi.SaltCmd(tgt=tgt,fun='cmd.run',client='local',arg='uptime')['return'][0]
     hostname = grains[tgt]['host']

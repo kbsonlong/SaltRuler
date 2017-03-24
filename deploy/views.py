@@ -76,6 +76,6 @@ def upload_file(request,server_id):
 
 @login_required
 def files_his(request):
-    his_list = files_history.objects.all()
+    his_list = files_history.objects.all().order_by('-active_time')     ##active_time操作时间倒序
     contexts = {'his_list': his_list}
     return render(request, 'deploy/history.html', contexts)

@@ -200,10 +200,8 @@ def main():
     # salt_server = SaltServer.objects.get(idc=idc)
     # sapi = SaltAPI(url=salt_server.url,username=salt_server.username,password=salt_server.password)
     sapi = SaltAPI(url="https://192.168.62.200:8000",username="kbson",password="kbson")
-    print "token=",sapi.SaltLogin()
     # result = sapi.SaltCmd(tgt=tgt,fun=fun,arg=arg)
     result = sapi.SaltCmd(tgt="192.168.62.200",fun="cp.get_url",arg='http://192.168.62.1/upload/jd-gui.cfg',arg1='dest=/tmp/jd-gui.cfg')
-    print 'result::',result
     # jid = result['return'][0]['jid']
     # print jid
     # jidinfo=sapi.SaltJob(jid)
