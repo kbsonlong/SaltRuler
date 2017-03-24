@@ -180,6 +180,8 @@ def service_fun(request,server_id):
             arg = script + ' start'
         elif active == 'status':
             arg = script + ' status'
+        elif active == 'restart':
+            arg = script + ' restart'
         try:
             sapi = SaltAPI(url=url, username=username, password=password)
             info = sapi.SaltCmd(tgt=tgt, fun='cmd.run', client='local', arg=arg)['return'][0][tgt]
@@ -190,7 +192,7 @@ def service_fun(request,server_id):
 
         fh = files_history()
         fh.username = request.session.get('username')
-        fh.active = 'svn checkout'
+        fh.active = '应用操作'
         fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         fh.remote_server = SvnProject.objects.filter(id=project_id)[0].host
         fh.path = result['msg']
