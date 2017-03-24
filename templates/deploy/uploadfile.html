@@ -45,13 +45,13 @@
                 {% endif %}
 
                 <form enctype="multipart/form-data" action="/deploy/uploadFile/{{server_id}}/" method="post">
-                    <a href="javascript:;" class="file">选择文件<input type="file" name="myfile" onchange="fileChange(this);" /></a>
+                    <li class="nav"><a href="javascript:;" class="file">选择文件<input type="file" name="myfile" onchange="fileChange(this);" /></a><small style="color: red">暂不支持中文文件</small></li>
                     <br/>
                     <li class="nav">目标主机：<input type="text" name="server" value="" /> <small style="color: red">多个目标主机以英文逗号(,)分隔</small></li>
                     <br/>
-                    <li class="nav">上传路径：<input type="text" name="dest" value="/tmp/" /> <small style="color: red">目标主机必须存在的目录，默认/tmp/</small> </li>
+                    <li class="nav">上传路径：<input type="text" name="dest" value="/tmp/" /> <small style="color: red">如果目标主机不存在的目录需要选择创建目录，默认/tmp/</small> </li>
                    <br/>
-                    <li class="nav"><input type="checkbox" name="mdir"  >是否创建目录</li>
+                    <li class="nav"><input type="checkbox" name="mdir"  >是否创建目录  &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     <input type="checkbox" name="mtime"  >是否添加时间戳</li>
                     <br/>
                    <input type="submit" value="上传"/>
                 </form>
