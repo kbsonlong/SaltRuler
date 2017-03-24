@@ -11,7 +11,7 @@
 
     <title>{% block title %}SaltRuler 运维平台{% endblock %}</title>
     {% load staticfiles %}
-
+    <link href={% static "css/uploadfile.css"%} rel="stylesheet">
     <!-- Bootstrap Core CSS -->
     <link href="{% static "bower_components/bootstrap/dist/css/bootstrap.min.css" %}" rel="stylesheet">
 
@@ -107,7 +107,7 @@
                                 <!--</li>-->
                                 <li><a href="/saltstack/deploy/0/">代码发布</a></li>
                                 <li>
-                                    <a href="/deploy/uploadFile/0/"></i>文件上传<span class="fa arrow"></span></a>
+                                    <a href="/deploy/uploadFile/0/"></i>文件上传</a>
                                 </li>
                                 <li>
                                     <a href="#"></i>文件下载</a>

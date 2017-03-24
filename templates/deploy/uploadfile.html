@@ -45,7 +45,7 @@
                 {% endif %}
 
                 <form enctype="multipart/form-data" action="/deploy/uploadFile/{{server_id}}/" method="post">
-                    <li class="nav"><a href="javascript:;" class="file">选择文件<input type="file" name="myfile" onchange="fileChange(this);" /></a><small style="color: red">暂不支持中文文件</small></li>
+                    <li class="nav"><a href="javascript:;" class="file">选择文件<input type="file" name="myfile" /></a><small style="color: red">暂不支持中文文件</small></li>
                     <br/>
                     <li class="nav">目标主机：<input type="text" name="server" value="" /> <small style="color: red">多个目标主机以英文逗号(,)分隔</small></li>
                     <br/>
