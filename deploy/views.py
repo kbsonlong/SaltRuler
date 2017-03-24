@@ -78,4 +78,4 @@ def upload_file(request,server_id):
 def files_his(request):
     his_list = files_history.objects.all()
     contexts = {'his_list': his_list}
-    return render(request,'deploy/files_history.html',contexts)
+    return render(request, 'deploy/history.html', contexts)
