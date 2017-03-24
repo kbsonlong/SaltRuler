@@ -1,25 +1,27 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import  render
-from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
+from django.http import JsonResponse
 from EmpAuth.decorators import login_required
 from saltstack.models import *
 from saltstack.saltapi import SaltAPI
-
+from deploy.models import files_history
+import time
 
 #代码发布
 @login_required
 def deploy(request,server_id):
-    server_list=SaltServer.objects.all()
+    contexts = {}
+    server_list = SaltServer.objects.all()
     try:
-        salt_server = SaltServer.objects.get(id=server_id)
-    except:#id不存在时返回第一个
-        salt_server = SaltServer.objects.all()[0]
-    if not salt_server:
+        try:
+            salt_server = SaltServer.objects.get(id=server_id)
+        except:#id不存在时返回第一个
+            salt_server = SaltServer.objects.all()[0]
+        project_list = SvnProject.objects.filter(salt_server=salt_server).order_by('host')
+        contexts = {'server_list': server_list, 'salt_server': salt_server, 'project_list': project_list}
+        return render(request, 'saltstack/svn_deploy.html', contexts)
+    except:
         return render(request, 'saltstack/svn.html')
-    project_list=SvnProject.objects.filter(salt_server=salt_server).order_by('host')
-    contexts = {'server_list':server_list,'salt_server':salt_server,'project_list':project_list}
-    # print contexts
-    return render(request, 'saltstack/svn_deploy.html', contexts)
 
 
 
@@ -71,10 +73,18 @@ def checkout(request,server_id):
                 project.info = u"最近修改时间：%s\n最近修改版本：%s\n最新版本：%s" % (svn_info["Last Changed Date"][0:20], svn_info["Last Changed Rev"], svn_info["Revision"])
             project.save()
             result = {'ret': True, 'msg': u'检出成功'}
+
+
         except Exception as error:
             # print 'error:',error
             result = {'ret': False, 'msg': u'错误：项目目录冲突'}
-
+        fh = files_history()
+        fh.username = request.session.get('username')
+        fh.active = 'svn checkout'
+        fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        fh.remote_server = SvnProject.objects.filter(id=project_id)[0].host
+        fh.path = result['msg']
+        fh.save()
         return JsonResponse(result, safe=False)
 
 
@@ -141,6 +151,14 @@ def deploy_fun(request,server_id):
         except Exception as e:
             # print e
             result = {'ret':False,'msg':u'错误：%s' % e}
+
+        fh = files_history()
+        fh.username = request.session.get('username')
+        fh.active = 'svn checkout'
+        fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        fh.remote_server = SvnProject.objects.filter(id=project_id)[0].host
+        fh.path = result['msg']
+        fh.save()
         return JsonResponse(result,safe=False)
 
 
@@ -169,4 +187,12 @@ def service_fun(request,server_id):
             # print info
         except Exception as e:
             result = {'error':str(e)}
+
+        fh = files_history()
+        fh.username = request.session.get('username')
+        fh.active = 'svn checkout'
+        fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        fh.remote_server = SvnProject.objects.filter(id=project_id)[0].host
+        fh.path = result['msg']
+        fh.save()
         return JsonResponse(result, safe=False)
