@@ -1,10 +1,8 @@
 #coding:utf-8
 import logging
-
 from pyftpdlib.authorizers import DummyAuthorizer
 from pyftpdlib.handlers import FTPHandler, ThrottledDTPHandler
 from pyftpdlib.servers import FTPServer
-
 from deploy import ftp_settings
 
 

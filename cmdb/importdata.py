@@ -4,7 +4,7 @@ import os
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "SaltRuler.settings")
 
-from cmdb.models import Blog,Assetmanage
+from cmdb.models import Assetmanage
 def importdata(file):
     f = open(file)
 
