@@ -1,11 +1,9 @@
 #coding:utf-8
-
 from django.shortcuts import render
 from EmpAuth.decorators import login_required
 from saltstack.saltapi import SaltAPI
-from saltstack.models import SaltServer,State
-
-import json,time
+from saltstack.models import SaltServer
+import time
 from deploy.models import files_history
 from SaltRuler.glob_config import glob_config
 # Create your views here.
@@ -85,7 +83,7 @@ def cmd_exec(request,server_id):
                 tgt = request.POST.get('minions')
             cmd_exec_result = e
             context.update({'error':e})
-
+        ##添加审计记录
         fh.username = request.session.get('username')
         fh.active = 'exec command'
         fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
