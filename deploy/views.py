@@ -10,6 +10,7 @@ import os,time,re
 
 
 upload_dir = glob_config('nginx','upload_dir')
+master = glob_config('salt_api','master')
 @login_required
 def upload_file(request,server_id):
     username = request.session.get('username')
@@ -105,24 +106,55 @@ def download_file(request,server_id):
                 ##检索目录或者文件
                 arg = 'ls %s' % dest
                 # print arg
-                files_list = sapi.SaltCmd(tgt=server, fun="cmd.run",expr_form='list', arg=arg)['return'][0][server].split()
-                result1 = 'No' in files_list
-                result2 = 'such' in files_list
-                result3 = 'file' in files_list
-                result4 = 'directory' in files_list
-                result5 = u'没有那个文件或目录' in files_list
-                if result1 and result2 and result3 and result4 or result5:
+                files_list = sapi.SaltCmd(tgt=server, fun="cmd.run",expr_form='list', arg=arg)['return'][0][server]
+                # print files_list
+                if 'No such file or directory' in files_list:
                     contexts.update({'error': u'文件或目录不存在'})
                 else:
                     nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
-                    contexts.update({'files_list':files_list,'nginx_url':nginx_url})
-
+                    contexts.update({'files_list':files_list.split(),'nginx_url':nginx_url,'server':server,'dest':dest})
                 return render(request,'deploy/download_file.html',contexts)
 
     except Exception as e:
         pass
     return render(request,'deploy/download_file.html',contexts)
 
+def download_fun(request,server_id):
+    username = request.session.get('username')
+    server_list = SaltServer.objects.all()
+    contexts = {'server_list': server_list, 'server_id': server_id}
+    try:
+        salt_server = SaltServer.objects.get(id=server_id)
+    except:  # id不存在时返回第一个
+        salt_server = SaltServer.objects.all()[0]
+        if not salt_server:
+            pass
+    contexts.update({'salt_server': salt_server})
+    try:
+        file = request.POST.get('file')
+        server = request.POST.get("server", None)
+        dest = request.POST.get('dest')
+        print file
+        print server
+        print dest
+        arg=dest+file
+        sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
+        result = sapi.SaltCmd(tgt=server,fun='cp.push',expr_form='list',arg=arg)
+        print result
+        roots=sapi.SaltRun(client='wheel', fun='file_roots.list_roots')['return'][0]['data']['return']['base'][0].keys()[0]
+        print roots
+        arg1='mkdir -p %s/temp && mv %s/minions/%s/files%s%s %s/temp/%s' % (roots,glob_config('salt_api','cachedir'),server,dest,file,roots,file)
+        print arg1
+        sapi.SaltCmd(tgt=master,fun='cmd.run',arg=arg1)
+        arg2='salt://%s %s/%s/%s' % (file,os.path.dirname(os.path.dirname(os.path.abspath(__file__))),upload_dir,file)
+        print arg2
+        sapi.SaltCmd(tgt=glob_config('nginx','host'),fun='cp.get_file',makedirs=True,arg=arg2)
+        nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
+        contexts.update({'nginx_url': nginx_url, 'server': server, 'dest': dest})
+
+    except Exception as e:
+        pass
+    return render(request, 'deploy/download_file.html', contexts)
 
 
 

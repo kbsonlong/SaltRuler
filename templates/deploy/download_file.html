@@ -45,9 +45,9 @@
                 {% endif %}
 
                 <form enctype="multipart/form-data" action="/deploy/downloadFile/{{server_id}}/" method="post">
-                    <li class="nav">目标主机：<input type="text" name="server" value="" /> <small style="color: red">多个目标主机以英文逗号(,)分隔</small></li>
+                    <li class="nav">目标主机：<input type="text" name="server" value="{{ server }}" /> <small style="color: red">多个目标主机以英文逗号(,)分隔</small></li>
                     <br/>
-                    <li class="nav">目标路径：<input type="text" name="dest" value="" /> </li>
+                    <li class="nav">目标路径：<input type="text" name="dest" value="{{ dest }}" /> </li>
                    <br/>
 
                    <input type="submit" value="查看目录"/>
@@ -64,11 +64,14 @@
                         <tbody>
                         {% for file in files_list %}
                             <tr class="gradeA">
-                                <td>{{ file }}</td>
+                                <td >{{ file }}</td>
                                 <td>
-                                    <a href="{{ nginx_url }}{{file }}">
-                                        <button class="btn btn-warning btn-xs" type="button">下载</button>
-                                    </a>
+                                    <form enctype="multipart/form-data" action="/deploy/download/{{server_id}}/" method="post">
+{#                                    <a href="{{ nginx_url }}{{file }}"> </a>#}
+{#                                        <button  class="btn btn-warning btn-xs" type="button" name="file" value="{{ file }}">下载</button>#}
+                                        <a href="javascript:;" class="file"><input name="server" type="text" value="{{ server }}"><input name="dest" type="text" value="{{ dest }}"><input name="file" type="text"  value="{{ file }}" />下载<input type="submit"/></a>
+{#                                        <input class="btn btn-warning btn-xs" type="submit" value="下载"/>#}
+                                    </form>
                                 </td>
                              </tr>
                         {% endfor %}

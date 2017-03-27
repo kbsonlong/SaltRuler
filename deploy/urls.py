@@ -4,5 +4,6 @@ from . import views
 urlpatterns = [
     url(r'^uploadFile/(?P<server_id>[0-9]+)/$', views.upload_file, name='upload_file'),
     url(r'^downloadFile/(?P<server_id>[0-9]+)/$', views.download_file, name='download_file'),
+    url(r'^download/(?P<server_id>[0-9]+)/$', views.download_fun, name='download'),
     url(r'^history/$', views.files_his, name='history'),
 ]
