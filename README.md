@@ -1,4 +1,14 @@
 # SaltRunler
+
+下载源码
+git clone
+
+安装依赖
+pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple  --trusted-host mirrors.aliyun.com
+
+
+
+
 #截图
 
 
@@ -11,8 +21,7 @@ login界面
 minion认证管理
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/minion_auth_man.png)
 
-管理minion服务
-![image](https://github.com/kbsonlong/fowl/blob/master/screenshots/minion_start.png)
+
 
 执行远程SHELL
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/command.png)
