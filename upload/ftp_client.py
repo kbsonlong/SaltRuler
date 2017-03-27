@@ -12,4 +12,3 @@ if __name__ == '__main__':
     path = sys.argv[2]
     http_code = get_down(url,path)
     print http_code
-

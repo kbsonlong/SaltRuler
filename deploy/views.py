@@ -107,15 +107,20 @@ def download_file(request,server_id):
                 contexts.update({'error': u'下载文件不能为空！！'})
             else:
                 ##检索目录或者文件
-                arg = 'ls %s' % dest
+
                 # print arg
-                files_list = sapi.SaltCmd(tgt=server, fun="cmd.run",expr_form='list', arg=arg)['return'][0][server]
-                print files_list
-                if 'No such file or directory' in files_list:
-                    contexts.update({'error': u'文件或目录不存在'})
-                else:
+                dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=dest)['return'][0][ server]
+                # files_list = sapi.SaltCmd(tgt=server, fun="cmd.run",expr_form='list', arg=arg)['return'][0][server]
+                # print files_list
+                # if 'No such file or directory' in files_list:
+                #     contexts.update({'error': u'文件或目录不存在'})
+                if dir_result:
+                    arg = 'ls %s' % dest
+                    files_list = sapi.SaltCmd(tgt=server, fun="cmd.run", expr_form='list', arg=arg)['return'][0][server]
                     nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
-                    contexts.update({'files_list':files_list.split(),'nginx_url':nginx_url,'server':server,'dest':dest})
+                    contexts.update({'files_list': files_list.split(), 'nginx_url': nginx_url, 'server': server, 'dest': dest})
+                else:
+                    contexts.update({'error': u'文件或目录不存在'})
                 return render(request,'deploy/download_file.html',contexts)
 
     except Exception as e:
@@ -133,20 +138,27 @@ def download_fun(request,server_id):
         if not salt_server:
             pass
     contexts.update({'salt_server': salt_server})
+    sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
     try:
         files = request.POST.get('myfile')
         server = request.POST.get("server", None)
         dest = request.POST.get('dest')
         print server ,files, dest
-        file_path=dest + files
-        ftp_url = 'http://' + glob_config('ftp', 'host') + ':' + glob_config('ftp','port')
-        command = 'python /tmp/ftp_client.py %s %s' % (ftp_url,file_path)
-        sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
-        code =  sapi.SaltCmd(tgt=server, fun='cmd.run', expr_form='list', arg=command)['return'][0][server]
-        if int(code) == 200:
-            contexts.update({'code':code})
-        nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
-        contexts.update({'files':files,'nginx_url': nginx_url, 'server': server, 'dest': dest})
+        file_path=dest + '/' + files
+        print file_path
+        dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=file_path)['return'][0][server]
+        if dir_result:
+            arg = 'ls %s' % file_path
+            files_list = sapi.SaltCmd(tgt=server, fun="cmd.run", expr_form='list', arg=arg)['return'][0][server]
+            contexts.update({'files_list': files_list.split(),  'server': server, 'dest': file_path})
+        else:
+            ftp_url = 'http://' + glob_config('ftp', 'host') + ':' + glob_config('ftp','port')
+            command = 'python /tmp/ftp_client.py %s %s' % (ftp_url,file_path)
+            code =  sapi.SaltCmd(tgt=server, fun='cmd.run', expr_form='list', arg=command)['return'][0][server]
+            if int(code) == 200:
+                contexts.update({'code':code})
+            nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
+            contexts.update({'files':files,'nginx_url': nginx_url, 'server': server, 'dest': dest})
         return render(request, 'deploy/download_file.html', contexts)
     except Exception as e:
         print e
