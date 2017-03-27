@@ -1,4 +1,6 @@
 #coding=utf-8
+import sys
+sys.path.append("..")
 from SaltRuler.glob_config import glob_config
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 import cgi
