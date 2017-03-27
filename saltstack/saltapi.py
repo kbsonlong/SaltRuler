@@ -199,10 +199,10 @@ def main():
     # from models import SaltServer
     # salt_server = SaltServer.objects.get(idc=idc)
     # sapi = SaltAPI(url=salt_server.url,username=salt_server.username,password=salt_server.password)
-    sapi = SaltAPI(url="https://192.168.234.158:8000",username="salt",password="pcgames2016")
+    sapi = SaltAPI(url="https://192.168.62.200:8000",username="salt",password="salt")
     # result = sapi.SaltCmd(tgt=tgt,fun=fun,arg=arg)
     # result = sapi.SaltCmd(tgt="192.168.62.200",fun="cp.get_url",arg='http://192.168.62.1/upload/jd-gui.cfg',arg1='dest=/tmp/jd-gui.cfg')
-    print sapi.SaltCmd(tgt='192.168.234.167', fun='cp.get_file', expr_form='list', arg='salt://temp/CentOS-Vault.repo', arg1='/data/PRG/SaltRuler/upload/1231.sss')
+    print sapi.SaltCmd(tgt='192.168.62.200', fun='cp.get_file', expr_form='list', arg='salt://temp/CentOS-Vault.repo', arg1='/data/PRG/SaltRuler/upload/1231.sss')
     # jid = result['return'][0]['jid']
     # print jid
     # jidinfo=sapi.SaltJob(jid)
