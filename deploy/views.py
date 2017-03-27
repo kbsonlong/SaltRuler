@@ -1,11 +1,16 @@
 #coding:utf-8
-from django.shortcuts import render,HttpResponse
+import os
+import time
+
+from django.shortcuts import render
+
 from EmpAuth.decorators import login_required
 from SaltRuler.glob_config import glob_config
-from saltstack.saltapi import *
-from saltstack.models import SaltServer,State
 from deploy.models import files_history
-import os,time,re
+from saltstack.models import SaltServer
+from saltstack.saltapi import *
+
+
 # Create your views here.
 
 
@@ -92,11 +97,8 @@ def download_file(request,server_id):
     contexts.update({'salt_server': salt_server})
     try:
         if request.method == 'POST':
-            # print server_id
             server = request.POST.get("server", None)
-            # print server
             dest = request.POST.get('dest')
-            # print dest
             if not server:
                 contexts.update({'error': u'目标主机不能为空！！'})
             elif not dest:
@@ -107,14 +109,13 @@ def download_file(request,server_id):
                 arg = 'ls %s' % dest
                 # print arg
                 files_list = sapi.SaltCmd(tgt=server, fun="cmd.run",expr_form='list', arg=arg)['return'][0][server]
-                # print files_list
+                print files_list
                 if 'No such file or directory' in files_list:
                     contexts.update({'error': u'文件或目录不存在'})
                 else:
                     nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
                     contexts.update({'files_list':files_list.split(),'nginx_url':nginx_url,'server':server,'dest':dest})
                 return render(request,'deploy/download_file.html',contexts)
-
     except Exception as e:
         pass
     return render(request,'deploy/download_file.html',contexts)
@@ -131,29 +132,23 @@ def download_fun(request,server_id):
             pass
     contexts.update({'salt_server': salt_server})
     try:
-        file = request.POST.get('file')
+        files = request.POST.get('file')
         server = request.POST.get("server", None)
         dest = request.POST.get('dest')
-        print file
-        print server
-        print dest
-        arg=dest+file
+        file_path=dest + files
+        ftp_url = 'http://' + glob_config('ftp', 'host') + ':' + glob_config('ftp','port')
+        command = 'python /tmp/ftp_client.py %s %s' % (ftp_url,file_path)
         sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
-        result = sapi.SaltCmd(tgt=server,fun='cp.push',expr_form='list',arg=arg)
-        print result
-        roots=sapi.SaltRun(client='wheel', fun='file_roots.list_roots')['return'][0]['data']['return']['base'][0].keys()[0]
-        print roots
-        arg1='mkdir -p %s/temp && mv %s/minions/%s/files%s%s %s/temp/%s' % (roots,glob_config('salt_api','cachedir'),server,dest,file,roots,file)
-        print arg1
-        sapi.SaltCmd(tgt=master,fun='cmd.run',arg=arg1)
-        arg2='salt://%s %s/%s/%s' % (file,os.path.dirname(os.path.dirname(os.path.abspath(__file__))),upload_dir,file)
-        print arg2
-        sapi.SaltCmd(tgt=glob_config('nginx','host'),fun='cp.get_file',makedirs=True,arg=arg2)
+        code =  sapi.SaltCmd(tgt=server, fun='cmd.run', expr_form='list', arg=command)['return'][0][server]
+        if int(code) == 200:
+            contexts.update({'code':code})
         nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
-        contexts.update({'nginx_url': nginx_url, 'server': server, 'dest': dest})
-
+        contexts.update({'files':files,'nginx_url': nginx_url, 'server': server, 'dest': dest})
+        return render(request, 'deploy/download_file.html', contexts)
     except Exception as e:
-        pass
+        print e
+
+    print contexts
     return render(request, 'deploy/download_file.html', contexts)
 
 

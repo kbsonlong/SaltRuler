@@ -24,9 +24,9 @@ class   PostHandler(BaseHTTPRequestHandler):
             filename = field_item.filename
             filevalue  = field_item.value
             filesize = len(filevalue)#文件大小(字节)
-            with open(upload_dir+filename.decode('utf-8'),'wb') as f:
+            with open(upload_dir + '/'+filename.decode('utf-8'),'wb') as f:
                 f.write(filevalue)
-        return
+        return filesize
 
 
 def main():
