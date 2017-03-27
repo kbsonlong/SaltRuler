@@ -5,9 +5,11 @@ from SaltRuler.glob_config import glob_config
 from saltstack.saltapi import *
 from saltstack.models import SaltServer,State
 from deploy.models import files_history
-import os,time
+import os,time,re
 # Create your views here.
 
+
+upload_dir = glob_config('nginx','upload_dir')
 @login_required
 def upload_file(request,server_id):
     username = request.session.get('username')
@@ -25,6 +27,7 @@ def upload_file(request,server_id):
             myFile =request.FILES.get("myfile", None)    # 获取上传的文件，如果没有文件，则默认为None
             server = request.POST.get("server",None)
             dest = request.POST.get('dest','/tmp/')
+            print dest
             mdir = request.POST.get('mdir',None)
             mtime = request.POST.get('mtime',None)
             if not myFile:
@@ -35,7 +38,7 @@ def upload_file(request,server_id):
                 return render(request, 'deploy/uploadfile.html', contexts)
 
             ##将文件上传到平台所在服务器
-            upload_dir = glob_config('nginx','upload_dir')
+
             destination = open(os.path.join(upload_dir,myFile.name),'wb+')    # 打开特定的文件进行二进制的写操作
             for chunk in myFile.chunks():      # 分块写入文件
                 destination.write(chunk)
@@ -73,6 +76,57 @@ def upload_file(request,server_id):
     except Exception as e:
         contexts.update({'error':e})
     return render(request, 'deploy/uploadfile.html', contexts)
+
+@login_required
+def download_file(request,server_id):
+    username = request.session.get('username')
+    server_list = SaltServer.objects.all()
+    contexts = {'server_list': server_list, 'server_id': server_id}
+    try:
+        salt_server = SaltServer.objects.get(id=server_id)
+    except:  # id不存在时返回第一个
+        salt_server = SaltServer.objects.all()[0]
+        if not salt_server:
+            pass
+    contexts.update({'salt_server': salt_server})
+    try:
+        if request.method == 'POST':
+            # print server_id
+            server = request.POST.get("server", None)
+            # print server
+            dest = request.POST.get('dest')
+            # print dest
+            if not server:
+                contexts.update({'error': u'目标主机不能为空！！'})
+            elif not dest:
+                contexts.update({'error': u'下载文件不能为空！！'})
+            else:
+                sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
+                ##检索目录或者文件
+                arg = 'ls %s' % dest
+                # print arg
+                files_list = sapi.SaltCmd(tgt=server, fun="cmd.run",expr_form='list', arg=arg)['return'][0][server].split()
+                result1 = 'No' in files_list
+                result2 = 'such' in files_list
+                result3 = 'file' in files_list
+                result4 = 'directory' in files_list
+                result5 = u'没有那个文件或目录' in files_list
+                if result1 and result2 and result3 and result4 or result5:
+                    contexts.update({'error': u'文件或目录不存在'})
+                else:
+                    nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
+                    contexts.update({'files_list':files_list,'nginx_url':nginx_url})
+
+                return render(request,'deploy/download_file.html',contexts)
+
+    except Exception as e:
+        pass
+    return render(request,'deploy/download_file.html',contexts)
+
+
+
+
+
 
 @login_required
 def files_his(request):
