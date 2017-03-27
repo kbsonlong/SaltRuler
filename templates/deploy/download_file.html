@@ -49,13 +49,12 @@
                     <br/>
                     <li class="nav">目标路径：<input type="text" name="dest" value="{{ dest }}" /> </li>
                    <br/>
-
                    <input type="submit" value="查看目录"/>
                 </form>
                 {{ code }}
                 {% if code %}
-                                            <meta http-equiv="refresh" content="0; url={{ nginx_url }}{{ files }}" />
-                                        {% endif %}
+                    <meta http-equiv="refresh" content="0; url={{ nginx_url }}{{ files }}" />
+                {% endif %}
 
                 {% if files_list %}
                     <table class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -68,23 +67,16 @@
                         <tbody>
                         {% for file in files_list %}
                             <tr class="gradeA">
-                                <td >{{ file }}</td>
+                                <td >{{ file }} </td>
                                 <td>
-                                    <form enctype="multipart/form-data" action="/deploy/download/{{server_id}}/" method="post">
-{#                                    <a href="{{ nginx_url }}{{file }}"> </a>#}
-{#                                        <button  class="btn btn-warning btn-xs" type="button" name="file" value="{{ file }}">下载</button>#}
+                                    <form enctype="multipart/form-data" action="/deploy/download/{{server_id}}/" method="post" target="_blank">
                                         <a href="javascript:;" class="file">
                                             <input name="server" type="text" value="{{ server }}">
                                             <input name="dest" type="text" value="{{ dest }}">
-                                            <input name="file" type="text"  value="{{ file }}" />下载
+                                            <input name="myfile" type="text"  value="{{ file }}" />下载
                                             <input type="submit"/>
-{#                                            <meta http-equiv="refresh" content="0; url={{ nginx_url }}{{ file }}" />#}
                                         </a>
-
-{#                                        <input class="btn btn-warning btn-xs" type="submit" value="下载"/>#}
                                     </form>
-
-
                                 </td>
                              </tr>
                         {% endfor %}

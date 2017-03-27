@@ -95,7 +95,9 @@ def download_file(request,server_id):
         if not salt_server:
             pass
     contexts.update({'salt_server': salt_server})
+    sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
     try:
+        print request.method
         if request.method == 'POST':
             server = request.POST.get("server", None)
             dest = request.POST.get('dest')
@@ -104,7 +106,6 @@ def download_file(request,server_id):
             elif not dest:
                 contexts.update({'error': u'下载文件不能为空！！'})
             else:
-                sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
                 ##检索目录或者文件
                 arg = 'ls %s' % dest
                 # print arg
@@ -116,6 +117,7 @@ def download_file(request,server_id):
                     nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
                     contexts.update({'files_list':files_list.split(),'nginx_url':nginx_url,'server':server,'dest':dest})
                 return render(request,'deploy/download_file.html',contexts)
+
     except Exception as e:
         pass
     return render(request,'deploy/download_file.html',contexts)
@@ -132,9 +134,10 @@ def download_fun(request,server_id):
             pass
     contexts.update({'salt_server': salt_server})
     try:
-        files = request.POST.get('file')
+        files = request.POST.get('myfile')
         server = request.POST.get("server", None)
         dest = request.POST.get('dest')
+        print server ,files, dest
         file_path=dest + files
         ftp_url = 'http://' + glob_config('ftp', 'host') + ':' + glob_config('ftp','port')
         command = 'python /tmp/ftp_client.py %s %s' % (ftp_url,file_path)
@@ -150,6 +153,80 @@ def download_fun(request,server_id):
 
     print contexts
     return render(request, 'deploy/download_file.html', contexts)
+
+@login_required
+def file_remote(request, server_id):
+    server_list = SaltServer.objects.all()
+    try:
+        salt_server = SaltServer.objects.get(id=server_id)
+    except:  # id不存在时返回第一个
+        salt_server = SaltServer.objects.all()[0]
+    context = {'server_list': server_list, 'salt_server': salt_server}
+    if request.method == 'GET':
+        tgt=request.GET.get('server')
+        path=request.GET.get('dest','').replace('//','/').encode('utf-8')
+        if path!='/':
+            path=path.rstrip('/')
+        dir=None
+        if tgt and path:
+            try:
+                #目录存在时返回目录列表
+                sapi = SaltAPI(url=salt_server.url,username=salt_server.username,password=salt_server.password)
+                result = sapi.SaltCmd(client='local',tgt=tgt,fun='file.directory_exists',arg=path)['return'][0][tgt]
+                print result
+                if result:
+                    path_str=path.split('/')
+                    if path_str[-1]=='..':#返回上层
+                        if len(path_str)>3:
+                            dir='/'.join(path_str[0:-2])
+                        else:
+                            dir='/'
+                    else:
+                        dir=path
+                    svn_info=sapi.SaltCmd(client='local',tgt=tgt,fun='svn.info',arg=dir,arg1='fmt=dict')['return'][0][tgt][0]
+                    if isinstance(svn_info,dict):
+                        context['svn']={'URL':svn_info['URL'],'Revision':svn_info['Revision'],'LastChangedRev':svn_info['Last Changed Rev'],'LastChangeDate':svn_info["Last Changed Date"][0:20]}
+                #文件存在时，返回文件内容，加上文件格式、大小限制
+                elif sapi.SaltCmd(client='local',tgt=tgt,fun='file.file_exists',arg=path)['return'][0][tgt]:
+                    if os.path.splitext(path)[1] in glob_config('ftp','FILE_FORMAT'):
+                        stats=sapi.SaltCmd(client='local',tgt=tgt,fun='file.stats',arg=path)['return'][0][tgt]
+                        if stats['size'] <= 1024000000:
+                            content=sapi.SaltCmd(client='local',tgt=tgt,fun='cmd.run',arg='cat '+path)['return'][0][tgt]
+                            context['content']=content
+                            context['stats']=stats
+                        else:
+                            context['error']=u"文件大小超过1G，拒绝访问！"
+                    else:
+                        context['error']=u"文件格式不允许访问，请检查setting.FILE_FORMAT！"
+                    path_str=path.rstrip('/').split('/')
+                    if len(path_str)>2:
+                        dir='/'.join(path_str[0:-1])
+                    else:
+                        dir='/'
+                    svn_info=sapi.SaltCmd(client='local',tgt=tgt,fun='svn.info',arg=dir,arg1='fmt=dict',arg2='targets=%s'%path_str[-1])['return'][0][tgt][0]
+                    if isinstance(svn_info,dict):
+                        context['svn']={'URL':svn_info['URL'],'Revision':svn_info['Revision'],'LastChangedRev':svn_info['Last Changed Rev'],'LastChangeDate':svn_info["Last Changed Date"][0:20]}
+                else:
+                    context['error']=u"目标不存在或者不是目录或文件！"
+
+                # 根据路径获取列表
+                if dir:
+                    dirs = sapi.SaltCmd(client='local',tgt=tgt,fun='file.readdir',arg=dir)['return'][0][tgt]
+                    try:
+                        dirs.remove('.')
+                        dirs.remove('.svn')
+                    except:pass
+                    if dir=='/':
+                        dirs.remove('..')
+                    # result = {'dirs':sorted(dirs) ,'type':'dir','pdir':path}
+                    context['dir']=dir
+                    context['dir_list']=dirs
+                    context['tgt']=tgt
+                # return JsonResponse(result,safe=False)
+            except Exception as e:
+                context['error']=e
+    return render(request, 'deploy/download_file.html', context)
+
 
 
 
