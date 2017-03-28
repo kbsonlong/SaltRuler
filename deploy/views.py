@@ -43,8 +43,8 @@ def upload_file(request,server_id):
                 contexts.update({'error': u'目标主机不能为空！！'})
                 return render(request, 'deploy/uploadfile.html', contexts)
 
-            ##将文件上传到平台所在服务器
 
+            ##将文件上传到平台所在服务器
             destination = open(os.path.join(upload_dir,myFile.name),'wb+')    # 打开特定的文件进行二进制的写操作
             for chunk in myFile.chunks():      # 分块写入文件
                 destination.write(chunk)
@@ -62,6 +62,10 @@ def upload_file(request,server_id):
             else:
                 dest_path = u'dest=/%s/%s' % (dest.strip('/'), myFile.name)
 
+            dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=dest)['return'][0][server]
+            if not dir_result:
+                contexts.update({'error': u'目标主机目录不存在，请选择创建目录！！'})
+                return render(request, 'deploy/uploadfile.html', contexts)
             if mdir:
                 command = 'mkdir -p %s' % dest
                 sapi.SaltCmd(tgt=server, fun="cmd.run", expr_form='list', arg=command)
@@ -97,7 +101,6 @@ def download_file(request,server_id):
     contexts.update({'salt_server': salt_server})
     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
     try:
-        print request.method
         if request.method == 'POST':
             server = request.POST.get("server", None)
             dest = request.POST.get('dest')
@@ -107,13 +110,7 @@ def download_file(request,server_id):
                 contexts.update({'error': u'下载文件不能为空！！'})
             else:
                 ##检索目录或者文件
-
-                # print arg
                 dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=dest)['return'][0][ server]
-                # files_list = sapi.SaltCmd(tgt=server, fun="cmd.run",expr_form='list', arg=arg)['return'][0][server]
-                # print files_list
-                # if 'No such file or directory' in files_list:
-                #     contexts.update({'error': u'文件或目录不存在'})
                 if dir_result:
                     arg = 'ls %s' % dest
                     files_list = sapi.SaltCmd(tgt=server, fun="cmd.run", expr_form='list', arg=arg)['return'][0][server]
