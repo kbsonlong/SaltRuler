@@ -33,22 +33,21 @@ def upload_file(request,server_id):
             dest = request.POST.get('dest','/tmp/')
             mdir = request.POST.get('mdir',None)
             mtime = request.POST.get('mtime',None)
-            dest_path = 'dest='
             nginx_path = ''
             sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
             dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=dest)['return'][0]
 
             if not myFile:
                 contexts.update({'error':u'请选择上传文件!'})
-                dest_path = u'dest=请选择上传文件!'
+                action_result = u'请选择上传文件!'
                 # return render(request, 'deploy/uploadfile.html', contexts)
             elif not server:
                 contexts.update({'error': u'目标主机不能为空！！'})
-                dest_path = u'dest=目标主机不能为空！!'
+                action_result = u'目标主机不能为空！!'
                 # return render(request, 'deploy/uploadfile.html', contexts)
             elif not dir_result[server]:
                 contexts.update({'error': u'目标主机目录不存在，请选择创建目录！！'})
-                dest_path = u'dest=目标主机目录不存在，请选择创建目录!'
+                action_result = u'目标主机目录不存在，请选择创建目录!'
                 # return render(request, 'deploy/uploadfile.html', contexts)
             else:
                 ##将文件上传到平台所在服务器
@@ -75,11 +74,13 @@ def upload_file(request,server_id):
                 # upload_results = {'return': [{'192.168.62.200': '/tmp/along_logo.png', '192.168.62.201': '/tmp/along_logo.png'}]}['return'][0]
                 # print server.split(',')
                 contexts.update({'success': u'%s 上传成功!' % upload_results})
+                action_result = dest_path.split('dest=')
 
+            ###将操作过程写入数据库
             fh=files_history()
             fh.username=username
             fh.active='upload'
-            fh.path=dest_path.strip('dest=')
+            fh.path=action_result
             fh.remote_server = server
             fh.active_time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             fh.url = nginx_path
@@ -87,7 +88,6 @@ def upload_file(request,server_id):
 
     except Exception as e:
         contexts.update({'error':e})
-    print contexts
     return render(request, 'deploy/uploadfile.html', contexts)
 
 @login_required
@@ -108,15 +108,16 @@ def download_file(request,server_id):
             server = request.POST.get("server", None)
             dest = request.POST.get('dest')
             dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=dest)['return'][0][server]
+            file_result = sapi.SaltCmd(client='local', tgt=server, fun='file.file_exists', arg=dest)['return'][0][server]
             if not server:
                 contexts.update({'error': u'目标主机不能为空！！'})
                 action_result = u'目标主机不能为空！！'
             elif not dest:
                 contexts.update({'error': u'下载文件不能为空！！'})
                 action_result = u'下载文件不能为空！！'
-            elif not dir_result :
-                contexts.update({'error': u'文件或目录不存在'})
-                action_result = u'文件或目录不存在！！'
+            elif not dir_result and not file_result :
+                contexts.update({'error': u'%s 文件或目录不存在' % dest})
+                action_result =  u'%s 文件或目录不存在' % dest
             else:
                 ##检索目录或者文件
                 arg = 'ls %s' % dest
@@ -124,6 +125,7 @@ def download_file(request,server_id):
                 nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
                 contexts.update({'files_list': files_list.split(), 'nginx_url': nginx_url, 'server': server, 'dest': dest})
                 action_result = arg
+
             fh = files_history()
             fh.username = username
             fh.active = 'download list'
@@ -133,7 +135,6 @@ def download_file(request,server_id):
             fh.save()
     except Exception as e:
         contexts.update({'error': e})
-
     return render(request,'deploy/download_file.html',contexts)
 
 ##点击下载按钮是触发调用download_fun动作
@@ -178,7 +179,6 @@ def download_fun(request,server_id):
         fh.save()
     except Exception as e:
         contexts.update({'error': e})
-
     return render(request, 'deploy/download_file.html', contexts)
 
 @login_required
