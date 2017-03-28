@@ -12,3 +12,14 @@ class Users(models.Model):
     def __unicode__(self):
         return self.username
 
+
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    url = models.CharField(max_length=100)
+    title = models.CharField(max_length=3)
+    birth_date = models.DateField(blank=True, null=True)
+    content = models.CharField(max_length=100)
+    sites = models.CharField(max_length=100)
+    enable_comments = models.CharField(max_length=100)
+    registration_required = models.CharField(max_length=100)
+    template_name = models.CharField(max_length=100)

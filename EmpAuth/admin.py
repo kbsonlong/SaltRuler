@@ -1,8 +1,25 @@
 from django.contrib import admin
-from .models import Users
+from .models import Users,Author
 
 # Register your models here.
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username','password')
 
-admin.site.register(Users,UserAdmin)
+
+class FlatPageAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (None, {
+            'fields': ('url', 'title', 'content', 'sites')
+        }),
+        ('Advanced options', {
+            'classes': ('collapse',),
+            'fields': ('enable_comments', 'registration_required', 'template_name')
+        }),
+    )
+
+# admin.site.register(Author,FlatPageAdmin)
+admin.site.register(Users)
+
+
+
+
