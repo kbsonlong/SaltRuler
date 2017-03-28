@@ -103,6 +103,7 @@ def download_file(request,server_id):
             pass
     contexts.update({'salt_server': salt_server})
     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
+    server = ''
     try:
         if request.method == 'POST':
             server = request.POST.get("server", None)
@@ -125,16 +126,21 @@ def download_file(request,server_id):
                 nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
                 contexts.update({'files_list': files_list.split(), 'nginx_url': nginx_url, 'server': server, 'dest': dest})
                 action_result = arg
+        else:
+            action_result = u'请求异常！'
 
-            fh = files_history()
-            fh.username = username
-            fh.active = 'download list'
-            fh.path = action_result
-            fh.remote_server = server
-            fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            fh.save()
     except Exception as e:
-        contexts.update({'error': e})
+        print e
+        contexts.update({'error':u'目标主机和目标路径不能为空！！'})
+        action_result = u'目标主机和目标路径不能为空！！'
+
+    fh = files_history()
+    fh.username = username
+    fh.active = 'download list'
+    fh.path = action_result
+    fh.remote_server = server
+    fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    fh.save()
     return render(request,'deploy/download_file.html',contexts)
 
 ##点击下载按钮是触发调用download_fun动作
