@@ -1,22 +1,35 @@
 # SaltRunler
 
-下载源码
+1、下载源码
 
 git clone https://github.com/kbsonlong/SaltRuler.git
 
-安装依赖
+2、安装依赖
 
 pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple  --trusted-host mirrors.aliyun.com
 
 
-修改配置文件 SaltRuler/config.ini
+3、修改配置文件 SaltRuler/config.ini
 
 
-同步数据库
+4、同步数据库
+
 python manage.py makemigrations
 
 python manage.py migrate
 
+5、配置uwsgi + nginx
+
+uwsgi配置参考（https://github.com/kbsonlong/SaltRuler/blob/master/uwsgi.ini）
+
+nginx配置参考（https://github.com/kbsonlong/SaltRuler/blob/master/uwsgi_nginx.conf）
+
+
+6、修改启动脚本uwsgi.sh
+
+BASE_DIR="/data/PRG"         ##项目所在上级目录
+
+NAME="SaltRuler"             ##如果重命名项目名称，需要修改
 
 
 #截图
