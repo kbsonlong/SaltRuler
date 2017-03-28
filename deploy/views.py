@@ -126,7 +126,7 @@ def download_file(request,server_id):
                 action_result = arg
             fh = files_history()
             fh.username = username
-            fh.active = 'download'
+            fh.active = 'download list'
             fh.path = action_result
             fh.remote_server = server
             fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -136,6 +136,7 @@ def download_file(request,server_id):
 
     return render(request,'deploy/download_file.html',contexts)
 
+##点击下载按钮是触发调用download_fun动作
 def download_fun(request,server_id):
     username = request.session.get('username')
     server_list = SaltServer.objects.all()
