@@ -39,7 +39,7 @@ login界面
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/login.jpg)
 
 首页
-![image](https://github.com/kbsonlong/salt_ruler/blob/master/screenshots/home.png)
+![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/home.png)
 
 minion认证管理
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/minion_auth_man.png)
