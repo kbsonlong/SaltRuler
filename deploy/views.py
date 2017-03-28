@@ -7,8 +7,6 @@ from SaltRuler.glob_config import glob_config
 from deploy.models import files_history
 from saltstack.models import SaltServer
 from saltstack.saltapi import *
-
-
 # Create your views here.
 
 
@@ -24,8 +22,9 @@ def upload_file(request,server_id):
             salt_server = SaltServer.objects.get(id=server_id)
         except Exception as e:  # id不存在时返回第一个
             salt_server = SaltServer.objects.all()[0]
+            if not salt_server:
+                pass
     except Exception as e:
-        # contexts.update({'error': e})
         return render(request, 'deploy/uploadfile.html', contexts)
     contexts.update({'salt_server': salt_server})
     try:
@@ -89,8 +88,8 @@ def upload_file(request,server_id):
             fh.save()
 
     except Exception as e:
-        # contexts.update({'error':e})
-        return render(request, 'deploy/uploadfile.html', contexts)
+        contexts.update({'error':e})
+    return render(request, 'deploy/uploadfile.html', contexts)
 
 @login_required
 def download_file(request,server_id):
@@ -105,7 +104,6 @@ def download_file(request,server_id):
             if not salt_server:
                 pass
     except Exception as e:
-        # contexts.update({'error': e})
         return render(request,'deploy/download_file.html',contexts)
     contexts.update({'salt_server': salt_server})
     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
@@ -136,7 +134,6 @@ def download_file(request,server_id):
             action_result = u'请求异常！'
 
     except Exception as e:
-        print e
         contexts.update({'error':u'目标主机和目标路径不能为空！！'})
         action_result = u'目标主机和目标路径不能为空！！'
 
