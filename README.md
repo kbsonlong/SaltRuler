@@ -74,11 +74,13 @@ minion认证管理
 
 物理服务器信息
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/physical_server_info.png)
+
 物理服务器详细信息
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/physical_server_details_info.png)
+
 服务器信息新增
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/server_info_add.png)
-服务器信息新增结果
+
 
 操作审计
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/shenji.png)
