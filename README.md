@@ -52,20 +52,25 @@ minion认证管理
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/STATES_Modules.png)
 
 用户管理
-![image](https://github.com/kbsonlong/salt_ruler/blob/master/screenshots/userinfo.png)
+![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/userinfo.png)
 
 添加用户
-![image](https://github.com/kbsonlong/salt_ruler/blob/master/screenshots/useradd.png)
+![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/useradd.png)
 
 修改密码
-![image](https://github.com/kbsonlong/salt_ruler/blob/master/screenshots/userchange.png)
-
-自动化部署应用
+![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/userchange.png)
 
 
 代码发布
-![image](https://github.com/kbsonlong/salt_ruler/blob/master/screenshots/svn.png)
-部署计算节点
+![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/svn.png)
+
+文件上传
+![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/uploadfile.png)
+
+文件下载
+![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/downloadfile.png)
+
+
 
 物理服务器信息
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/physical_server_info.png)
@@ -75,6 +80,7 @@ minion认证管理
 ![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/server_info_add.png)
 服务器信息新增结果
 
-
+操作审计
+![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/shenji.png)
 
 
