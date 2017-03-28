@@ -20,11 +20,13 @@ def upload_file(request,server_id):
     server_list = SaltServer.objects.all()
     contexts = {'server_list': server_list, 'server_id': server_id}
     try:
-        salt_server = SaltServer.objects.get(id=server_id)
-    except:  # id不存在时返回第一个
-        salt_server = SaltServer.objects.all()[0]
-        if not salt_server:
-            return render(request, 'deploy/uploadfile.html', contexts)
+        try:
+            salt_server = SaltServer.objects.get(id=server_id)
+        except Exception as e:  # id不存在时返回第一个
+            salt_server = SaltServer.objects.all()[0]
+    except Exception as e:
+        # contexts.update({'error': e})
+        return render(request, 'deploy/uploadfile.html', contexts)
     contexts.update({'salt_server': salt_server})
     try:
         if request.method == "POST":    # 请求方法为POST时，进行处理
@@ -87,8 +89,8 @@ def upload_file(request,server_id):
             fh.save()
 
     except Exception as e:
-        contexts.update({'error':e})
-    return render(request, 'deploy/uploadfile.html', contexts)
+        # contexts.update({'error':e})
+        return render(request, 'deploy/uploadfile.html', contexts)
 
 @login_required
 def download_file(request,server_id):
@@ -96,11 +98,15 @@ def download_file(request,server_id):
     server_list = SaltServer.objects.all()
     contexts = {'server_list': server_list, 'server_id': server_id}
     try:
-        salt_server = SaltServer.objects.get(id=server_id)
-    except:  # id不存在时返回第一个
-        salt_server = SaltServer.objects.all()[0]
-        if not salt_server:
-            pass
+        try:
+            salt_server = SaltServer.objects.get(id=server_id)
+        except:  # id不存在时返回第一个
+            salt_server = SaltServer.objects.all()[0]
+            if not salt_server:
+                pass
+    except Exception as e:
+        # contexts.update({'error': e})
+        return render(request,'deploy/download_file.html',contexts)
     contexts.update({'salt_server': salt_server})
     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
     server = ''

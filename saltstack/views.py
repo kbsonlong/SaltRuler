@@ -23,7 +23,7 @@ def key_list(request,server_id):
         if salt_server:
             salt_server = salt_server[0]
         else:
-            return render(request, 'saltstack/command.html',{'apiinfo':u'请先添加API'})
+            return render(request, 'saltstack/command.html',{'apiinfo':u'请先添加SaltServer API'})
     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
     context = {'salt_server':salt_server,'server_list':server_list,'url':'key_list'}
     if request.method == 'POST':
@@ -54,7 +54,7 @@ def cmd_exec(request,server_id):
         if salt_server:
             salt_server=salt_server[0]
         else:
-            return render(request, 'saltstack/command.html',{'apiinfo':u'请先添加API'})
+            return render(request, 'saltstack/command.html',{'apiinfo':u'请先添加SaltServer API'})
     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
     minions = sapi.key_list('key.list_all')['return'][0]['data']['return']['minions']
     tgt = info = cmd_args = cmd_exec_result = ''
@@ -103,7 +103,7 @@ def state_exec(request,server_id):
         if salt_server:
             salt_server = salt_server[0]
         else:
-            return render(request, 'saltstack/state.html',{'apiinfo':u'请先添加API'})
+            return render(request, 'saltstack/state.html',{'apiinfo':u'请先添加SaltServer API'})
     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
     envs = sapi.SaltRun(client='runner', fun='fileserver.envs')['return'][0]
     minions = sapi.key_list('key.list_all')['return'][0]['data']['return']['minions']
