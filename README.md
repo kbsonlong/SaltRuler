@@ -18,6 +18,10 @@ python manage.py makemigrations
 
 python manage.py migrate
 
+INSERT INTO `saltruler`.`auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES ('2', 'sha1$hmpYlKW04EUB$32f33bdbea3e9c818e626636d11a3456c7aaea09', NULL, '1', 'saltruler', '', '', '', '1', '1', '2017-03-28 08:37:41');
+INSERT INTO `saltruler`.`empauth_users` (`id`, `username`, `password`) VALUES ('2', 'saltruler', '8bb2135393b54831dcce04abdeb70f3e2c9ca420');
+
+
 5、配置uwsgi + nginx
 
 uwsgi配置参考（https://github.com/kbsonlong/SaltRuler/blob/master/uwsgi.ini）
@@ -30,6 +34,8 @@ nginx配置参考（https://github.com/kbsonlong/SaltRuler/blob/master/uwsgi_ngi
 BASE_DIR="/data/PRG"         ##项目所在上级目录
 
 NAME="SaltRuler"             ##如果重命名项目名称，需要修改
+
+登录http://{ip}:{port}/
 
 
 #截图
