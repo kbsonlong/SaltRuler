@@ -121,9 +121,7 @@ def state_exec(request,server_id):
                 if minion and state:
                     ret=sapi.SaltCmd(minion,fun='state.sls',client='local',arg=state)['return'][0]
             roots = sapi.SaltRun(client='wheel', fun='file_roots.list_roots')['return'][0]['data']['return']
-
             dirs = roots[env][0]
-
             states = []
             for root, dirs in dirs.items():  # root="/srv/salt/prod/"  dirs={"init":{"epel.sls":"f",}}
                 for dir, files in dirs.items():  # dir='init' or 'top.sls'    files={"epel.sls":"f",}
@@ -138,7 +136,7 @@ def state_exec(request,server_id):
             result = sorted(states)
             if result and not state:
                 state=result[0]
-            context.update({'minion': minion, 'states': result})
+            context.update({'minion': minion, 'states': result,'env':env,'state':state})
         except Exception as e:
             context.update({'error':e})
 
@@ -149,3 +147,53 @@ def state_exec(request,server_id):
         fh.path = state
         fh.save()
     return render(request, 'saltstack/state.html', context)
+
+@login_required
+def state_fun(request,server_id):
+    ret = state = ''
+    server_list = SaltServer.objects.all()
+    try:
+        salt_server = SaltServer.objects.get(id=server_id)
+    except:  # id不存在时返回第一个
+        salt_server = SaltServer.objects.all()
+        if salt_server:
+            salt_server = salt_server[0]
+        else:
+            return render(request, 'saltstack/state.html', {'apiinfo': u'请先添加SaltServer API'})
+    sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
+    envs = sapi.SaltRun(client='runner', fun='fileserver.envs')['return'][0]
+    minions = sapi.key_list('key.list_all')['return'][0]['data']['return']['minions']
+    context = {'minion_list': minions, 'ret': ret, 'envs': envs, 'state': state, 'salt_server': salt_server,
+               'server_list': server_list, 'url': 'state_exec'}
+    if request.is_ajax() or request.method == 'GET':
+        try:
+            if request.GET.get('tgt'):
+                minion = request.GET.get('tgt')
+            else:
+                minion = minions[0]
+            if request.GET.get('env'):
+                env = request.GET.get('env')
+                state = request.GET.get('state')
+                if minion and state:
+                    ret = sapi.SaltCmd(minion, fun='state.sls', client='local', arg=state)['return'][0]
+            roots = sapi.SaltRun(client='wheel', fun='file_roots.list_roots')['return'][0]['data']['return']
+            dirs = roots[env][0]
+            states = []
+            for root, dirs in dirs.items():  # root="/srv/salt/prod/"  dirs={"init":{"epel.sls":"f",}}
+                for dir, files in dirs.items():  # dir='init' or 'top.sls'    files={"epel.sls":"f",}
+                    if dir == '.svn':
+                        dir = '.svn'
+                    elif files == "f" and dir.endswith('.sls'):
+                        states.append(dir[0:-4])
+                    elif isinstance(files, dict):
+                        for sls, f in files.items():
+                            if f == 'f' and sls.endswith('.sls'):
+                                states.append('%s.%s' % (dir, sls[0:-4]))
+            result = sorted(states)
+            if result and not state:
+                state = result[0]
+
+            context.update({'minion': minion, 'states': result,'env':env,'state':state})
+        except Exception as e:
+            context.update({'error': e})
+    return render(request,'saltstack/state.html',context)
