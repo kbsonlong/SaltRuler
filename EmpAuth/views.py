@@ -70,7 +70,6 @@ def index(request):
             minion_down = []
         key_status, totle = sapi.minions_key_status()
         saltdata = {'minion_online': minion_online, 'minion_offline': len(minion_down),'minion_down': minion_down}
-        # print saltdata
         LocalData['username'] = username
         LocalData['minions_totle'] = totle
         LocalData.update(saltdata)
@@ -99,13 +98,11 @@ def userinfo(request):
 def change(request):
     try:
         info=''
-
+        username = request.session.get('username')
         if request.method == 'POST':
             username = request.POST.get('username')
         elif request.method == 'GET':
             username = request.GET.get('username')
-            if username is None:
-                username = request.session.get('username')
         oldpass  = request.POST.get('oldpass')
         password = hashlib.sha1(oldpass + username + 'kbson').hexdigest()
         newpass  = request.POST.get('newpass')
@@ -118,8 +115,7 @@ def change(request):
         else:
             info = '输入的两次新密码不一致！'
     except Exception as e:
-        pass
-    # print info
+        info = e
     return render(request, 'EmpAuth/change.html', {'info':info})
 
 @login_required
@@ -151,16 +147,6 @@ def useradd(request):
 def userdel(request):
     username = request.session.get('username')
     if username == 'kbson'or username == 'admin':
-        info=''
-        # if request.method == 'POST':
-        #     username=request.POST.get('username')
-        #     user = Users.objects.filter(username=username)
-        #     if  user:
-        #         Users.objects.filter(username=username).delete()
-        #         info = 'Users %s Delete Success!!' % username
-        #     else:
-        #         info = "Users %s not Exist!!" % username
-        #     return render(request, 'EmpAuth/userdel.html',{'info':info})
         if request.method == 'GET':
             username = request.GET.get('username')
             Users.objects.filter(username=username).delete()

@@ -1,4 +1,4 @@
-#coding=utf-8
+#coding:utf-8
 import sys
 sys.path.append("..")
 from SaltRuler.glob_config import glob_config
@@ -19,7 +19,7 @@ class   PostHandler(BaseHTTPRequestHandler):
         self.wfile.write('User-agent: %sn' % str(self.headers['user-agent']))
         self.wfile.write('Path: %sn'%self.path)
         self.wfile.write('Form data:n')
-        # upload_dir = '../upload/'
+
         upload_dir = glob_config('ftp','upload_dir')
         for field in form.keys():
             field_item = form[field]

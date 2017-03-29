@@ -35,27 +35,26 @@ class SaltAPI:
         except KeyError:
             raise KeyError
 
-    # 登陆获取token
-    def token_id(self):
-        params = {'eauth': 'pam', 'username': self.__username, 'password': self.__password}
-        encode = urllib.urlencode(params)
-        obj = urllib.unquote(encode)
-        headers = {'X-Auth-Token': ''}
-        url = self.__url + '/login'
-        req = urllib2.Request(url, obj, headers)
-        opener = urllib2.urlopen(req)
-        content = json.loads(opener.read())
-        try:
-            token = content['return'][0]['token']
-            return token
-        except KeyError:
-            raise KeyError
+    # # 登陆获取token
+    # def token_id(self):
+    #     params = {'eauth': 'pam', 'username': self.__username, 'password': self.__password}
+    #     encode = urllib.urlencode(params)
+    #     obj = urllib.unquote(encode)
+    #     headers = {'X-Auth-Token': ''}
+    #     url = self.__url + '/login'
+    #     req = urllib2.Request(url, obj, headers)
+    #     opener = urllib2.urlopen(req)
+    #     content = json.loads(opener.read())
+    #     try:
+    #         token = content['return'][0]['token']
+    #         return token
+    #     except KeyError:
+    #         raise KeyError
 
     def postRequest(self, obj, prefix='/'):
         url = self.__url + prefix
         headers = {'X-Auth-Token': self.__token_id}
         req = urllib2.Request(url, obj, headers)
-        # print url, obj, headers
         opener = urllib2.urlopen(req)
         content = json.loads(opener.read())
         return content
@@ -63,7 +62,6 @@ class SaltAPI:
     def command(self, tgt, fun, client='local_async', expr_form='glob', arg=None, **kwargs):
         params = {'client': client, 'tgt': tgt, 'fun': fun, 'expr_form': expr_form, 'arg': arg}
         obj = urllib.urlencode(params)
-        # print obj
         req = self.postRequest(obj)
         jid = req['return'][0]['jid']
         return jid
@@ -136,7 +134,7 @@ class SaltAPI:
                     params['arg%s'%a.index(i)]=i
         if kwargs:
             params=dict(params.items()+kwargs.items())
-        # print params
+
         obj = urllib.urlencode(params)
         res = self.PostRequest(obj)
         return res
@@ -147,7 +145,7 @@ class SaltAPI:
         else:
             prefix = '/jobs'
         res = self.PostRequest(None,prefix)
-        # print res
+
         return res
     #获取grains
     def SaltMinions(self,minion=''):

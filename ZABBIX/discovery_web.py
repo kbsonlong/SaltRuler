@@ -1,21 +1,12 @@
 #!/usr/bin/env python
-
 # coding:utf-8
-
-
-
+###zabbix自动发现web
 import os, sys, json
-
-
-
 urllist = ["http://baidu.com",
 
            "http://www.qq.com",
 
            "http://www.sina.com.cn/"]
-
-
-
 
 def web_site_discovery():
     web_list = []

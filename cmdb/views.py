@@ -17,9 +17,6 @@ url = glob_config('salt_api','url')
 username = glob_config('salt_api','username')
 password = glob_config('salt_api','password')
 device0 = glob_config('server','dervice0')
-print url
-print username
-print password
 sapi=SaltAPI(url,username,password)
 
 @login_required
@@ -34,11 +31,9 @@ def asset_table(request):
         if uf.is_valid():
             # 获取表单信息
             headImg = uf.cleaned_data['headImg']
-            # print headImg
             upload = Upload()
             upload.headImg = headImg
             upload.save()
-            # print u'./upload/%s' % str(headImg)
             try:
 
                 f = open(u'./upload/%s' % str(headImg))
@@ -278,13 +273,12 @@ def host_table(request):
                 'system_version': '%s %s' % (grains_ret_result['os'],grains_ret_result['osrelease']),
                 'cpu_num': '%s' % (grains_ret_result['num_cpus']),
                 'mem_size': '%s' % (grains_ret_result['mem_total']),'host_note': '%s' % (host.host_note)}
-            # print host_dict
             b.append(host_dict)
         else:
             host_dict = {'host_ip': '%s' % (host.host_ip.server_ip),'local_ip': '%s' % (host.local_ip),'status':'down',
                 'app': '%s' % (host.app),'host_note': '%s' % (host.host_note)}
             b.append(host_dict)
-    # print b
+
     return render(request, 'cmdb/host_table.html', {'b' : b})
 
 
@@ -331,10 +325,6 @@ def host_del_html(request):
         local_ip = request.GET.get('local_ip')
         Hostinfo.objects.get(local_ip="%s" % (local_ip)).delete()
         info = '删除成功！！'
-    # host = Hostinfo.objects.get(local_ip="%s" % (local_ip))
-    # host_del = {'host_ip': '%s' % (host.host_ip.server_ip), 'local_ip': '%s' % (host.local_ip),
-    #             'app': '%s' % (host.app), 'host_note': '%s' % (host.host_note)}
-
     return render(request, 'cmdb/host_del.html',{'host_del':host_del,'info':info})
 
 @login_required

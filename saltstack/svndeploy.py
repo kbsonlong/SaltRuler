@@ -10,18 +10,18 @@ import time
 #代码发布
 @login_required
 def deploy(request,server_id):
-    contexts = {}
     server_list = SaltServer.objects.all()
+    contexts = {'server_list': server_list}
     try:
         try:
             salt_server = SaltServer.objects.get(id=server_id)
         except:#id不存在时返回第一个
             salt_server = SaltServer.objects.all()[0]
         project_list = SvnProject.objects.filter(salt_server=salt_server).order_by('host')
-        contexts = {'server_list': server_list, 'salt_server': salt_server, 'project_list': project_list}
+        contexts.update({'salt_server': salt_server, 'project_list': project_list})
         return render(request, 'saltstack/svn_deploy.html', contexts)
     except:
-        return render(request, 'saltstack/svn.html')
+        return render(request, 'saltstack/svn.html',contexts )
 
 
 
@@ -49,7 +49,7 @@ def checkout(request,server_id):
             path=project.path+'/'+project.target
 
             svn_info=sapi.SaltCmd(client='local',tgt=project.host,fun='svn.info',arg=path,arg1='fmt=dict')['return'][0][project.host][0]
-            # print svn_info
+
             if isinstance(svn_info,dict):
                 if project.url == svn_info['URL']:
                     project.status=u"已发布"
@@ -76,7 +76,6 @@ def checkout(request,server_id):
 
 
         except Exception as error:
-            # print 'error:',error
             result = {'ret': False, 'msg': u'错误：项目目录冲突'}
         fh = files_history()
         fh.username = request.session.get('username')
@@ -91,7 +90,6 @@ def checkout(request,server_id):
 #SVN提交、更新
 @login_required
 def deploy_fun(request,server_id):
-    # print server_id
     #SVN功能按钮
     if request.is_ajax() and request.method == 'GET':
         tgt=request.GET.get('tgt','')
@@ -137,8 +135,6 @@ def deploy_fun(request,server_id):
 
                 ##更新完成后更新项目状态
                 svn_info = sapi.SaltCmd(client='local', tgt=project.host, fun='svn.info', arg=path, arg1='fmt=dict')['return'][0][project.host][0]
-                # print svn_info
-                # print isinstance(svn_info, dict)
                 if isinstance(svn_info, dict):
                     if project.url == svn_info['URL']:
                         project.status = u"已发布"
@@ -149,7 +145,6 @@ def deploy_fun(request,server_id):
                 project.save()
 
         except Exception as e:
-            # print e
             result = {'ret':False,'msg':u'错误：%s' % e}
 
         fh = files_history()
@@ -186,7 +181,6 @@ def service_fun(request,server_id):
             sapi = SaltAPI(url=url, username=username, password=password)
             info = sapi.SaltCmd(tgt=tgt, fun='cmd.run', client='local', arg=arg)['return'][0][tgt]
             result = {'ret': True, 'msg': u'%s' % info}
-            # print info
         except Exception as e:
             result = {'error':str(e)}
 

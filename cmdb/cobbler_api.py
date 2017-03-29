@@ -18,7 +18,6 @@ class CobblerAPI(object):
         '''
         Add Cobbler System Infomation
         '''
-
         system_id = self.remote.new_system(self.token) 
         self.remote.modify_system(system_id,"name",hostname,self.token) 
         self.remote.modify_system(system_id,"hostname",hostname,self.token) 

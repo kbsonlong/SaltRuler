@@ -12,11 +12,7 @@ class ZabbixAPI:
         self.__password = cf.get("zabbix_server","password")
         self.__header = {"Content-Type": "application/json-rpc"}
         self.__token_id = self.UserLogin()
-        # self.__url = "http://192.168.xx.167/api_jsonrpc.php"
-        # self.__user = "Admin"
-        # self.__password = "zabbix"
-        # self.__header = {"Content-Type": "application/json-rpc"}
-        # self.__token_id = self.UserLogin()
+
     #登陆获取token
     def UserLogin(self):
         data = {
@@ -35,7 +31,7 @@ class ZabbixAPI:
         result = urllib2.urlopen(request)
         response = json.loads(result.read())
         try:
-            # print response['result']
+
             return response['result']
         except KeyError:
             raise KeyError
@@ -180,17 +176,8 @@ class ZabbixAPI:
 def main():
     zapi=ZabbixAPI()
     token=zapi.UserLogin()
-    print token
     #39378ec03aa101c2b17d1d2bd6f4ef16
     hosts=zapi.HostGet()
-    for host in hosts:
-        print host["host"]
-    groups= zapi.HostGroupGet()
-    for group in groups:
-        print group['groupid']
-
-    for temp in zapi.TemplateGet():
-        print temp["templateid"]
     #[{u'host': u'Zabbix server', u'hostid': u'10084', u'interfaces': [{u'interfaceid': u'1', u'ip': u'127.0.0.1'}]}]
 
 

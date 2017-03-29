@@ -128,7 +128,7 @@ def state_exec(request,server_id):
             for root, dirs in dirs.items():  # root="/srv/salt/prod/"  dirs={"init":{"epel.sls":"f",}}
                 for dir, files in dirs.items():  # dir='init' or 'top.sls'    files={"epel.sls":"f",}
                     if dir == '.svn':
-                        pass
+                        dir = '.svn'
                     elif files == "f" and dir.endswith('.sls'):
                         states.append(dir[0:-4])
                     elif isinstance(files, dict):
