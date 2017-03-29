@@ -1,2 +1,0 @@
-show grants for 'search_admin';   ---查看用户权限
-GRANT SELECT, INSERT, UPDATE, DELETE, CREATE , DROP ON `search_admin`.* TO 'search_admin'@'%' ;    --赋予用户增删改查表数据、创建表、删除表权限
