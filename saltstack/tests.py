@@ -1,21 +1,6 @@
-from django.test import TestCase
-from saltstack.tasks import add
+import commands
+cmd = 'curl  -F "filename=@%s" %s  -w %s  -o /dev/null' % ('/data/www/remove_img_20170329.txt','http://192.168.234.167:10003','%{http_code}')
 
-# Create your tests here.
-
-result = add.delay(2,2)
-
-print result
-
-if result.ready():
-    print "Task has run"
-    if result.successful():
-        print "Result was: %s" % result.result
-    else:
-        if isinstance(result.result, Exception):
-            print "Task failed due to raising an exception"
-            raise result.result
-        else:
-            print "Task failed without raising exception"
-else:
-    print "Task has not yet run"
+result = commands.getstatusoutput(cmd)
+if result[0] == 0:
+    http_code = 200
