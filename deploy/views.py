@@ -28,15 +28,17 @@ def upload_file(request,server_id):
         return render(request, 'deploy/uploadfile.html', contexts)
     contexts.update({'salt_server': salt_server})
     try:
-        if request.method == "GET":    # 请求方法为GET时，进行处理
+        if request.method == "POST":    # 请求方法为GET时，进行处理
             myFile =request.FILES.get("myfile", None)    # 获取上传的文件，如果没有文件，则默认为None
-            server = request.GET.get("server",None)
-            dest = request.GET.get('dest','/tmp/')
-            mdir = request.GET.get('mdir',None)
-            mtime = request.GET.get('mtime',None)
+            server = request.POST.get("server",None)
+            dest = request.POST.get('dest','/tmp/')
+            mdir = request.POST.get('mdir',None)
+            mtime = request.POST.get('mtime',None)
             nginx_path = ''
             sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
             dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=dest)['return'][0]
+
+            print myFile
 
             if not myFile:
                 contexts.update({'error':u'请选择上传文件!'})
@@ -108,9 +110,9 @@ def download_file(request,server_id):
     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
     server = ''
     try:
-        if request.method == 'GET':
-            server = request.GET.get("server", None)
-            dest = request.GET.get('dest')
+        if request.method == 'POST':
+            server = request.POST.get("server", None)
+            dest = request.POST.get('dest')
             dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=dest)['return'][0][server]
             file_result = sapi.SaltCmd(client='local', tgt=server, fun='file.file_exists', arg=dest)['return'][0][server]
             if not server:
@@ -159,9 +161,9 @@ def download_fun(request,server_id):
     contexts.update({'salt_server': salt_server})
     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
     try:
-        files = request.GET.get('myfile')
-        server = request.GET.get("server", None)
-        dest = request.GET.get('dest')
+        files = request.POST.get('myfile')
+        server = request.POST.get("server", None)
+        dest = request.POST.get('dest')
         file_path=dest + '/' + files
         dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=file_path)['return'][0][server]
         if dir_result:
@@ -188,10 +190,6 @@ def download_fun(request,server_id):
     except Exception as e:
         contexts.update({'error': e})
     return render(request, 'deploy/download_file.html', contexts)
-
-
-
-
 
 
 @login_required

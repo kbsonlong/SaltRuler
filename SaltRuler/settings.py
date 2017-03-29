@@ -1,3 +1,4 @@
+#coding:utf-8
 """
 Django settings for fourthgen project.
 
@@ -14,9 +15,14 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 from django.conf import global_settings
 from glob_config import glob_config
+###启用celery
+import djcelery
+djcelery.setup_loader()
+BROKER_URL = 'django://'
+CELERY_ALWAYS_EAGER = True
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -44,6 +50,8 @@ INSTALLED_APPS = (
     'deploy',
     'cmdb',
     'EmpAuth',
+    'djcelery',    ##调用celery，djcelery是必须的. kombu.transport.django则是基于Django的broker
+    'kombu.transport.django',
 )
 
 MIDDLEWARE_CLASSES = (

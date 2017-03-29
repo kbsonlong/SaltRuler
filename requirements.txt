@@ -29,3 +29,6 @@ supervisor
 #uWSGI
 Pillow
 pyftpdlib
+
+###20170329 添加异步
+django-celery
