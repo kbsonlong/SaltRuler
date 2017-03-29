@@ -9,6 +9,4 @@ urlpatterns = [
     url(r'^template/$', template, name='template'),
     url(r'^graph/$', graph, name='graph'),
     url(r'^history/$', history, name='history'),
-    # url(r'^server/$', server, name='server'),
-    # url(r'^config/(?P<server_id>[0-9]+)/$', config, name='config'),
     ]

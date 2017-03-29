@@ -1,21 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import  render,render_to_response,get_object_or_404
-from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
-from django.core.urlresolvers import reverse
-from django.contrib import auth
+from django.shortcuts import  render
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required  #setting: LOGIN_URL = '/auth/login/'
-from django.shortcuts import redirect
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import  PasswordChangeForm
-from models import *
-from cmdb.models import *
+
 from ZabbixAPI import ZabbixAPI
-import json
-from django.forms.models import model_to_dict
-import re
-# from pyzabbix import ZabbixAPI
+
 import ConfigParser
-import datetime
+
 import time
 
 @login_required
@@ -96,7 +87,6 @@ def screen(request):
 def history(request):
     itemid=request.GET.get('itemid','')
     data_type=request.GET.get('data_type','0')
-    print data_type
     try:
         zapi=ZabbixAPI()
         if itemid:

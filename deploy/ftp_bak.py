@@ -27,7 +27,6 @@ def ftp_server():
     # 添加用户权限和路径，括号内的参数是(用户名， 密码， 用户目录， 权限)
     # authorizer.add_user('user', '12345', '/home/', perm='elradfmw')
     user_list = get_user('ftp_user.ini')
-    print user_list
     for user in user_list:
         name, passwd, permit, homedir = user
         try:
