@@ -44,4 +44,21 @@ class Migration(migrations.Migration):
                 ('host_ip', models.ForeignKey(related_name='asset_set', to='cmdb.Assetmanage')),
             ],
         ),
+        migrations.CreateModel(
+            name='Servers',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('local_ip', models.CharField(unique=True, max_length=20)),
+                ('server_status', models.IntegerField(default=0)),
+                ('hostname', models.CharField(max_length=50)),
+                ('OS', models.CharField(max_length=100)),
+                ('Cpu_type', models.CharField(max_length=200)),
+                ('Cpus', models.IntegerField(verbose_name=20)),
+                ('Mem', models.IntegerField(verbose_name=100)),
+                ('minion_id', models.CharField(max_length=50)),
+                ('minion_accept', models.IntegerField(verbose_name=10)),
+                ('minion_unaccept', models.IntegerField(verbose_name=10)),
+                ('minion_reject', models.IntegerField(verbose_name=10)),
+            ],
+        ),
     ]

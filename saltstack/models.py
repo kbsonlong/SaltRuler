@@ -57,3 +57,4 @@ class SvnProject(models.Model):
         verbose_name = u'SVN项目'
         verbose_name_plural = u'SVN项目列表'
         unique_together = ("host", "path", "target")
+

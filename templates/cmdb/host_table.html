@@ -19,6 +19,18 @@
                 <li><a href="/cmdb/host_del_html/">删除信息</a>
                 </li>
             </ul>
+            {% if error %}
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    {{ error }}
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        {{ success }}
+                </div>
+            {% endif %}
 
             <div class="tab-content">
                 <div class="tab-pane fade in active">
@@ -26,6 +38,7 @@
                 				<div class="panel-heading" style="background-color: white">
                     				<B class="fa fa-th"> 主机信息表</B>
                                     <div style="float: right;">
+                                        <a href="/cmdb/server_collect/{% if server_id %}{{ server_id }}{% else %}0{% endif %}/?ip=*" class="fa fa-hand-o-right">收集所有主机</a>
                                         <a href="/cmdb/asset_table/" class="fa fa-hand-o-right">返回列表</a>
                                         <a href="/cmdb/host_add_html/?server_ip={{ server_ip }}" class="fa fa-plus-square">新增</a>
                                     </div>
@@ -48,6 +61,7 @@
                                 				</tr>
                             				</thead>
                             				<tbody>
+
                             				{% for i in b %}
                                 				<tr class="gradeA">
                                     				<td>{{ i.host_ip }}</td>
@@ -59,7 +73,22 @@
                                     				<td>{{ i.cpu_num }}</td>
                                     				<td>{{ i.mem_size }}</td>
                                     				<td class="center">{{ i.host_note }}</td>
-                                                    <td><a href="/cmdb/host_update_html/?local_ip={{ i.local_ip }}"><button class="btn btn-warning btn-xs" type="button">更改</button></a> <a href="/cmdb/host_del_html/?local_ip={{ i.local_ip }}"><button class="btn btn-danger btn-xs" type="button">删除</button></a></td>
+                                                    <td>
+                                                        <a href="/cmdb/server_collect/{% if server_id %}{{ server_id }}{% else %}0{% endif %}/?ip={{ i.local_ip }}">
+                                                            <button class="btn btn-danger btn-xs" type="button">
+                                                                收集
+                                                            </button>
+                                                        </a>
+                                                        <a href="/cmdb/host_update_html/?local_ip={{ i.local_ip }}">
+                                                            <button class="btn btn-warning btn-xs" type="button">
+                                                                更改
+                                                            </button></a>
+                                                        <a href="/cmdb/host_del_html/?local_ip={{ i.local_ip }}">
+                                                            <button class="btn btn-danger btn-xs" type="button">
+                                                                删除
+                                                            </button>
+                                                        </a>
+                                                    </td>
                                 				</tr>
                             				{% endfor %}
                             				</tbody>

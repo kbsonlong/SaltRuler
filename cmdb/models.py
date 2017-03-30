@@ -38,5 +38,15 @@ class Hostinfo(models.Model):
         return self.local_ip
 
 
-
-
+class Servers(models.Model):
+    local_ip = models.CharField(max_length = 20,unique=True)
+    server_status = models.IntegerField(default=0)
+    hostname = models.CharField(max_length=50)
+    OS = models.CharField(max_length=100)
+    Cpu_type = models.CharField(max_length=200)
+    Cpus = models.IntegerField(20)
+    Mem = models.IntegerField(100)
+    minion_id = models.CharField(max_length=50)
+    minion_accept = models.IntegerField(10)
+    minion_unaccept = models.IntegerField(10)
+    minion_reject = models.IntegerField(10)

@@ -26,7 +26,6 @@ def saltinfo(tgt):
     cpu_logical_cores = grains[tgt]['num_cpus']
     cpu_model = grains[tgt]['cpu_model']
     uptime = info[tgt].split(',')[0]
-
     loadavg = info[tgt].split(',')[-3:]
     loadavg_1 = loadavg[0].strip('  load average:')
     loadavg_5 = loadavg[1]
@@ -43,6 +42,9 @@ def saltinfo(tgt):
             Z +=1
     LocalData = {'uptime': uptime,'ip': ip,'hostname': hostname,'os': OS,'disk_all': disk_all,'disk_free': disk_free,'disk_used': disk_used,'disk_used_p': disk_used_p,'loadavg_1': loadavg_1,'loadavg_5': loadavg_5,'loadavg_15': loadavg_15,'salt_version': saltstack_version,'mem_total': mem_total,'cpu_physical_num': cpu_model,'cpu_logical_cores': cpu_logical_cores,'process_num': S+R+Z, 'process_S': S,'process_R': R,'process_Z': Z,'login_user_num': login_user_num,'Manufacturer': Manufacturer,}
     return LocalData
+
+
+
 
 if __name__ == '__main__':
     saltinfo(tgt='192.168.62.200')

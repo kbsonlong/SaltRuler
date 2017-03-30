@@ -7,6 +7,18 @@
 			<h3 class="page-header">宿主机({{ server_ip }})虚拟主机信息</h3>
 		</div>
 	</div>
+    {% if error %}
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            {{ error }}
+        </div>
+    {% endif %}
+    {% if success %}
+        <div class="alert alert-success">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+                {{ success }}
+        </div>
+    {% endif %}
 	<div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">

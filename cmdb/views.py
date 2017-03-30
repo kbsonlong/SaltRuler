@@ -1,7 +1,6 @@
 #coding:utf-8
 
 import os
-
 from django.shortcuts import render
 from EmpAuth.decorators import login_required
 from SaltRuler.glob_config import glob_config
@@ -9,6 +8,9 @@ from saltstack.saltapi import *
 from .models import Assetmanage, Hostinfo
 from deploy.models import Upload
 from django import forms
+from cmdb.models import Servers
+from saltstack.models import SaltServer
+from saltstack.tasks import *
 
 class UpForm(forms.Form):
     headImg = forms.FileField(label='')
@@ -261,25 +263,18 @@ def host_add_html(request):
 
 @login_required
 def host_table(request):
-    b=[]
-    host_list = Hostinfo.objects.all()
-    for host in host_list:
-        if host:
-            grains_ret = sapi.SaltCmd(tgt=host.local_ip,fun='grains.items',client='local')['return'][0]
-        if grains_ret:
-            grains_ret_result = grains_ret.values()[0]
-            host_dict = {'host_ip': '%s' % (host.host_ip.server_ip),'local_ip': '%s' % (host.local_ip),'status':'up',
-                'app': '%s' % (host.app),'host_name': '%s' % (grains_ret_result['localhost']),
-                'system_version': '%s %s' % (grains_ret_result['os'],grains_ret_result['osrelease']),
-                'cpu_num': '%s' % (grains_ret_result['num_cpus']),
-                'mem_size': '%s' % (grains_ret_result['mem_total']),'host_note': '%s' % (host.host_note)}
-            b.append(host_dict)
-        else:
-            host_dict = {'host_ip': '%s' % (host.host_ip.server_ip),'local_ip': '%s' % (host.local_ip),'status':'down',
-                'app': '%s' % (host.app),'host_note': '%s' % (host.host_note)}
-            b.append(host_dict)
-
-    return render(request, 'cmdb/host_table.html', {'b' : b})
+    servers_list = Servers.objects.all()
+    contexts = {}
+    b = []
+    for servers in servers_list:
+        host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': 'up',
+                     'host_name': '%s' % (servers.hostname),
+                     'system_version': '%s' % (servers.OS),
+                     'cpu_num': '%s' % (servers.Cpus),
+                     'mem_size': '%s' % (servers.Mem), 'host_note': '%s' % (servers.Cpu_type)}
+        b.append(host_dict)
+    contexts.update({'b': b})
+    return render(request, 'cmdb/host_table.html', contexts)
 
 
 
@@ -347,3 +342,37 @@ def host_list(request, server_ip):
                 'app': '%s' % (host.app),'host_note': '%s' % (host.host_note)}
             b.append(host_dict)
     return render(request, 'cmdb/host_table_relate.html', {'b' : b, 'server_ip':server_ip})
+
+
+
+@login_required
+def server_collect(request,server_id):
+    server_list = SaltServer.objects.all()
+    tgt = request.GET.get('ip')
+    servers_list = Servers.objects.all()
+    contexts = {'server_list': server_list, 'server_id': server_id}
+    b=[]
+    for servers in servers_list:
+        host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': 'up',
+                     'host_name': '%s' % (servers.hostname),
+                     'system_version': '%s' % (servers.OS),
+                     'cpu_num': '%s' % (servers.Cpus),
+                     'mem_size': '%s' % (servers.Mem), 'host_note': '%s' % (servers.Cpu_type)}
+        b.append(host_dict)
+    contexts.update({'b':b})
+    try:
+        try:
+            salt_server = SaltServer.objects.get(id=server_id)
+        except Exception as e:  # id不存在时返回第一个
+            salt_server = SaltServer.objects.all()[0]
+    except Exception as e:
+        contexts.update({'error':e})
+        return render(request, 'cmdb/host_table.html', contexts)
+
+    result = server_collects.delay(tgt=tgt,server_id=server_id,device=device0)
+    # contexts.update(retult)
+    add.delay(2, 2)
+    print result.ready()
+
+    return render(request, 'cmdb/host_table.html', contexts)
+

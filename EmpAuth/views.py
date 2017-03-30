@@ -50,8 +50,6 @@ def login(request):
 def index(request):
     username = request.session.get('username')
     if username:
-        ##saltmaster主机信息
-        # print salt_master
         LocalData = saltinfo(salt_master)
 
         ##统计数据中心主机

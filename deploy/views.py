@@ -36,22 +36,31 @@ def upload_file(request,server_id):
             mtime = request.POST.get('mtime',None)
             nginx_path = ''
             sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
-            dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=dest)['return'][0]
-
-            print myFile
-
+            minions = sapi.key_list('manage.status', client='runner')['return'][0]
+            for s in server.split(','):
+                if s not in minions['up']:
+                    contexts.update({'error': u'目标主机 %s不存在或者已离线' % s})
+                    action_result = contexts['error']
+                    ###将操作过程写入数据库
+                    fh = files_history()
+                    fh.username = username
+                    fh.active = 'upload'
+                    fh.path = action_result
+                    fh.remote_server = server
+                    fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                    fh.url = nginx_path
+                    fh.save()
+                    return render(request, 'deploy/uploadfile.html', contexts)
+            dir_result = sapi.SaltCmd(client='local', tgt=server, fun='file.directory_exists', arg=dest, expr_form='list')['return'][0]
             if not myFile:
                 contexts.update({'error':u'请选择上传文件!'})
                 action_result = u'请选择上传文件!'
-
             elif not server:
                 contexts.update({'error': u'目标主机不能为空！！'})
                 action_result = u'目标主机不能为空！!'
-
-            elif not dir_result[server]:
-                contexts.update({'error': u'目标主机目录不存在，请选择创建目录！！'})
-                action_result = u'目标主机目录不存在，请选择创建目录!'
-
+            elif not dir_result[s]:
+                contexts.update({'error': u'目标主机 %s 目录不存在，请选择创建目录！！' % s})
+                action_result = contexts['error']
             else:
                 ##将文件上传到平台所在服务器
                 destination = open(os.path.join(upload_dir,myFile.name),'wb+')    # 打开特定的文件进行二进制的写操作
@@ -71,12 +80,14 @@ def upload_file(request,server_id):
                 if mdir:
                     command = 'mkdir -p %s' % dest
                     sapi.SaltCmd(tgt=server, fun="cmd.run", expr_form='list', arg=command)
-                upload_results = sapi.SaltCmd(tgt=server, fun="cp.get_url",expr_form='list', arg=nginx_path, arg1=dest_path)['return'][0]
+                upload_results = sapi.SaltCmd(tgt=server, fun="cp.get_url", arg=nginx_path, arg1=dest_path,expr_form='list')['return'][0]
                 #curl - k https: // 192.168.62.200:8000 - H "Accept: application/x-yaml" - H "X-Auth-Token: 69ce7566d2f6680f420cf673ab0d3dc8639ce7aa" - d client = 'local' - d tgt = '192.168.62.200,192.168.62.201' - d fun = 'cp.get_url' - d arg = 'http://192.168.62.1/upload/along_logo.png' - d arg = '/tmp/along_logo.png'
                 # upload_results = {'return': [{'192.168.62.200': '/tmp/along_logo.png', '192.168.62.201': '/tmp/along_logo.png'}]}['return'][0]
-                # print server.split(',')
+
                 contexts.update({'success': u'%s 上传成功!' % upload_results})
-                action_result = dest_path.split('dest=')
+                action_result = contexts['success']
+                os.remove('%s/%s' % (upload_dir,myFile.name))
+                print "移除后 : %s" % os.listdir(upload_dir)
 
             ###将操作过程写入数据库
             fh=files_history()
@@ -89,6 +100,7 @@ def upload_file(request,server_id):
             fh.save()
 
     except Exception as e:
+        print e
         contexts.update({'error':e})
     return render(request, 'deploy/uploadfile.html', contexts)
 
@@ -180,6 +192,7 @@ def download_fun(request,server_id):
             nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
             contexts.update({'files':files,'nginx_url': nginx_url, 'server': server, 'dest': dest})
             action_result = file_path
+            # os.remove(upload_dir + '/' + files)
         fh = files_history()
         fh.username = username
         fh.active = 'download'
