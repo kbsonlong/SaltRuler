@@ -144,20 +144,19 @@ def download_file(request,server_id):
                 nginx_url = 'http://' + glob_config('nginx', 'host') + ':' + glob_config('nginx','port') + '/' + upload_dir + '/'
                 contexts.update({'files_list': files_list.split(), 'nginx_url': nginx_url, 'server': server, 'dest': dest})
                 action_result = arg
-        else:
-            action_result = u'请求异常！'
+            fh = files_history()
+            fh.username = username
+            fh.active = 'download list'
+            fh.path = action_result
+            fh.remote_server = server
+            fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            fh.save()
+
 
     except Exception as e:
         contexts.update({'error':u'目标主机和目标路径不能为空！！'})
-        action_result = u'目标主机和目标路径不能为空！！'
 
-    fh = files_history()
-    fh.username = username
-    fh.active = 'download list'
-    fh.path = action_result
-    fh.remote_server = server
-    fh.active_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    fh.save()
+
     return render(request,'deploy/download_file.html',contexts)
 
 ##点击下载按钮是触发调用download_fun动作
@@ -208,7 +207,7 @@ def download_fun(request,server_id):
 
 @login_required
 def files_his(request):
-    his_list = files_history.objects.all().order_by('-active_time')     ##active_time操作时间倒序
+    his_list = files_history.objects.all().order_by('-id')     ##id倒序
     contexts = {'his_list': his_list}
     return render(request, 'deploy/history.html', contexts)
 
