@@ -10,7 +10,7 @@ def add(x, y):
     return x + y
 
 @task
-def server_collects(tgt,server_id,device):
+def server_collects(tgt,server_id):
     server_list = SaltServer.objects.all()
     contexts = {'server_list': server_list, 'server_id': server_id}
     try:
@@ -19,12 +19,13 @@ def server_collects(tgt,server_id,device):
         except Exception as e:  # id不存在时返回第一个
             salt_server = SaltServer.objects.all()[0]
     except Exception as e:
-        contexts.update({'error':e})
+        contexts.update({'error': e})
     try:
         sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
+        print salt_server.url
         grains = sapi.SaltCmd(tgt=tgt, fun='grains.items', client='local')['return'][0]
         minions = sapi.key_list('manage.status', client='runner')['return'][0]
-        if  salt_server and grains:
+        if salt_server and grains:
             for i in grains.keys():
                 try:
                     server = Servers.objects.get(local_ip=i)
@@ -35,7 +36,7 @@ def server_collects(tgt,server_id,device):
                 else:
                     minions_status = '1'
                 server.hostname = grains[i]['host']
-                server.local_ip = grains[i]['ip4_interfaces'][device][0]
+                server.local_ip = grains[i]['id']
                 server.OS = grains[i]['os'] + ' ' + grains[i]['osrelease'] + '-' + grains[i]['osarch']
                 server.Mem = grains[i]['mem_total']
                 server.Cpus = grains[i]['num_cpus']
@@ -43,12 +44,11 @@ def server_collects(tgt,server_id,device):
                 server.minion_id = grains[i]['id']
                 server.server_status = minions_status
                 server.save()
-                contexts.update({'success': u'%s 收集成功' % tgt,'server_id':salt_server.id})
+                contexts.update({'success': u'%s 收集成功' % tgt, 'server_id': salt_server.id})
         if not grains:
             contexts.update({'error': u'%s 主机不存在或者离线' % tgt})
-        return True
     except Exception as e:
-        contexts.update({'error':'%s %s' % (tgt,e)})
-        return False
+        contexts.update({'error': '%s %s' % (tgt, e)})
+    return contexts
 
 
