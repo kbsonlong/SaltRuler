@@ -1,11 +1,11 @@
 #coding:utf-8
 
 import os
-from django.shortcuts import render
+from django.shortcuts import render,HttpResponseRedirect
 from EmpAuth.decorators import login_required
 from SaltRuler.glob_config import glob_config
 from saltstack.saltapi import *
-from .models import Assetmanage, Hostinfo
+from .models import Assetmanage, Servers
 from deploy.models import Upload
 from django import forms
 from cmdb.models import Servers
@@ -240,26 +240,31 @@ def asset_del(request):
 
 @login_required
 def host_add_html(request):
-    info = host_add = server_ip = ''
+    info = host_dict = server_ip = ''
     if request.GET.get('server_ip'):
         server_ip = request.GET.get('server_ip')
     if request.method == 'POST':
         ser_ip = request.POST.get('host_ip')
         local_ip = request.POST.get('local_ip')
-        app = request.POST.get('app')
-        host_note = request.POST.get('host_note')
         if ser_ip == "" or local_ip == "":
             info = '主机IP、宿主IP不允许为空！'
         else:
-            host_ip = Assetmanage.objects.get(server_ip=ser_ip)
-
-            Hostinfo.objects.create(host_ip=host_ip, local_ip=local_ip,
-                                    app=app, host_note=host_note)
-            host = Hostinfo.objects.get(local_ip=local_ip)
-            host_add = {'host_ip': '%s' % (host.host_ip.server_ip), 'local_ip': '%s' % (host.local_ip),
-                        'app': '%s' % (host.app), 'host_note': '%s' % (host.host_note)}
+            host_id = Assetmanage.objects.get(server_ip=ser_ip)
+            if not Servers.objects.filter(local_ip=local_ip):
+                Servers.objects.create(host_ip=host_id, local_ip=local_ip)
+            else:
+                host = Servers.objects.get(local_ip=local_ip)
+                print host
+                host.host_ip_id = host_id
+                host.save()
+            # servers = Servers.objects.get(local_ip=local_ip)
+            # host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
+            #              'host_name': '%s' % (servers.hostname),
+            #              'system_version': '%s' % (servers.OS),
+            #              'cpu_num': '%s' % (servers.Cpus),
+            #              'mem_size': '%s' % (servers.Mem), 'host_note': '%s' % (servers.Cpu_type)}
             info = '添加成功!'
-    return render(request, 'cmdb/host_add.html',{'host_add':host_add,'info':info,'server_ip':server_ip})
+    return render(request, 'cmdb/host_add.html',{'host_add':host_dict,'info':info,'server_ip':server_ip})
 
 @login_required
 def host_table(request):
@@ -267,7 +272,11 @@ def host_table(request):
     contexts = {}
     b = []
     for servers in servers_list:
-        host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': 'up',
+        if servers.server_status == 0:
+            status = 'up'
+        else:
+            status = 'down'
+        host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
                      'host_name': '%s' % (servers.hostname),
                      'system_version': '%s' % (servers.OS),
                      'cpu_num': '%s' % (servers.Cpus),
@@ -275,7 +284,6 @@ def host_table(request):
         b.append(host_dict)
     contexts.update({'b': b})
     return render(request, 'cmdb/host_table.html', contexts)
-
 
 
 @login_required
@@ -291,7 +299,7 @@ def host_update_html(request):
             host_ip = Assetmanage.objects.get(server_ip=server_ip)
         else:
             host_ip = ''
-        update = Hostinfo.objects.get(local_ip="%s" % (local_ip))
+        update = Servers.objects.get(local_ip="%s" % (local_ip))
         if host_ip != '':
             update.host_ip = host_ip
             update.save()
@@ -301,9 +309,10 @@ def host_update_html(request):
         if host_note != '':
             update.host_note = "%s" % (host_note)
             update.save()
-        host = Hostinfo.objects.get(local_ip="%s" % (local_ip))
+        host = Servers.objects.get(local_ip="%s" % (local_ip))
         host_update = {'host_ip': '%s' % (host.host_ip.server_ip), 'local_ip': '%s' % (host.local_ip),
-                       'app': '%s' % (host.app), 'host_note': '%s' % (host.host_note)}
+                       'app':app,'note':host_note
+                       }
         info ='更新成功！！'
     return render(request, 'cmdb/host_update.html',{'host_update':host_update,'info':info})
 
@@ -314,34 +323,36 @@ def host_del_html(request):
     host_del=local_ip=info=''
     if request.method == 'POST':
         local_ip = request.POST.get('local_ip')
-        Hostinfo.objects.get(local_ip="%s" % (local_ip)).delete()
-        info = '删除成功！！'
+        Servers.objects.get(local_ip="%s" % (local_ip)).delete()
+        info = u'删除成功！！'
     if request.GET.get('local_ip'):
         local_ip = request.GET.get('local_ip')
-        Hostinfo.objects.get(local_ip="%s" % (local_ip)).delete()
-        info = '删除成功！！'
-    return render(request, 'cmdb/host_del.html',{'host_del':host_del,'info':info})
+        Servers.objects.get(local_ip="%s" % (local_ip)).delete()
+        info = u'%s 删除成功！！' % local_ip
+        return render(request, 'cmdb/host_table.html',{'host_del':host_del,'success':info})
+    return render(request, 'cmdb/host_del.html', {'host_del': host_del, 'success': info})
 
 @login_required
 def host_list(request, server_ip):
-    b=[]
-    host_list = Assetmanage.objects.get(server_ip=server_ip).asset_set.all()
-    for host in host_list:
-        if host:
-            grains_ret = sapi.SaltCmd('%s' %(host.local_ip), 'grains.items',client='local')['return'][0]
-        if grains_ret:
-            grains_ret_result = grains_ret.values()[0]
-            host_dict = {'host_ip': '%s' % (host.host_ip.server_ip),'local_ip': '%s' % (host.local_ip),'status':'up',
-                'app': '%s' % (host.app),'host_name': '%s' % (grains_ret_result['localhost']),
-                'system_version': '%s %s' % (grains_ret_result['os'],grains_ret_result['osrelease']),
-                'cpu_num': '%s' % (grains_ret_result['num_cpus']),
-                'mem_size': '%s' % (grains_ret_result['mem_total']),'host_note': '%s' % (host.host_note)}
-            b.append(host_dict)
+    host_ip_ids = Assetmanage.objects.filter(server_ip=server_ip)
+    asset_id = host_ip_ids.values('id')[0]['id']
+    servers_list = Servers.objects.filter(host_ip_id=asset_id)
+    host_ip = Assetmanage.objects.filter(id=asset_id).values('server_ip')[0]['server_ip']
+    contexts = {'server_ip':host_ip}
+    b = []
+    for servers in servers_list:
+        if servers.server_status == 0:
+            status = 'up'
         else:
-            host_dict = {'host_ip': '%s' % (host.host_ip.server_ip),'local_ip': '%s' % (host.local_ip),'status':'down',
-                'app': '%s' % (host.app),'host_note': '%s' % (host.host_note)}
-            b.append(host_dict)
-    return render(request, 'cmdb/host_table_relate.html', {'b' : b, 'server_ip':server_ip})
+            status = 'down'
+        host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
+                     'host_name': '%s' % (servers.hostname),
+                     'system_version': '%s' % (servers.OS),
+                     'cpu_num': '%s' % (servers.Cpus),
+                     'mem_size': '%s' % (servers.Mem), 'host_note': '%s' % (servers.Cpu_type)}
+        b.append(host_dict)
+    contexts.update({'b': b})
+    return render(request, 'cmdb/host_table.html', contexts)
 
 
 
@@ -353,26 +364,63 @@ def server_collect(request,server_id):
     contexts = {'server_list': server_list, 'server_id': server_id}
     b=[]
     for servers in servers_list:
-        host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': 'up',
+        if servers.server_status == 0:
+            status = 'up'
+        else:
+            status = 'down'
+        host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
                      'host_name': '%s' % (servers.hostname),
                      'system_version': '%s' % (servers.OS),
                      'cpu_num': '%s' % (servers.Cpus),
                      'mem_size': '%s' % (servers.Mem), 'host_note': '%s' % (servers.Cpu_type)}
         b.append(host_dict)
+
+    print b
     contexts.update({'b':b})
-    try:
-        try:
-            salt_server = SaltServer.objects.get(id=server_id)
-        except Exception as e:  # id不存在时返回第一个
-            salt_server = SaltServer.objects.all()[0]
-    except Exception as e:
-        contexts.update({'error':e})
-        return render(request, 'cmdb/host_table.html', contexts)
+    # try:
+    #     try:
+    #         salt_server = SaltServer.objects.get(id=server_id)
+    #     except Exception as e:  # id不存在时返回第一个
+    #         salt_server = SaltServer.objects.all()[0]
+    # except Exception as e:
+    #     contexts.update({'error':e})
+    #     return render(request, 'cmdb/host_table.html', contexts)
 
-    result = server_collects.delay(tgt=tgt,server_id=server_id,device=device0)
-    # contexts.update(retult)
-    add.delay(2, 2)
-    print result.ready()
-
-    return render(request, 'cmdb/host_table.html', contexts)
+    # server_list = SaltServer.objects.all()
+    # contexts = {'server_list': server_list, 'server_id': server_id}
+    # try:
+    #     try:
+    #         salt_server = SaltServer.objects.get(id=server_id)
+    #     except Exception as e:  # id不存在时返回第一个
+    #         salt_server = SaltServer.objects.all()[0]
+    # except Exception as e:
+    #     contexts.update({'error': e})
+    #
+    # sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
+    # grains = sapi.SaltCmd(tgt=tgt, fun='grains.items', client='local')['return'][0]
+    # minions = sapi.key_list('manage.status', client='runner')['return'][0]
+    # if salt_server and grains:
+    #     for i in grains.keys():
+    #         try:
+    #             server = Servers.objects.get(local_ip=i)
+    #         except:
+    #             server = Servers()
+    #         if i in minions['up']:
+    #             minions_status = '0'
+    #         else:
+    #             minions_status = '1'
+    #         server.hostname = grains[i]['host']
+    #         server.local_ip = grains[i]['ip4_interfaces'][device0][0]
+    #         server.OS = grains[i]['os'] + ' ' + grains[i]['osrelease'] + '-' + grains[i]['osarch']
+    #         server.Mem = grains[i]['mem_total']
+    #         server.Cpus = grains[i]['num_cpus']
+    #         server.Cpu_type = grains[i]['cpu_model']
+    #         server.minion_id = grains[i]['id']
+    #         server.server_status = minions_status
+    #         server.save()
+    #         contexts.update({'success': u'%s 收集成功' % tgt, 'server_id': salt_server.id})
+    # if not grains:
+    #     contexts.update({'error': u'%s 主机不存在或者离线' % tgt})
+    server_collects.delay(tgt=tgt,server_id=server_id,device=device0)
+    return HttpResponseRedirect("/cmdb/host_table/")
 

@@ -1,9 +1,9 @@
 #coding:utf-8
-
 from celery import task
 from saltstack.models import SaltServer
 from cmdb.models import Servers
 from saltstack.saltapi import SaltAPI
+
 
 @task()
 def add(x, y):
@@ -20,14 +20,16 @@ def server_collects(tgt,server_id,device):
             salt_server = SaltServer.objects.all()[0]
     except Exception as e:
         contexts.update({'error':e})
-        return contexts
     try:
         sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
         grains = sapi.SaltCmd(tgt=tgt, fun='grains.items', client='local')['return'][0]
         minions = sapi.key_list('manage.status', client='runner')['return'][0]
         if  salt_server and grains:
             for i in grains.keys():
-                server = Servers.objects.get(local_ip=i)
+                try:
+                    server = Servers.objects.get(local_ip=i)
+                except:
+                    server = Servers()
                 if i in minions['up']:
                     minions_status = '0'
                 else:
@@ -44,8 +46,9 @@ def server_collects(tgt,server_id,device):
                 contexts.update({'success': u'%s 收集成功' % tgt,'server_id':salt_server.id})
         if not grains:
             contexts.update({'error': u'%s 主机不存在或者离线' % tgt})
+        return True
     except Exception as e:
         contexts.update({'error':'%s %s' % (tgt,e)})
-    return contexts
+        return False
 
 

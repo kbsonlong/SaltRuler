@@ -20,6 +20,7 @@ def upload_file(request,server_id):
     try:
         try:
             salt_server = SaltServer.objects.get(id=server_id)
+            print salt_server
         except Exception as e:  # id不存在时返回第一个
             salt_server = SaltServer.objects.all()[0]
             if not salt_server:

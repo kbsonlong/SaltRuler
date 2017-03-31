@@ -28,25 +28,21 @@ class Assetmanage(models.Model):
     def get_host_url(self):
         return reverse('host_list', args=(self.server_ip,))
 
-class Hostinfo(models.Model):
-    host_ip =  models.ForeignKey(Assetmanage,related_name='asset_set')
-    local_ip = models.CharField(max_length = 20,unique=True)
-    app = models.CharField(max_length = 50,default='-')
-    host_note = models.CharField(max_length = 200,default='-')
 
-    def __unicode__(self):
-        return self.local_ip
 
 
 class Servers(models.Model):
+    host_ip = models.ForeignKey(Assetmanage, related_name='asset_set')
     local_ip = models.CharField(max_length = 20,unique=True)
-    server_status = models.IntegerField(default=0)
+    server_status = models.IntegerField(default=1)
     hostname = models.CharField(max_length=50)
     OS = models.CharField(max_length=100)
     Cpu_type = models.CharField(max_length=200)
     Cpus = models.IntegerField(20)
     Mem = models.IntegerField(100)
     minion_id = models.CharField(max_length=50)
-    minion_accept = models.IntegerField(10)
-    minion_unaccept = models.IntegerField(10)
-    minion_reject = models.IntegerField(10)
+    app = models.CharField(max_length=50)
+    note = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.local_ip

@@ -18,8 +18,11 @@ from glob_config import glob_config
 ###启用celery
 import djcelery
 djcelery.setup_loader()
-BROKER_URL = 'django://'
-CELERY_ALWAYS_EAGER = True
+# BROKER_URL = 'django://'
+BROKER_URL = 'redis://192.168.62.200:6379/0'
+BROKER_TRANSPORT = 'redis'
+# CELERY_ALWAYS_EAGER = True
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
