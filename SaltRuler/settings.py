@@ -19,7 +19,7 @@ from glob_config import glob_config
 import djcelery
 djcelery.setup_loader()
 # BROKER_URL = 'django://'
-BROKER_URL = 'redis://192.168.62.200:6379/0'
+BROKER_URL = 'redis://%s:%s/0' % (glob_config('redis','host'),glob_config('redis','port'))
 BROKER_TRANSPORT = 'redis'
 # CELERY_ALWAYS_EAGER = True
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
