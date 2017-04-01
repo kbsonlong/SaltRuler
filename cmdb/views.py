@@ -326,12 +326,6 @@ def host_update_html(request):
 def host_del_html(request):
     host_del=info=''
     contexts = {}
-    if request.method == 'POST':
-        local_ip = request.POST.get('local_ip')
-        Servers.objects.get(local_ip="%s" % (local_ip)).delete()
-        info = u'删除成功！！'
-        contexts.update({'host_del': host_del, 'success': info})
-        return render(request, 'cmdb/host_del.html', contexts)
     if request.GET.get('local_ip'):
         local_ip = request.GET.get('local_ip')
         Servers.objects.get(local_ip="%s" % (local_ip)).delete()
