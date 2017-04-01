@@ -1,4 +1,16 @@
 # SaltRunler
+ 安装 依赖关系
+ yum install -y gcc-c++ git wget mysql-devel python-devel salt-master salt-api salt-minion 
+
+mkdir /tmp/soft -p 
+cd /tmp/soft 
+
+wget --no-check-certificate https://pypi.python.org/packages/source/s/setuptools/setuptools-12.0.3.tar.gz#md5=f07e4b0f4c1c9368fcd980d888b29a65 
+
+tar zxvf setuptools-12.0.3.tar.gz 
+cd setuptools-12.0.3 
+python setup.py install 
+easy_install pip  
 
 1、下载源码
 
