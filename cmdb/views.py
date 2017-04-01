@@ -276,10 +276,14 @@ def host_table(request):
             status = 'up'
         else:
             status = 'down'
-        host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
+        if servers.host_ip_id:
+            host_ip = Assetmanage.objects.filter(id=servers.host_ip_id).values()[0]['server_ip']
+        else:
+            host_ip = ''
+        host_dict = {'host_ip': '%s' % (host_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
                      'host_name': '%s' % (servers.hostname),
                      'system_version': '%s' % (servers.OS),
-                     'cpu_num': '%s' % (servers.Cpus),
+                     'cpu_num': '%s' % (servers.Cpus),'app':servers.app,
                      'mem_size': '%s' % (servers.Mem), 'host_note': '%s' % (servers.Cpu_type)}
         b.append(host_dict)
     contexts.update({'b': b})
@@ -320,17 +324,38 @@ def host_update_html(request):
 
 @login_required
 def host_del_html(request):
-    host_del=local_ip=info=''
+    host_del=info=''
+    contexts = {}
     if request.method == 'POST':
         local_ip = request.POST.get('local_ip')
         Servers.objects.get(local_ip="%s" % (local_ip)).delete()
         info = u'删除成功！！'
+        contexts.update({'host_del': host_del, 'success': info})
+        return render(request, 'cmdb/host_del.html', contexts)
     if request.GET.get('local_ip'):
         local_ip = request.GET.get('local_ip')
         Servers.objects.get(local_ip="%s" % (local_ip)).delete()
         info = u'%s 删除成功！！' % local_ip
-        return render(request, 'cmdb/host_table.html',{'host_del':host_del,'success':info})
-    return render(request, 'cmdb/host_del.html', {'host_del': host_del, 'success': info})
+        servers_list = Servers.objects.all()
+        b = []
+        for servers in servers_list:
+            if servers.server_status == 0:
+                status = 'up'
+            else:
+                status = 'down'
+            if servers.host_ip_id:
+                host_ip = Assetmanage.objects.filter(id=servers.host_ip_id).values()[0]['server_ip']
+            else:
+                host_ip = ''
+            host_dict = {'host_ip': '%s' % (host_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
+                         'host_name': '%s' % (servers.hostname),
+                         'system_version': '%s' % (servers.OS),
+                         'cpu_num': '%s' % (servers.Cpus), 'app': servers.app,
+                         'mem_size': '%s' % (servers.Mem), 'host_note': '%s' % (servers.Cpu_type)}
+            b.append(host_dict)
+        contexts.update({'b': b})
+    contexts.update({'host_del': host_del, 'success': info})
+    return render(request, 'cmdb/host_table.html', contexts)
 
 @login_required
 def host_list(request, server_ip):
@@ -345,15 +370,16 @@ def host_list(request, server_ip):
             status = 'up'
         else:
             status = 'down'
-        host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
+        if servers.host_ip_id:
+            host_ip = Assetmanage.objects.filter(id=servers.host_ip_id).values()[0]['server_ip']
+        host_dict = {'host_ip': '%s' % (host_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
                      'host_name': '%s' % (servers.hostname),
                      'system_version': '%s' % (servers.OS),
-                     'cpu_num': '%s' % (servers.Cpus),
+                     'cpu_num': '%s' % (servers.Cpus),'app':servers.app,
                      'mem_size': '%s' % (servers.Mem), 'host_note': '%s' % (servers.Cpu_type)}
         b.append(host_dict)
     contexts.update({'b': b})
     return render(request, 'cmdb/host_table.html', contexts)
-
 
 
 @login_required
@@ -368,10 +394,14 @@ def server_collect(request,server_id):
             status = 'up'
         else:
             status = 'down'
-        host_dict = {'host_ip': '%s' % (servers.local_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
+        if servers.host_ip_id:
+            host_ip = Assetmanage.objects.filter(id=servers.host_ip_id).values()[0]['server_ip']
+        else:
+            host_ip = ''
+        host_dict = {'host_ip': '%s' % (host_ip), 'local_ip': '%s' % (servers.local_ip), 'status': status,
                      'host_name': '%s' % (servers.hostname),
                      'system_version': '%s' % (servers.OS),
-                     'cpu_num': '%s' % (servers.Cpus),
+                     'cpu_num': '%s' % (servers.Cpus),'app':servers.app,
                      'mem_size': '%s' % (servers.Mem), 'host_note': '%s' % (servers.Cpu_type)}
         b.append(host_dict)
 

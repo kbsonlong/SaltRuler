@@ -42,6 +42,7 @@ def server_collects(tgt,server_id):
                 server.Cpus = grains[i]['num_cpus']
                 server.Cpu_type = grains[i]['cpu_model']
                 server.minion_id = grains[i]['id']
+                server.app = grains[i]['virtual']
                 server.server_status = minions_status
                 server.save()
                 contexts.update({'success': u'%s 收集成功' % tgt, 'server_id': salt_server.id})
