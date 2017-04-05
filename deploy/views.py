@@ -74,10 +74,15 @@ def upload_file(request,server_id):
                 ##文件上传后静态服务地址
                 nginx_path = u'%s%s'% (nginx_url ,myFile.name)
                 ##目标存放绝对路径
+                dest_path = u'dest=/%s/%s' % (dest.strip('/'), myFile.name)
+
+                ##备份文件
                 if mtime:
-                    dest_path=u'dest=/%s/%s%s'% (dest.strip('/'),myFile.name,time.strftime("%Y%m%d%H%M%S", time.localtime()))
-                else:
-                    dest_path = u'dest=/%s/%s' % (dest.strip('/'), myFile.name)
+                    file_path =u'/%s/%s'  % (dest.strip('/'),myFile.name)
+                    file_result = sapi.SaltCmd(client='local', tgt=server, fun='file.file_exists', arg=file_path)['return'][0][server]
+                    if file_result:
+                        command = 'mv %s %s%s' % (file_path,file_path,time.strftime("%Y%m%d%H%M%S", time.localtime()))
+                        sapi.SaltCmd(tgt=server, fun="cmd.run", expr_form='list', arg=command)
                 if mdir:
                     command = 'mkdir -p %s' % dest
                     sapi.SaltCmd(tgt=server, fun="cmd.run", expr_form='list', arg=command)
@@ -159,7 +164,7 @@ def download_file(request,server_id):
 
     return render(request,'deploy/download_file.html',contexts)
 
-##点击下载按钮是触发调用download_fun动作
+##点击下载按钮时触发调用download_fun动作
 def download_fun(request,server_id):
     username = request.session.get('username')
     server_list = SaltServer.objects.all()
