@@ -5,7 +5,7 @@ import cgi
 class   PostHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
-        upload_dir = 'upload'
+        upload_dir = '../upload'
         form = cgi.FieldStorage(
             fp=self.rfile,
             headers=self.headers,
