@@ -5,7 +5,7 @@ import cgi
 class   PostHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
-        upload_dir = '../upload'
+        upload_dir = '/src/salt'      ###配置Salt-Master的file_roots base路径，默认/src/salt
         form = cgi.FieldStorage(
             fp=self.rfile,
             headers=self.headers,
