@@ -136,7 +136,7 @@ def state_exec(request,server_id):
             result = sorted(states)
             if result and not state:
                 state=result[0]
-            context.update({'minion': minion, 'states': result,'env':env,'state':state})
+            context.update({'minion': minion,'ret': ret, 'states': result,'env':env,'state':state})
         except Exception as e:
             context.update({'error':e})
 
@@ -193,7 +193,7 @@ def state_fun(request,server_id):
             if result and not state:
                 state = result[0]
 
-            context.update({'minion': minion, 'states': result,'env':env,'state':state})
+            context.update({'minion': minion,'ret': ret, 'states': result,'env':env,'state':state})
         except Exception as e:
             context.update({'error': e})
     return render(request,'saltstack/state.html',context)
