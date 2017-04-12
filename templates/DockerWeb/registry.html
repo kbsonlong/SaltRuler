@@ -6,10 +6,11 @@
         <div class="row">
             <div class="col-lg-12">
                 {% block main %}
-                    <h2>Docker私有仓库
-                        <small style="color: red" class="text-danger">请先添加Docker私有仓库</small>
+                    <h2>{% block title1 %}
+                    Docker私有仓库
+                    {% endblock %}
                         <div class="btn-group pull-right">
-                            <a class="btn btn-info" href="/admin/DockerWeb/registry/add/" target="_blank" title="添加仓库"><span class="glyphicon glyphicon-plus"></span> 添加仓库</a>
+                            <a class="btn btn-info" href="/docker/registry_add/{% if salt_server.id %}{{ salt_server.id }}{% else %}0{% endif %}/" target="_blank" title="添加仓库"><span class="glyphicon glyphicon-plus"></span> 添加仓库</a>
                             <div class="btn-group pull-right dropdown">
                                 <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     &nbsp;SaltServer&nbsp;<span class="caret"></span></a>
@@ -27,10 +28,10 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-12">
                             <div class="table-responsive">
+                            {% block table %}
                                 <table class="table table-hover table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>IsActive</th>
                                             <th>私有仓库名称</th>
                                             <th>私有仓库地址</th>
                                             <th>私有仓库版本</th>
@@ -41,15 +42,9 @@
                                     {% for reg in reg_list %}
                                             <tbody>
                                                 <tr>
-                                                    <td>{% if reg.isactive  == 0 %}
-                                                        <small style="color: green" > Active </small>
-                                                        {% else %}
-                                                           <small style="color: blue" > Standby</small>
-                                                        {% endif %}
-                                                    </td>
                                                     <td>{{ reg.name }}</td>
-                                                    <td>{{ reg.address }}</td>
-                                                    <td><small class="navbar-btn" >{% if reg.isactive  %}V{% endif %}{{ reg.version }}</small></td>
+                                                    <td><a href="/docker/registry_image/{{ reg.id }}/" title="/docker/registry_image/{{ reg.id }}/">{{ reg.address }}</a></td>
+                                                    <td><small class="navbar-btn" >V{{ reg.version }}</small></td>
                                                     <td>{% if reg.status  == 0 %}
                                                             <small style="color: green" > Healthy</small>
                                                         {% else %}
@@ -57,14 +52,15 @@
                                                         {% endif %}</td>
                                                     <td>
                                                         <div class="btn-group">
-                                                            <a class="btn btn-info btn-xs" href="/admin/saltstack/svnproject/{{ reg.id }}/" target="_blank">
-                                                                <span class="glyphicon glyphicon-edit">&nbsp;修改</span></a>
+                                                            <a class="btn btn-info btn-xs" href="/docker/registry_del/{% if salt_server.id %}{{ salt_server.id }}{% else %}0{% endif %}/?reg_id={{ reg.id }}">
+                                                                <span class="glyphicon glyphicon-edit ">&nbsp;删除</span></a>
                                                         </div>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         {% endfor %}
                                 </table>
+                                {% endblock %}
                             </div>
                         </div>
                     </div>

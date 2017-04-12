@@ -1,0 +1,28 @@
+{% extends 'DockerWeb/registry.html' %}
+{% block title %}Docker私有仓库镜像{% endblock %}
+{% block title1 %} {{ image_name }}{% endblock %}
+{% block table %}
+    <table class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>镜像名称</th>
+                <th>description</th>
+                <th>操作管理</th>
+            </tr>
+        </thead>
+        {% for image in image_name %}
+                <tbody>
+                    <tr>
+                        <td>{{ image.image_name }}</td>
+                        <td><a href="/docker/registry_image/0/" target="_blank" title="/docker/registry_image/0/">{{ image.description }}</a></td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-info btn-xs" href="/docker/registry_del/{% if salt_server.id %}{{ salt_server.id }}{% else %}0{% endif %}/?reg_id={{ reg.id }}">
+                                    <span class="glyphicon glyphicon-edit ">&nbsp;删除</span></a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            {% endfor %}
+    </table>
+{% endblock %}

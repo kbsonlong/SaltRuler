@@ -54,7 +54,7 @@ class BASE_REGISTRY_API:
                 if version == 1:
                     res.update(data=Tags)
                 else:
-                    res.update(data={ _:self._from_image_tag_getId(ImageName, _, url, version) for _ in Tags.get('tags', []) })
+                    res.update(data={ self.from_image_tag_getId(ImageName, _, url, version) for _ in Tags.get('tags', []) })
 
         return res
 
@@ -124,7 +124,7 @@ class BASE_REGISTRY_API:
 
         res = {"msg": None, "success": False}
         if url:
-            ReqUrl = url.strip("/") + "/v1/repositories/{}/tags/{}".format(ImageName, tag) if version == 1 else url.strip("/") + "/v2/{}/manifests/{}".format(ImageName, self._from_image_tag_getId(ImageName, tag, url, version))
+            ReqUrl = url.strip("/") + "/v1/repositories/{}/tags/{}".format(ImageName, tag) if version == 1 else url.strip("/") + "/v2/{}/manifests/{}".format(ImageName, self.from_image_tag_getId(ImageName, tag, url, version))
 
             try:
                 delete_repo_result = requests.delete(ReqUrl, timeout=self.timeout, verify=self.verify).json()
@@ -148,8 +148,8 @@ class MultiRegistryManager(BASE_REGISTRY_API):
         self._BASE   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         self._dir0   = os.path.join(self._BASE, 'logs', ".Registries.db")
         self._dir1   = os.path.join(self._BASE, 'logs', ".ActiveRegistry.db")
-        self._registries  = self._unpickle
-        self._active      = self._unpickleActive
+        self._registries  = self.unpickle
+        self._active      = self.unpickleActive
 
     def pickle(self, data):
         """ 序列化所有数据写入存储 """
@@ -245,7 +245,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
         else:
 
             self._active = self.getOne(name)
-            self._pickleActive(self._active)
+            self.pickleActive(self._active)
             if self.isActive(name):
                 print "setActive, the request name sets it for active, successfully"
             else:
@@ -303,7 +303,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
             res.update(msg="registry already exists", code=10004)
         else:
             self._registries.append(dict(name=name.strip(), addr=addr.strip(), version=version, auth=auth))
-            self._pickle(self._registries)
+            self.pickle(self._registries)
             res.update(success=True, code=0)
 
 
@@ -331,7 +331,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
                 res.update(success=False)
             else:
 
-                self._pickle(self._registries)
+                self.pickle(self._registries)
                 res.update(success=True)
 
         else:
@@ -380,24 +380,36 @@ class ApiRegistryManager(BASE_REGISTRY_API):
     @property
     def isHealth(self):
         """ 返回私有仓健康状态 """
-        return self._checkStatus(self.url, self.version)
+        return self.checkStatus(self.url, self.version)
 
     def list_repository(self, q=""):
         """ 查询私有仓镜像名称(默认列出所有镜像) """
-        return self._search_all_repository(url=self.url, version=self.version, q=q)
+        return self.search_all_repository(url=self.url, version=self.version, q=q)
 
     def list_imageTags(self, ImageName):
         """ 查询某镜像的tag列表 """
-        return self._list_image_tags(url=self.url, version=self.version, ImageName=ImageName)
+        return self.list_image_tags(url=self.url, version=self.version, ImageName=ImageName)
 
     def get_tag_info(self, ImageId, ImageName=None):
         """ 查询某tag(ImageId)的镜像信息 """
-        return self._get_imageId_info(url=self.url, version=self.version, ImageId=ImageId, ImageName=ImageName)
+        return self.get_imageId_info(url=self.url, version=self.version, ImageId=ImageId, ImageName=ImageName)
 
     def delete_an_image(self, ImageName):
         """ 删除一个镜像 """
-        return self._delete_image(url=self.url, version=self.version, ImageName=ImageName)
+        return self.delete_image(url=self.url, version=self.version, ImageName=ImageName)
 
     def delete_an_image_tag(self, ImageName, tag):
         """ 删除一个镜像标签 """
-        return self._delete_imageTag(url=self.url, version=self.version, ImageName=ImageName, tag=tag)
+        return self.delete_imageTag(url=self.url, version=self.version, ImageName=ImageName, tag=tag)
+
+
+if __name__ == '__main__':
+    b = BASE_REGISTRY_API()
+
+    url = 'http://192.168.62.200:5000'
+    ImageName = 'saltops'
+    ReqUrl = url.strip("/") + "/v2/{}/tags/list".format(ImageName)
+    Tags = requests.get(ReqUrl).json()
+    print Tags
+    print b.list_image_tags(ImageName,url,2)
+    print b.from_image_tag_getId(ImageName=ImageName,tag='v2',url=url,version=2)
