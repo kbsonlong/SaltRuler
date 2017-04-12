@@ -7,7 +7,7 @@ class BASE_REGISTRY_API:
     def __init__(self, timeout=2, verify=False):
         self.timeout  = timeout
         self.verify   = verify
-    def _checkStatus(self, url, version=1):
+    def checkStatus(self, url, version=1):
         """ 返回私有仓状态 """
         if url:
             url = url.strip("/") + "/v1/_ping" if version == 1 else url.strip("/") + "/v2/"
@@ -19,9 +19,8 @@ class BASE_REGISTRY_API:
                 return req.ok
         return False
 
-    def _search_all_repository(self, url, version=1, q=""):
+    def search_all_repository(self, url, version=1, q=""):
         """ 搜索私有仓所有镜像 """
-
         res = {"msg": None, "data": []}
         if url:
             ReqUrl = url.strip("/") + "/v1/search" if version == 1 else url.strip("/") + "/v2/_catalog"
@@ -39,7 +38,7 @@ class BASE_REGISTRY_API:
 
         return res
 
-    def _list_image_tags(self, ImageName, url, version=1):
+    def list_image_tags(self, ImageName, url, version=1):
         """ 列出某个镜像所有标签 """
 
         res = {"msg": None, "data": {}}
@@ -59,7 +58,7 @@ class BASE_REGISTRY_API:
 
         return res
 
-    def _delete_image(self, ImageName, url, version=1):
+    def delete_image(self, ImageName, url, version=1):
         """ 删除一个镜像 """
 
         res = {"msg": None, "success": False}
@@ -79,7 +78,7 @@ class BASE_REGISTRY_API:
 
         return res
 
-    def _from_image_tag_getId(self, ImageName, tag, url, version=1):
+    def from_image_tag_getId(self, ImageName, tag, url, version=1):
         """ 查询某个镜像tag的imageId/digest """
 
         if url:
@@ -99,7 +98,7 @@ class BASE_REGISTRY_API:
                     return r.headers.get("Docker-Content-Digest", "")
         return ""
 
-    def _get_imageId_info(self, ImageId, url, version=1, ImageName=None):
+    def get_imageId_info(self, ImageId, url, version=1, ImageName=None):
         """ 查询某个镜像的信息(v2时必须定义ImageName), ImageId/Tag(v2) """
 
         res = {"msg": None, "data": {}}
@@ -120,7 +119,7 @@ class BASE_REGISTRY_API:
 
         return res
 
-    def _delete_imageTag(self, ImageName, tag, url, version=1):
+    def delete_imageTag(self, ImageName, tag, url, version=1):
         """ 删除一个镜像标签 """
 
         res = {"msg": None, "success": False}
@@ -143,7 +142,7 @@ class BASE_REGISTRY_API:
 class MultiRegistryManager(BASE_REGISTRY_API):
 
 
-    def __init__(self, timeout=2, verify=False):
+    def _init__(self, timeout=2, verify=False):
         self.timeout = timeout
         self.verify  = verify
         self._BASE   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -152,7 +151,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
         self._registries  = self._unpickle
         self._active      = self._unpickleActive
 
-    def _pickle(self, data):
+    def pickle(self, data):
         """ 序列化所有数据写入存储 """
         try:
             with open(self._dir0, "w") as f:
@@ -167,7 +166,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
         return res
 
     @property
-    def _unpickle(self):
+    def unpickle(self):
         """ 反序列化信息取出所有数据 """
         try:
             with open(self._dir0, "r") as f:
@@ -181,7 +180,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
 
         return res
 
-    def _pickleActive(self, data):
+    def pickleActive(self, data):
         """ 序列化活跃仓库数据写入存储 """
         try:
             with open(self._dir1, "w") as f:
@@ -196,7 +195,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
         return res
 
     @property
-    def _unpickleActive(self):
+    def unpickleActive(self):
         """ 反序列化信息取出活跃仓库 """
         try:
             with open(self._dir1, "r") as f:
@@ -360,7 +359,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
 class ApiRegistryManager(BASE_REGISTRY_API):
 
 
-    def __init__(self, timeout=2, verify=False, ActiveRegistry={}):
+    def _init__(self, timeout=2, verify=False, ActiveRegistry={}):
         self.timeout = timeout
         self.verify  = verify
         self._addr   = ActiveRegistry.get("addr")

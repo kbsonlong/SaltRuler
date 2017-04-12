@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Docker私有仓库{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                {% block main %}
+                    <h2>Docker私有仓库
+                        <small style="color: red" class="text-danger">请先添加Docker私有仓库</small>
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-info" href="/admin/DockerWeb/registry/add/" target="_blank" title="添加仓库"><span class="glyphicon glyphicon-plus"></span> 添加仓库</a>
+                            <div class="btn-group pull-right dropdown">
+                                <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    &nbsp;SaltServer&nbsp;<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    {% for s in server_list %}
+                                        <li><a href="/saltstack/deploy/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </h2>
+                    {% if error %}<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ error }}</div>{% endif %}
+                    {% if success %}<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ success }}</div>{% endif %}
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>IsActive</th>
+                                            <th>私有仓库名称</th>
+                                            <th>私有仓库地址</th>
+                                            <th>私有仓库版本</th>
+                                            <th>私有仓库状态</th>
+                                            <th>操作管理</th>
+                                        </tr>
+                                    </thead>
+                                    {% for reg in reg_list %}
+                                            <tbody>
+                                                <tr>
+                                                    <td>{% if reg.isactive  == 0 %}
+                                                        <small style="color: green" > Active </small>
+                                                        {% else %}
+                                                           <small style="color: blue" > Standby</small>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ reg.name }}</td>
+                                                    <td>{{ reg.address }}</td>
+                                                    <td><small class="navbar-btn" >{% if reg.isactive  %}V{% endif %}{{ reg.version }}</small></td>
+                                                    <td>{% if reg.status  == 0 %}
+                                                            <small style="color: green" > Healthy</small>
+                                                        {% else %}
+                                                            <small style="color: red" > UnHealthy</small>
+                                                        {% endif %}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a class="btn btn-info btn-xs" href="/admin/saltstack/svnproject/{{ reg.id }}/" target="_blank">
+                                                                <span class="glyphicon glyphicon-edit">&nbsp;修改</span></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

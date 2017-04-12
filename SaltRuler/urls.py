@@ -21,8 +21,9 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^saltstack/', include('saltstack.urls', namespace="saltstack")),
     url(r'^deploy/', include('deploy.urls', namespace="deploy")),
+    url(r'^docker/', include('DockerWeb.urls', namespace="dockerweb")),
     url(r'^zabbix/', include('ZABBIX.urls', namespace="zabbix")),
-    url(r'^cmdb/', include('cmdb.urls')),
-    url(r'^EmpAuth/', include('EmpAuth.urls')),
+    url(r'^cmdb/', include('cmdb.urls', namespace="cmdb")),
+    url(r'^EmpAuth/', include('EmpAuth.urls', namespace="empAuth")),
     url(r'^$', include('EmpAuth.urls')),
 ]

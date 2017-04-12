@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'deploy',
     'cmdb',
     'EmpAuth',
+    'DockerWeb',
     'djcelery',    ##调用celery，djcelery是必须的. kombu.transport.django则是基于Django的broker
     'kombu.transport.django',
 )
