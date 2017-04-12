@@ -3,26 +3,18 @@
 import docker
 import os.path, json, requests
 
-
-from public import logger
-
-
 class BASE_REGISTRY_API:
-
-
     def __init__(self, timeout=2, verify=False):
         self.timeout  = timeout
         self.verify   = verify
-
     def _checkStatus(self, url, version=1):
         """ 返回私有仓状态 """
-
         if url:
             url = url.strip("/") + "/v1/_ping" if version == 1 else url.strip("/") + "/v2/"
             try:
                 req = requests.head(url, timeout=self.timeout, verify=self.verify)
             except Exception,e:
-                logger.error(e, exc_info=True)
+                return e
             else:
                 return req.ok
         return False
@@ -33,18 +25,18 @@ class BASE_REGISTRY_API:
         res = {"msg": None, "data": []}
         if url:
             ReqUrl = url.strip("/") + "/v1/search" if version == 1 else url.strip("/") + "/v2/_catalog"
-            logger.info("_search_all_repository for url {}".format(ReqUrl))
+
             try:
                 Images = requests.get(ReqUrl, timeout=self.timeout, verify=self.verify, params={"q": q}).json()
             except Exception,e:
-                logger.error(e, exc_info=True)
+
                 res.update(msg=e)
             else:
                 if version == 1:
                     res.update(data=Images["results"])
                 else:
                     res.update(data=[ {"name": _, "description": None} for _ in Images["repositories"] if q in _ ])
-        logger.info(res)
+
         return res
 
     def _list_image_tags(self, ImageName, url, version=1):
@@ -53,18 +45,18 @@ class BASE_REGISTRY_API:
         res = {"msg": None, "data": {}}
         if url and ImageName:
             ReqUrl = url.strip("/") + "/v1/repositories/{}/tags".format(ImageName) if version == 1 else url.strip("/") + "/v2/{}/tags/list".format(ImageName)
-            logger.info("_list_image_tags for url {}".format(ReqUrl))
+
             try:
                 Tags = requests.get(ReqUrl, timeout=self.timeout, verify=self.verify).json()
             except Exception,e:
-                logger.error(e, exc_info=True)
+
                 res.update(msg=e)
             else:
                 if version == 1:
                     res.update(data=Tags)
                 else:
                     res.update(data={ _:self._from_image_tag_getId(ImageName, _, url, version) for _ in Tags.get('tags', []) })
-        logger.info(res)
+
         return res
 
     def _delete_image(self, ImageName, url, version=1):
@@ -73,18 +65,18 @@ class BASE_REGISTRY_API:
         res = {"msg": None, "success": False}
         if url:
             ReqUrl = url.strip("/") + "/v1/repositories/{}/".format(ImageName) if version == 1 else ""
-            logger.info("_delete_image for url {}".format(ReqUrl))
+
             try:
                 delete_repo_result = requests.delete(ReqUrl, timeout=self.timeout, verify=self.verify).json()
             except Exception,e:
-                logger.error(e, exc_info=True)
+
                 if version == 1:
                     res.update(msg=e)
                 else:
                     res.update(msg="The operation is unsupported.", code=-1)
             else:
                 res.update(success=delete_repo_result)
-        logger.info(res)
+
         return res
 
     def _from_image_tag_getId(self, ImageName, tag, url, version=1):
@@ -92,14 +84,14 @@ class BASE_REGISTRY_API:
 
         if url:
             ReqUrl = url.strip("/") + "/v1/repositories/{}/tags/{}".format(ImageName, tag) if version == 1 else url.strip("/") + "/v2/{}/manifests/{}".format(ImageName, tag)
-            logger.info("_from_image_tag_getId for url {}".format(ReqUrl))
+
             try:
                 if version == 1:
                     r = requests.get(ReqUrl, timeout=self.timeout, verify=self.verify)
                 else:
                     r = requests.head(ReqUrl, timeout=self.timeout, verify=self.verify, allow_redirects=True, headers={"Content-Type": "application/vnd.docker.distribution.manifest.v2+json"})
             except Exception,e:
-                logger.error(e, exc_info=True)
+                print e
             else:
                 if version == 1:
                     return r.json()
@@ -113,19 +105,19 @@ class BASE_REGISTRY_API:
         res = {"msg": None, "data": {}}
         if url:
             ReqUrl = url.strip("/") + "/v1/images/{}/json".format(ImageId) if version == 1 else url.strip("/") + "/v2/{}/manifests/{}".format(ImageName, ImageId)
-            logger.info("_get_imageId_info for url {}".format(ReqUrl))
+
             try:
                 ImageInfo = requests.get(ReqUrl, timeout=self.timeout, verify=self.verify).json()
             except Exception,e:
-                logger.error(e, exc_info=True)
+
                 res.update(msg=e)
             else:
-                logger.debug(ImageInfo)
+
                 if "errors" in ImageInfo or "error" in ImageInfo:
                     res.update(msg="get tag detail info error")
                 else:
                     res.update(data=ImageInfo)
-        logger.info(res)
+
         return res
 
     def _delete_imageTag(self, ImageName, tag, url, version=1):
@@ -134,18 +126,18 @@ class BASE_REGISTRY_API:
         res = {"msg": None, "success": False}
         if url:
             ReqUrl = url.strip("/") + "/v1/repositories/{}/tags/{}".format(ImageName, tag) if version == 1 else url.strip("/") + "/v2/{}/manifests/{}".format(ImageName, self._from_image_tag_getId(ImageName, tag, url, version))
-            logger.info("_delete_imageTag for url {}".format(ReqUrl))
+
             try:
                 delete_repo_result = requests.delete(ReqUrl, timeout=self.timeout, verify=self.verify).json()
             except Exception,e:
-                logger.error(e, exc_info=True)
+
                 res.update(msg=e)
             else:
                 if version == 1:
                     res.update(success=delete_repo_result)
                 else:
                     res.update(msg="The operation is unsupported.", code=-1)
-        logger.info(res)
+
         return res
 
 class MultiRegistryManager(BASE_REGISTRY_API):
@@ -166,12 +158,12 @@ class MultiRegistryManager(BASE_REGISTRY_API):
             with open(self._dir0, "w") as f:
                 json.dump(data, f)
         except Exception,e:
-            logger.error(e, exc_info=True)
+
             res = False
         else:
             res = True
 
-        logger.info("pickle registries data, content is %s, write result is %s" %(data, res))
+
         return res
 
     @property
@@ -181,12 +173,12 @@ class MultiRegistryManager(BASE_REGISTRY_API):
             with open(self._dir0, "r") as f:
                     data = json.load(f)
         except Exception,e:
-            logger.warn(e, exc_info=True)
+
             res = []
         else:
             res = data or []
 
-        logger.info("unpickle registries data is %s" %res)
+
         return res
 
     def _pickleActive(self, data):
@@ -195,12 +187,12 @@ class MultiRegistryManager(BASE_REGISTRY_API):
             with open(self._dir1, "w") as f:
                 json.dump(data, f)
         except Exception,e:
-            logger.error(e, exc_info=True)
+
             res = False
         else:
             res = True
 
-        logger.info("pickle active data, content is %s, write result is %s" %(data, res))
+
         return res
 
     @property
@@ -210,12 +202,12 @@ class MultiRegistryManager(BASE_REGISTRY_API):
             with open(self._dir1, "r") as f:
                 data = json.load(f)
         except Exception,e:
-            logger.warn(e, exc_info=True)
+
             res = {}
         else:
             res = data or {}
 
-        logger.info("unpickle active data is %s" %res)
+
         return res
 
     @property
@@ -233,7 +225,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
         if self.isMember(name):
             return ( _ for _ in self._registries if _.get("name") == name ).next()
         else:
-            logger.warn("no such registry named {}, return an empty dict".format(name))
+
             return {}
 
     @property
@@ -247,18 +239,18 @@ class MultiRegistryManager(BASE_REGISTRY_API):
 
     def setActive(self, name):
         """ 设置活跃仓库 """
-        logger.info("setActive, request name that will set is %s" % name)
+
 
         if self.isActive(name):
-            logger.info("The name of the request is already active, think it successfully")
+            print "The name of the request is already active, think it successfully"
         else:
-            logger.info("The name of the request is not current active registry, will update it to be active.")
+
             self._active = self.getOne(name)
             self._pickleActive(self._active)
             if self.isActive(name):
-                logger.info("setActive, the request name sets it for active, successfully")
+                print "setActive, the request name sets it for active, successfully"
             else:
-                logger.info("setActive, the request name sets it for active, but fail")
+                print "setActive, the request name sets it for active, but fail"
                 return False
         return True
 
@@ -270,7 +262,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
         """ 查询 """
 
         res = {"msg": None, "code": 0}
-        logger.info("GET: the query params is {}".format(query))
+
 
         if not isinstance(query, (str, unicode)) or not query:
             res.update(msg="GET: query params type error or none", code=10000)
@@ -288,7 +280,6 @@ class MultiRegistryManager(BASE_REGISTRY_API):
                 else:
                     res.update(msg="No such registry", code=10001)
 
-        logger.info(res)
         return res
 
     def POST(self, name, addr, version=1, auth=None):
@@ -298,12 +289,12 @@ class MultiRegistryManager(BASE_REGISTRY_API):
         try:
             version = int(version)
         except Exception,e:
-            logger.error(e, exc_info=True)
+
             res.update(msg="params error", code=-10002)
-            logger.info(res)
+
             return res
         else:
-            logger.info("post a registry, name is %s, addr is %s, version is %s" %(name, addr, version))
+            print "post a registry, name is %s, addr is %s, version is %s" %(name, addr, version)
 
         if not name or not addr:
             res.update(msg="params error", code=10002)
@@ -315,16 +306,16 @@ class MultiRegistryManager(BASE_REGISTRY_API):
             self._registries.append(dict(name=name.strip(), addr=addr.strip(), version=version, auth=auth))
             self._pickle(self._registries)
             res.update(success=True, code=0)
-            logger.info("check all pass and added")
 
-        logger.info(res)
+
+
         return res
 
     def DELETE(self, name):
         """ 删除当前存储中的私有仓 """
 
         res = {"msg": None, "code": 0, "success": False}
-        logger.info("the name that will delete is %s" %name)
+
 
         if name in ("member", "active", "all"):
             res.update(msg="name reserved for the system key words", code=10005)
@@ -334,27 +325,26 @@ class MultiRegistryManager(BASE_REGISTRY_API):
 
         elif self.isMember(name):
             registry = self.getOne(name)
-            logger.info("Will delete registry is %s" %registry)
+
             self._registries.remove(registry)
             if self.isMember(name):
-                logger.info("Delete fail")
+
                 res.update(success=False)
             else:
-                logger.info("Delete successfully, pickle current registries")
+
                 self._pickle(self._registries)
                 res.update(success=True)
 
         else:
             res.update(msg="This registry does not exist", code=10007)
 
-        logger.info(res)
         return res
 
     def PUT(self, name, setActive=False):
         """ 设置活跃仓库 """
 
         res = {"msg": None, "code": 0}
-        logger.info("PUT request, setActive(%s), will set %s as active" %(setActive, name))
+
 
         if setActive:
             if name and self.isMember(name):
@@ -364,7 +354,7 @@ class MultiRegistryManager(BASE_REGISTRY_API):
         else:
             pass
 
-        logger.info(res)
+
         return res
 
 class ApiRegistryManager(BASE_REGISTRY_API):
@@ -376,7 +366,7 @@ class ApiRegistryManager(BASE_REGISTRY_API):
         self._addr   = ActiveRegistry.get("addr")
         self._ver    = ActiveRegistry.get("version")
         self._auth   = ActiveRegistry.get("auth")
-        logger.info("Registry API Init, registry is {}".format(self._addr))
+
 
     @property
     def url(self):

@@ -6,9 +6,9 @@
 
 import docker
 import os.path, json, requests
-c = docker.Client(base_url='tcp://192.168.99.101:2375',version='1.14',timeout=10)
+# c = docker.Client(base_url='tcp://192.168.99.101:2375',version='1.14',timeout=10)
 
-url = 'http://192.168.99.101:5000/'
+url = 'http://192.168.62.200:5000/'
 
 urls =  url.strip("/") + "/v2/"
 
