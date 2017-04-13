@@ -11,15 +11,6 @@
                     {% endblock %}
                         <div class="btn-group pull-right">
                             <a class="btn btn-info" href="/docker/registry_add/" target="_blank" title="添加仓库"><span class="glyphicon glyphicon-plus"></span> 添加仓库</a>
-                            <div class="btn-group pull-right dropdown">
-                                <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                    &nbsp;SaltServer&nbsp;<span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    {% for s in server_list %}
-                                        <li><a href="/saltstack/deploy/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
                         </div>
                     </h2>
                     {% if error %}<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ error }}</div>{% endif %}
