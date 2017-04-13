@@ -10,7 +10,7 @@
                     Docker私有仓库
                     {% endblock %}
                         <div class="btn-group pull-right">
-                            <a class="btn btn-info" href="/docker/registry_add/{% if salt_server.id %}{{ salt_server.id }}{% else %}0{% endif %}/" target="_blank" title="添加仓库"><span class="glyphicon glyphicon-plus"></span> 添加仓库</a>
+                            <a class="btn btn-info" href="/docker/registry_add/" target="_blank" title="添加仓库"><span class="glyphicon glyphicon-plus"></span> 添加仓库</a>
                             <div class="btn-group pull-right dropdown">
                                 <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     &nbsp;SaltServer&nbsp;<span class="caret"></span></a>
@@ -52,7 +52,7 @@
                                                         {% endif %}</td>
                                                     <td>
                                                         <div class="btn-group">
-                                                            <a class="btn btn-info btn-xs" href="/docker/registry_del/{% if salt_server.id %}{{ salt_server.id }}{% else %}0{% endif %}/?reg_id={{ reg.id }}">
+                                                            <a class="btn btn-info btn-xs" href="/docker/registry_del/?reg_id={{ reg.id }}">
                                                                 <span class="glyphicon glyphicon-edit ">&nbsp;删除</span></a>
                                                         </div>
                                                     </td>

@@ -7,7 +7,7 @@ Registry Add | Breezes - Docker Registry 管理平台
 {% block container %}
     {% if error %}<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ error }}</div>{% endif %}
     {% if success %}<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ success }}</div>{% endif %}
-<form class="form-horizontal" role="form" id="AddRegistryForm" action="/docker/registry_add/{% if salt_server.id %}{{ salt_server.id }}{% else %}0{% endif %}/" method="post">
+<form class="form-horizontal" role="form" id="AddRegistryForm" action="/docker/registry_add/" method="post">
 
   <div class="form-group">
     <label for="AddRegistryName" class="col-sm-12">Registry Name&nbsp;<span class="glyphicon glyphicon-star-empty"></span></label>

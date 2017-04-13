@@ -9,5 +9,5 @@ class registry(models.Model):
     isactive = models.IntegerField(null=True)
     auth = models.CharField(max_length=30,null=True)
 
-    def __unicode__(self):
-        return self.address
+    # def __unicode__(self):
+    #     return self.address

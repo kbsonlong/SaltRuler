@@ -6,7 +6,7 @@
         <thead>
             <tr>
                 <th>镜像名称</th>
-                <th>description</th>
+                <th>查看标签</th>
                 <th>操作管理</th>
             </tr>
         </thead>
@@ -14,10 +14,10 @@
                 <tbody>
                     <tr>
                         <td>{{ image.name }}</td>
-                        <td><a href="/docker/registry_image/0/" target="_blank" title="/docker/registry_image/0/">{{ image.description }}</a></td>
+                        <td><a href="/docker/image_tag/{{ reg_id }}/?imagename={{ image.name }}" >{{ image.name }}</a></td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-info btn-xs" href="/docker/registry_del/{% if salt_server.id %}{{ salt_server.id }}{% else %}0{% endif %}/?reg_id={{ reg.id }}">
+                                <a class="btn btn-info btn-xs" href="/docker/image_del/{% if reg_id %}{{ reg_id }}{% else %}0{% endif %}/?imagename={{ image.name }}">
                                     <span class="glyphicon glyphicon-edit ">&nbsp;删除</span></a>
                             </div>
                         </td>
