@@ -59,6 +59,8 @@ NAME="SaltRuler"             ##如果重命名项目名称，需要修改
 登录http://{ip}:{port}/
 账号密码：saltruler/saltruler
 
+as
+
 #截图
 
 

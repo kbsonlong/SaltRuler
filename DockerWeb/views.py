@@ -12,7 +12,7 @@ c = docker.Client(base_url='tcp://192.168.62.200:2375',version='1.14',timeout=10
 url = 'http://192.168.62.200:5001/'   ##私有仓库地址
 
 b = BASE_REGISTRY_API()
-
+b.get_imageId_info(ImageId="sha256:9087edac75d18fbcaffbf6ed3f0fa34e726bd5e6abefe2d4cd0fdf4a493eb43b",url=url,version=2,tag="latest",ImageName="shipyard")
 
 ##查看镜像仓库
 @login_required
