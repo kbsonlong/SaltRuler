@@ -17,6 +17,7 @@ c = Client(base_url='tcp://192.168.62.200:2375',version='1.14',timeout=10)
 
 
 #sssss
+
 url = 'http://192.168.62.200:5000/'   ##私有仓库地址
 
 b = BASE_REGISTRY_API()
