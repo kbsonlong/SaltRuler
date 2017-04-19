@@ -119,7 +119,7 @@ def state_exec(request,server_id):
                 env = request.POST.get('env')
                 state = request.POST.get('state')
                 if minion and state:
-                    ret=sapi.SaltCmd(minion,fun='state.sls',client='local',arg=state)['return'][0]
+                    ret=sapi.SaltCmd(tgt=minion,fun='state.sls',client='local',arg=state,arg1='saltenv=%s'%env)['return'][0]
             roots = sapi.SaltRun(client='wheel', fun='file_roots.list_roots')['return'][0]['data']['return']
             dirs = roots[env][0]
             states = []
@@ -175,7 +175,7 @@ def state_fun(request,server_id):
                 env = request.GET.get('env')
                 state = request.GET.get('state')
                 if minion and state:
-                    ret = sapi.SaltCmd(minion, fun='state.sls', client='local', arg=state)['return'][0]
+                    ret = sapi.SaltCmd(minion, fun='state.sls', client='local', arg=state,arg1='saltenv=%s'%env)['return'][0]
             roots = sapi.SaltRun(client='wheel', fun='file_roots.list_roots')['return'][0]['data']['return']
             dirs = roots[env][0]
             states = []
