@@ -148,6 +148,7 @@ def state_exec(request,server_id):
         fh.save()
     return render(request, 'saltstack/state.html', context)
 
+##
 @login_required
 def state_fun(request,server_id):
     ret = state = ''
