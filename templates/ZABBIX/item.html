@@ -1,8 +1,8 @@
-{% extends "AUTH/navbar.html" %}
+{% extends "base.html" %}
 {% load staticfiles %}
-{% load pagination_tags %}
+
 {% block title %}
-    <title>Item列表</title>
+    Item列表
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -19,15 +19,6 @@
                         {% endfor %}
                     </select>
                 </div>
-{#                <div class="btn-group">#}
-{#                    <label for="graph" class="sr-only"></label>#}
-{#                    <select class="form-control" id="graph" onchange="GetGraph()">#}
-{#                        <option value="">选择图像</option>#}
-{#                        {% for graph in graph_list %}#}
-{#                            <option value="{{ graph.graphid }}"><span title="{{ graph.name }}">{{ graph.name|truncatechars:40 }}</span></option>#}
-{#                        {% endfor %}#}
-{#                    </select>#}
-{#                </div>#}
                 <div class="btn-group">
                     <label for="period" class="sr-only"></label>
                     <select class="form-control" id="period" onchange="GetItem($('#itemid').html())">
@@ -47,9 +38,9 @@
         <hr>
         <img id="img" src="" style="width:100%">
         {% if item_list %}
-        {% autopaginate item_list 20 %}
+
             <div class="table-responsive">
-                 <table class="table table-hover table-bordered table-striped">
+                 <table class="table table-hover table-bordered table-striped" id="dataTables-example">
                     <thead>
                         <tr>
                             <th>NAME</th>
@@ -80,7 +71,7 @@
                      </tbody>
                 </table>
             </div>
-            {% paginate %}
+
         {% endif %}
     </div>
 {% endblock %}

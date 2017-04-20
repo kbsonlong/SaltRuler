@@ -1,31 +1,12 @@
-{% extends "AUTH/navbar.html" %}
+{% extends "base.html" %}
 {% load staticfiles %}
-{% load pagination_tags %}
 {% block title %}
-    <title>Zabbix主机</title>
+Zabbix主机
 {% endblock %}
 {% block content %}
     <div class="container">
         <h2>
             Zabbix主机列表
-{#            <div class="btn-group pull-right">#}
-{#                <div class="btn-group " >#}
-{#                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#}
-{#                        <span class="glyphicon glyphicon-filter"></span>&nbsp;模块&nbsp;<span class="caret"></span></a>#}
-{#                    <ul class="dropdown-menu">#}
-{#                        <li><a href="{% url 'salt:command' %}">所有模块</a></li>#}
-{#                        {% for module in module_list %}#}
-{#                        <li><a href="{% url 'salt:command' %}?module_id={{ module.id }}">{{ module }}</a></li>#}
-{#                        {% endfor %}#}
-{#                    </ul>#}
-{#                </div>#}
-{#                <a class="btn btn-info " href="/admin/SALT/module/add/" target="_blank">#}
-{#                    <span class="glyphicon glyphicon-plus"></span>&nbsp;模块</a>#}
-{#                <a class="btn btn-info " href="/admin/SALT/command/add/" target="_blank">#}
-{#                    <span class="glyphicon glyphicon-plus"></span>&nbsp;命令</a>#}
-{#                <a class="btn btn-info " href="{% url 'salt:command' %}?active=collect">#}
-{#                    <span class="glyphicon glyphicon-cloud-download"></span>&nbsp;采集信息</a>#}
-{#            </div>#}
         </h2>
         {% if error %}<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ error }}</div>{% endif %}
         {% if success %}<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ success }}</div>{% endif %}
@@ -61,51 +42,48 @@
             </div>
         </div>
     <br>
-        {% if host_list %}
-        {% autopaginate host_list 20 %}
-            <div class="table-responsive">
-                 <table class="table table-hover table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Host</th>
-                            <th>Interfaces</th>
-                            <th>Groups</th>
-                            <th>Templates</th>
-                            <th>Items</th>
-                            <th>Triggers</th>
-                            <th>Graphs</th>
-                            <th>Screens</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    {% for host in host_list %}
-                        <tbody>
-                            <tr>
-                                <td>{{ host.host }}</td>
-                                <td>{% for h in host.interfaces  %}
-                                    {{ h.ip }}<br>
-                                    {% endfor %}</td>
-                                <td>{% for h in host.groups  %}
-                                    {{ h.name }}<br>
-                                    {% endfor %}</td>
-{#                                <td>{% for h in host.parentTemplates  %}#}
-{#                                    {{ h.name }}<br>#}
-{#                                    {% endfor %}</td>#}
-                                <td><a href="{% url 'zabbix:template' %}?hostid={{ host.hostid }}">Templates&nbsp;<span class="badge">{{ host.parentTemplates|length }}</span></td>
-                                <td><a href="{% url 'zabbix:item' %}?hostid={{ host.hostid }}">Items&nbsp;<span class="badge">{{ host.items|length }}</span></a></td>
-                                <td><a href="{% url 'zabbix:item' %}?hostid={{ host.hostid }}">Triggers&nbsp;<span class="badge">{{ host.triggers|length }}</span></a></td>
-                                <td><a href="{% url 'zabbix:graph' %}?hostid={{ host.hostid }}">Graphs&nbsp;<span class="badge">{{ host.graphs|length }}</span></a></td>
-                                <td><a href="{% url 'zabbix:item' %}?hostid={{ host.hostid }}">Screens&nbsp;<span class="badge">{{ host.screens|length }}</span></a></td>
-                                <td>{% if host.status == '0' %}<label class="label label-success">Enable</label>
-                                    {% else %}<label class="label label-danger">Disable</label>{% endif %}
-                                </td>
-                            </tr>
-                        </tbody>
-                    {% endfor %}
-                </table>
-            </div>
-            {% paginate %}
-        {% endif %}
+
+
+    <div class="panel-body">
+        <div class="dataTable_wrapper">
+            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                <thead>
+                <tr>
+                    <th>Host</th>
+                    <th>Interfaces</th>
+                    <th>Groups</th>
+                    <th>Templates</th>
+                    <th>Items</th>
+                    <th>Triggers</th>
+                    <th>Graphs</th>
+                    <th>Screens</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+                <tbody>
+                {% for host in host_list %}
+                    <tr>
+                        <td>{{ host.host }}</td>
+                        <td>{% for h in host.interfaces  %}
+                            {{ h.ip }}<br>
+                            {% endfor %}</td>
+                        <td>{% for h in host.groups  %}
+                            {{ h.name }}<br>
+                            {% endfor %}</td>
+                        <td><a href="{% url 'zabbix:template' %}?hostid={{ host.hostid }}">Templates&nbsp;<span class="badge">{{ host.parentTemplates|length }}</span></td>
+                        <td><a href="{% url 'zabbix:item' %}?hostid={{ host.hostid }}">Items&nbsp;<span class="badge">{{ host.items|length }}</span></a></td>
+                        <td><a href="{% url 'zabbix:item' %}?hostid={{ host.hostid }}">Triggers&nbsp;<span class="badge">{{ host.triggers|length }}</span></a></td>
+                        <td><a href="{% url 'zabbix:graph' %}?hostid={{ host.hostid }}">Graphs&nbsp;<span class="badge">{{ host.graphs|length }}</span></a></td>
+                        <td><a href="{% url 'zabbix:item' %}?hostid={{ host.hostid }}">Screens&nbsp;<span class="badge">{{ host.screens|length }}</span></a></td>
+                        <td>{% if host.status == '0' %}<label class="label label-success">Enable</label>
+                            {% else %}<label class="label label-danger">Disable</label>{% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
     </div>
 {% endblock %}
 {% block scripts %}

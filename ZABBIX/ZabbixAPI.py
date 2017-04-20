@@ -6,7 +6,7 @@ import urllib2
 class ZabbixAPI:
     def __init__(self):
         cf = ConfigParser.ConfigParser()
-        cf.read("OMS/config.ini")
+        cf.read("SaltRuler/config.ini")
         self.__url = cf.get("zabbix_server","url")
         self.__user= cf.get("zabbix_server","user")
         self.__password = cf.get("zabbix_server","password")
@@ -179,6 +179,8 @@ def main():
     #39378ec03aa101c2b17d1d2bd6f4ef16
     hosts=zapi.HostGet()
     #[{u'host': u'Zabbix server', u'hostid': u'10084', u'interfaces': [{u'interfaceid': u'1', u'ip': u'127.0.0.1'}]}]
+    Template = zapi.TemplateGet()
+    print Template
 
 
 

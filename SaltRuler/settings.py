@@ -57,6 +57,7 @@ INSTALLED_APPS = (
     'DockerWeb',
     'djcelery',    ##调用celery，djcelery是必须的. kombu.transport.django则是基于Django的broker
     'kombu.transport.django',
+    'pagination',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -68,6 +69,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'pagination.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'SaltRuler.urls'
@@ -141,6 +143,15 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    # 'django.core.context_processors.auth',
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request',
+)
 
 
 # LOGGING = {

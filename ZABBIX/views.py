@@ -2,6 +2,7 @@
 from django.shortcuts import  render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required  #setting: LOGIN_URL = '/auth/login/'
+from EmpAuth.decorators import login_required
 
 from ZabbixAPI import ZabbixAPI
 
@@ -42,11 +43,12 @@ def host_create(request):
 
 @login_required
 def template(request):
+
     return render(request, 'ZABBIX/template.html', locals())
 @login_required
 def item(request):
     cf = ConfigParser.ConfigParser()
-    cf.read("OMS/config.ini")
+    cf.read("SaltRuler/config.ini")
     itemurl = cf.get("zabbix_server","itemurl")
 
     hostid=request.GET.get('hostid','')
@@ -66,7 +68,7 @@ def item(request):
 @login_required
 def graph(request):
     cf = ConfigParser.ConfigParser()
-    cf.read("OMS/config.ini")
+    cf.read("SaltRuler/config.ini")
     graphurl = cf.get("zabbix_server","graphurl")
 
     hostid=request.GET.get('hostid','')
@@ -94,6 +96,7 @@ def history(request):
             clock=[]
             item=zapi.ItemGet(itemid=itemid)[0]
             host=zapi.HostGet(hostid=item['hostid'])[0]
+            print host
             history_list=zapi.History(itemid,int(data_type))
             for history in history_list:
                 value.append(float(history['value']))
