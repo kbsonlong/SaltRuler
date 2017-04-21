@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^cmdb/', include('cmdb.urls', namespace="cmdb")),
     url(r'^EmpAuth/', include('EmpAuth.urls', namespace="empAuth")),
     url(r'^$', include('EmpAuth.urls')),
+    url(r'^ueditor/',include('DjangoUeditor.urls' )),
 ]

@@ -1,29 +1,68 @@
 {% extends 'EmpAuth/user.html' %}
-{% block title %}首页{% endblock %}
-
+{% block title %}添加用户{% endblock %}
+{% block title1 %}
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>添加用户 | Add CustomUser.</h2>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+{% endblock %}
 {% block main %}
-    <form action="/EmpAuth/useradd" method="post" class="navbar-form navbar-left" role="search">
-        <ul class="nav nav-third-level">
-            <li>
-                <div class="input-group input-group-lg">
-                  <span class="input-group-addon">用户名</span>
-                  <input name="username" type="text" value="" class="form-control" placeholder="Username">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <p></p>
+                    {% if form.errors %}
+                     <div class="alert alert-block alert-danger">
+                                请确认帐号是否存在或其它选项是否已添写
+                     </div>
+                    {% endif %}
+                    <form class="form-horizontal" method="post" action="/accounts/adduser/" role="form">
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" />{{ form.old_password.errors }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <label for="inputPassword3" class="col-sm-2 control-label">名字</label>
+                            <div class="col-sm-10">
+                                <input class="form-control"  />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <label for="inputPassword3" class="col-sm-2 control-label">邮箱</label>
+                            <div class="col-sm-10">
+                                <input class="form-control"  />
+                                {{ form.new_password2.errors }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <label for="inputPassword3" class="col-sm-2 control-label">部门</label>
+                            <div class="col-sm-10">
+                                <input class="form-control"  />
+                                {{ form.new_password2.errors }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <label for="inputPassword3" class="col-sm-2 control-label">手机</label>
+                            <div class="col-sm-10">
+                                <input class="form-control"  />
+                                {{ form.new_password2.errors }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                           <div class="col-sm-4 col-sm-offset-5">
+                               <button class="btn btn-white" type="submit"> 重置 </button>
+                               <button class="btn btn-primary" type="submit"> 提交 </button>
+                           </div>
+                        </div>
+                    </form>
                 </div>
-            </li>
-            <li>
-                <div class="input-group input-group-lg">
-                    <span class="input-group-addon">&nbsp密&nbsp&nbsp码</span>
-                    <input name="password1" type="password" class="form-control" placeholder="Password">
-                </div>
-            </li>
-            <li>
-                <div class="input-group input-group-lg">
-                    <span class="input-group-addon">密码确认</span>
-                    <input name="password2" type="password" class="form-control" placeholder="Password">
-
-                </div>
-            </li>
-        </ul>
-        <input type="submit" value="添加" class="btn btn-success"><h5 style="color:red">{{info}}</h5>
-    </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

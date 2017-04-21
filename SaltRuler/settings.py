@@ -23,6 +23,10 @@ BROKER_URL = 'redis://%s:%s/0' % (glob_config('redis','host'),glob_config('redis
 BROKER_TRANSPORT = 'redis'
 # CELERY_ALWAYS_EAGER = True
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Shanghai'
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,6 +48,7 @@ ALLOWED_HOSTS = ['192.168.62.1']
 
 INSTALLED_APPS = (
     # 'bootstrap_admin',
+    'bootstrapform',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,12 +63,13 @@ INSTALLED_APPS = (
     'djcelery',    ##调用celery，djcelery是必须的. kombu.transport.django则是基于Django的broker
     'kombu.transport.django',
     'pagination',
+    'DjangoUeditor',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

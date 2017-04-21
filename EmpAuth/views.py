@@ -3,7 +3,7 @@
 from django.shortcuts import render_to_response,render
 from django.http import HttpResponseRedirect
 from django import forms
-from .models import Users
+from .models import *
 from cmdb.models import Assetmanage
 import hashlib,json
 from .decorators import login_required
@@ -90,7 +90,7 @@ def userinfo(request):
         user_list = Users.objects.filter(username)
     else:
         user_list = Users.objects.all()
-    return render(request, 'EmpAuth/show_user.html', {'a':user_list})
+    return render(request, 'EmpAuth/show_user.html', {'user_list':user_list})
 
 @login_required
 def change(request):
@@ -116,9 +116,18 @@ def change(request):
         info = e
     return render(request, 'EmpAuth/change.html', {'info':info})
 
+class UserCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'first_name', 'email', 'department', 'mobile', "user_key")
+
+
+
 @login_required
 def useradd(request):
     username = request.session.get('username')
+    data = UserCreateForm()
     if username == 'kbson'or username == 'admin':
         info=''
         if request.method == 'POST':
@@ -137,7 +146,7 @@ def useradd(request):
                     info = 'Users %s Add Success!!' % newuser
             else:
                 info = '输入的两次密码不一致！'
-        return render(request, 'EmpAuth/useradd.html', {'info':info})
+        return render_to_response( 'EmpAuth/useradd.html', {'info':info,"data":data})
     else:
         return HttpResponseRedirect('/EmpAuth')
 

@@ -5,12 +5,12 @@ from cmdb.models import Servers
 from saltstack.saltapi import SaltAPI
 
 
-@task()
+@task
 def add(x, y):
     return x + y
 
 @task
-def server_collects(tgt,server_id):
+def server_collects(tgt='*',server_id=0):
     server_list = SaltServer.objects.all()
     contexts = {'server_list': server_list, 'server_id': server_id}
     try:

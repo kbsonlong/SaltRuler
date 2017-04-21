@@ -62,7 +62,8 @@
                             <td>{{ item.history }}day</td>
                             <td>{{ item.trends }}day</td>
                             <td>{{ item.lastclock }}</td>
-                            <td class="text text-danger"><a href="{% url 'zabbix:history' %}?itemid={{ item.itemid }}&datatype={{ item.data_type }}" target="_blank">{{ item.lastvalue }}</a></td>
+                            <td class="text text-danger">{{ item.lastvalue }}</td>
+{#                            <td class="text text-danger"><a href="{% url 'zabbix:history' %}?itemid={{ item.itemid }}&datatype={{ item.data_type }}" target="_blank">{{ item.lastvalue }}</a></td>#}
                             <td>{% if item.status == '0' %}<label class="label label-success">Enable</label>
                                 {% else %}<label class="label label-danger">Disable</label>{% endif %}
                             </td>

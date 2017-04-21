@@ -96,9 +96,11 @@ def history(request):
             clock=[]
             item=zapi.ItemGet(itemid=itemid)[0]
             host=zapi.HostGet(hostid=item['hostid'])[0]
-            print host
             history_list=zapi.History(itemid,int(data_type))
+            print zapi.History(itemid=29112,data_type=0)
+            print history_list
             for history in history_list:
+                print history
                 value.append(float(history['value']))
                 clock.append(time.strftime('%Y/%m/%d %H:%M', time.localtime(float(history['clock']))))
             print history_list
