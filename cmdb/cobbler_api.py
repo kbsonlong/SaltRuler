@@ -7,12 +7,12 @@ import os
 
 class CobblerAPI(object):
     def __init__(self,url,user,password):
-   	self.remote = xmlrpclib.Server(url)
-	self.token = self.remote.login(user,password)
-	self.ret = {
-            "result": True,
-            "comment": [],
-        }
+        self.remote = xmlrpclib.Server(url)
+        self.token = self.remote.login(user,password)
+        self.ret = {
+                "result": True,
+                "comment": [],
+            }
  
     def add_system(self,hostname,ip_add,mac_add,profile,gateway,subnet):
         '''
@@ -33,28 +33,28 @@ class CobblerAPI(object):
         self.remote.save_system(system_id, self.token) 
         try:
             self.remote.sync(self.token)
-	    os.system("cobbler system edit --name=%s --gateway=%s"%(hostname,gateway))
+            os.system("cobbler system edit --name=%s --gateway=%s"%(hostname,gateway))
         except Exception as e:
             self.ret['result'] = False
             self.ret['comment'].append(str(e))
         return self.ret
 
     def get_profile(self):
-	"""
+        """
 	get cobbler profile return
 	"""
-	try:
-	    os = self.remote.get_profiles(self.token)	
-	    for i in os:
-	        self.ret['comment'].append(i['name'])
-	    return self.ret
-	except Exception as e:
+        try:
+            os = self.remote.get_profiles(self.token)
+            for i in os:
+                self.ret['comment'].append(i['name'])
+            return self.ret
+        except Exception as e:
             self.ret['result'] = False
             self.ret['comment'].append(str(e))
             return self.ret
 
     def get_distro(self):
-	"""
+        """
 	get cobbler distro return
 	"""
         try:
@@ -67,8 +67,8 @@ class CobblerAPI(object):
             self.ret['comment'].append(str(e))
             return self.ret
 
-    def create_profile(self,name,distro,ks):	
-	"""
+    def create_profile(self,name,distro,ks):
+        """
 	    create cobbler profile
 	"""
         profile_id = self.remote.new_profile(self.token)
@@ -76,26 +76,26 @@ class CobblerAPI(object):
         self.remote.modify_profile(profile_id,"distro",distro,self.token)
         self.remote.modify_profile(profile_id,"kickstart",ks,self.token)
         self.remote.save_profile(profile_id, self.token)
-	try:
-            self.remote.sync(self.token)
-	except Exception as e:
-	    self.ret['result'] = False
-	    self.ret['comment'].append(str(e))
-	return self.ret
+        try:
+                self.remote.sync(self.token)
+        except Exception as e:
+            self.ret['result'] = False
+            self.ret['comment'].append(str(e))
+        return self.ret
 
     def remove_profile(self,name):
-	"""
+        """
             remove cobbler profile
         """
-	try:
-	    self.remote.remove_profile(name,self.token)
-	except Exception as e:
+        try:
+            self.remote.remove_profile(name,self.token)
+        except Exception as e:
             self.ret['result'] = False
             self.ret['comment'].append(str(e))
         return self.ret
 
     def remove_system(self,name):
-	"""
+        """
             remove cobbler profile
         """
         try:
