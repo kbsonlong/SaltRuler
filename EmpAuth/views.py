@@ -99,35 +99,30 @@ def change(request):
         username = request.session.get('username')
         if request.method == 'POST':
             username = request.POST.get('username')
-        elif request.method == 'GET':
-            username = request.GET.get('username')
-        oldpass  = request.POST.get('oldpass')
-        password = hashlib.sha1(oldpass + username + 'kbson').hexdigest()
-        newpass  = request.POST.get('newpass')
-        confpass = request.POST.get('confpass')
-        if confpass == newpass:
-            user=Users.objects.filter(username=username,password=password)
-            if user:
-                newpasshs = hashlib.sha1(newpass + username + 'kbson').hexdigest()
-                Users.objects.update(password=newpasshs).filter(username=username)
-        else:
-            info = '输入的两次新密码不一致！'
+            oldpass  = request.POST.get('oldpass')
+            password = hashlib.sha1(oldpass + username + 'kbson').hexdigest()
+            newpass  = request.POST.get('newpass')
+            confpass = request.POST.get('confpass')
+            if confpass == newpass:
+                user=Users.objects.filter(username=username,password=password)
+                if user:
+                    newpasshs = hashlib.sha1(newpass + username + 'kbson').hexdigest()
+                    Users.objects.update(password=newpasshs).filter(username=username)
+                    info = u"密码修改成功"
+            else:
+                info = '输入的两次新密码不一致！'
     except Exception as e:
         info = e
+    print info
     return render(request, 'EmpAuth/change.html', {'info':info})
 
-class UserCreateForm(forms.ModelForm):
 
-    class Meta:
-        model = CustomUser
-        fields = ('username', 'first_name', 'email', 'department', 'mobile', "user_key")
 
 
 
 @login_required
 def useradd(request):
     username = request.session.get('username')
-    data = UserCreateForm()
     if username == 'kbson'or username == 'admin':
         info=''
         if request.method == 'POST':
@@ -146,9 +141,9 @@ def useradd(request):
                     info = 'Users %s Add Success!!' % newuser
             else:
                 info = '输入的两次密码不一致！'
-        return render_to_response( 'EmpAuth/useradd.html', {'info':info,"data":data})
+        return render_to_response( 'EmpAuth/useradd.html', {'info':info})
     else:
-        return HttpResponseRedirect('/EmpAuth')
+        return HttpResponseRedirect('/EmpAuth/usinfo')
 
 @login_required
 def userdel(request):
@@ -159,5 +154,5 @@ def userdel(request):
             Users.objects.filter(username=username).delete()
             return HttpResponseRedirect('/EmpAuth/userinfo')
     else:
-        return HttpResponseRedirect('/EmpAuth')
+        return HttpResponseRedirect('/EmpAuth/usinfo')
 

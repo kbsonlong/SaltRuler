@@ -3,65 +3,40 @@
 {% block title1 %}
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
-            <h2>修改密码 | Assets List.</h2>
+            <h2>修改密码 | Change Password.</h2>
         </div>
         <div class="col-lg-2">
         </div>
     </div>
  {% endblock %}
 {% block main %}
-{#    <form action="/accounts/change" method="post" class="navbar-form navbar-left"  role="search">#}
-{#        <ul class="nav nav-third-level">#}
-{#            <li>#}
-{#                <div class="input-group input-group-lg">#}
-{#                  <span class="input-group-addon">用户名</span>#}
-{#                  <input name="username" type="text" value="{{ request.session.username }}" class="form-control" placeholder="Username">#}
-{#                </div>#}
-{#            </li>#}
-{#            <li>#}
-{#                <div class="input-group input-group-lg">#}
-{#                    <span class="input-group-addon">旧密码</span>#}
-{#                    <input name="oldpass" type="password" class="form-control" placeholder="">#}
-{#                </div>#}
-{#            </li>#}
-{#            <li>#}
-{#                <div class="input-group input-group-lg">#}
-{#                    <span class="input-group-addon">新密码</span>#}
-{#                    <input name="newpass" type="password" class="form-control" placeholder="">#}
-{#                </div>#}
-{#            </li>#}
-{#            <li>#}
-{#                <div class="input-group input-group-lg">#}
-{#                    <span class="input-group-addon">新密码确认</span>#}
-{#                    <input name="confpass" type="password" class="form-control" placeholder="">#}
-{#                    <h5 style="color:red">{{info}}</h5>#}
-{#                </div>#}
-{#            </li>#}
-{#        </ul>#}
-{#        <input type="submit" value="修改" class="btn btn-success">#}
-{#    </form>#}
 
 <div class="wrapper">
     <div class="row">
         <div class="ibox float-e-margins col-sm-6">
-            <form class="form-horizontal" method="post" action="" role="form" autocomplete="off">{% csrf_token %}
+            <form class="form-horizontal" method="post" action="/EmpAuth/change/" role="form" autocomplete="off">
+                <div class="form-group">
+                     <label for="inputPassword3" class="col-sm-2 control-label">用户名</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" id="id_old_password"  name="username" value="{{ request.session.username }}" />
+                    </div>
+                </div>
                 <div class="form-group">
                      <label for="inputPassword3" class="col-sm-2 control-label">旧密码</label>
                     <div class="col-sm-10">
-                        <input class="form-control" id="id_old_password" type="password" name="old_password" data-rule="原密码: required;password;"/>{{ form.old_password.errors }}
+                        <input class="form-control" id="id_old_password" type="password" name="oldpass" data-rule="原密码: required;password;"/>
                     </div>
                 </div>
                 <div class="form-group">
                      <label for="inputPassword3" class="col-sm-2 control-label">新密码</label>
                     <div class="col-sm-10">
-                        <input class="form-control" id="id_new_password1" type="password" name="new_password1" data-rule="密码: required;password;" />
+                        <input class="form-control" id="id_new_password1" type="password" name="newpass" data-rule="密码: required;password;" />
                     </div>
                 </div>
                 <div class="form-group">
                      <label for="inputPassword3" class="col-sm-2 control-label">确认密码</label>
                     <div class="col-sm-10">
-                        <input class="form-control" id="id_new_password2" type="password" data-rule="确认密码: required;match(new_password1);" name="new_password2" />
-                        {{ form.new_password2.errors }}
+                        <input class="form-control" id="id_new_password2" type="password" data-rule="确认密码: required;match(new_password1);" name="confpass" />
                     </div>
                 </div>
                 <div class="form-group">

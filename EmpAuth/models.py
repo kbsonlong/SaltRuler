@@ -163,7 +163,7 @@ class CustomUser(models.Model):
 #
 #
 class server_auth(models.Model):
-    server_ip = models.IPAddressField(blank=True, null=True, verbose_name=u'服务器')
+    server_ip = models.GenericIPAddressField(blank=True, null=True, verbose_name=u'服务器')
     user_name = models.CharField(max_length=20, blank=True, null=True, verbose_name=u'用户名')
     first_name = models.CharField(max_length=20, blank=True, null=True, verbose_name=u'姓名')
     auth_weights = models.BooleanField(default=0, verbose_name=u'权限')
