@@ -1,5 +1,6 @@
 from django.conf.urls import include, url
 from . import views
+from . import cobbler
 
 urlpatterns = [
     url(r'^asset_table/$', views.asset_table, name='asset_table'),
@@ -12,4 +13,6 @@ urlpatterns = [
     url(r'^host_del_html/$', views.host_del_html, name='host_del_html'),
     url(r'^host_list/(?P<server_ip>[^/]+)/$', views.host_list, name='host_list'),
     url(r'^server_collect/(?P<server_id>[^/]+)/$', views.server_collect, name='server_collect'),
+    url(r'^cobbler/$', cobbler.list, name='list'),
+    url(r'^cobbler2/$', cobbler.list2, name='list2'),
 ]
