@@ -77,11 +77,13 @@ def graph(request):
         host_list=zapi.HostGet()
         if hostid:
             graph_list=zapi.GraphGet(hostid=hostid)
-        else:
-            graph_list=zapi.GraphGet()
+        # else:
+        #     graph_list=zapi.GraphGet()
     except Exception as e:
         error=str(e)
     return render(request, 'ZABBIX/graph.html', locals())
+
+
 @login_required
 def screen(request):
     return render(request, 'ZABBIX/screen.html', locals())

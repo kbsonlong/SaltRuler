@@ -42,7 +42,6 @@ document.getElementById("statev").value=document.getElementById("state").value;
                                 <div class="col-lg-12">
                                     <label style="color: green">State模块:</label>
                                     <div id="states"></div>
-{#                                    <input id="statev" class="text" size="25" value="{{ state }}">#}
                                     <select ondblclick="copyText()" id="state" size="8"  class="form-control" multiple="" name="state" style="background-color: black;color: green">
                                     {% for i in states %}
                                         <option>{{ i }}</option>
