@@ -1,0 +1,52 @@
+{% extends 'cmdb/cobbler.html' %}
+{% block title %}装机平台{% endblock %}
+{% block table %}
+<div class="tab-content">
+    <div class="tab-pane fade in active">
+        <div class="row">
+            <div class="panel-heading" style="background-color: white">
+                <B class="fa fa-th"> 装机列表</B>
+                <div style="float: right;">
+                    <a href="/cmdb/system/" class="fa fa-hand-o-right">返回列表</a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="dataTable_wrapper">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                            <tr>
+                                <th>主机名</th>
+                                <th>操作系统</th>
+                                <th>IP地址</th>
+                                <th>MAC地址</th>
+                                <th>子网掩码</th>
+                                <th>创建时间</th>
+{#                                <th>管理</th>#}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in systems %}
+                            <tr class="gradeA">
+                                <td>{{ i.hostname }}</td>
+                                <td>{{ i.profile }}</td>
+                                <td>{{ i.ip_address }}</td>
+                                <td>{{ i.mac_address }}</td>
+                                <td>{{ i.netmask }}</td>
+                                <td class="center">{{ i.ctime }}</td>
+{#                                <td>#}
+{#                                    <a href="/cmdb/remove_system/?system_name={{ i.hostname }}">#}
+{#                                        <button class="btn btn-danger btn-xs" type="button">#}
+{#                                            删除#}
+{#                                        </button>#}
+{#                                    </a>#}
+{#                                </td>#}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

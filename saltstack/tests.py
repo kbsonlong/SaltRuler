@@ -1,6 +1,50 @@
-import commands
-cmd = 'curl  -F "filename=@%s" %s  -w %s  -o /dev/null' % ('/data/www/remove_img_20170329.txt','http://192.168.234.167:10003','%{http_code}')
+import urllib2
 
-result = commands.getstatusoutput(cmd)
-if result[0] == 0:
-    http_code = 200
+import time
+
+from threading import Thread
+
+class GetUrlThread(Thread):
+    def __init__(self, url):
+        self.url = url
+
+        super(GetUrlThread, self).__init__()
+
+
+    def run(self):
+        resp = urllib2.urlopen(self.url)
+
+        print self.url, resp.getcode()
+
+
+def get_responses():
+    urls = [
+
+        'http://www.google.com',
+
+        'http://www.amazon.com',
+
+        'http://www.ebay.com',
+
+        'http://www.alibaba.com',
+
+        'http://www.reddit.com'
+
+    ]
+
+    start = time.time()
+
+    threads = []
+
+    for url in urls:
+        t = GetUrlThread(url)
+        threads.append(t)
+        t.start()
+
+
+    for t in threads:
+        t.join()
+
+    print"Elapsed time: %s" % (time.time() - start)
+
+get_responses()

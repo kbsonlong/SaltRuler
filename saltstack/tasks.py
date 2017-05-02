@@ -37,7 +37,7 @@ def server_collects(tgt='*',server_id=0):
                     minions_status = '1'
                 server.hostname = grains[i]['host']
                 server.local_ip = grains[i]['id']
-                server.OS = grains[i]['os'] + ' ' + grains[i]['osrelease'] + '-' + grains[i]['osarch']
+                server.OS = "%s %s" % (grains[i]['os'], grains[i]['osrelease'])
                 server.Mem = grains[i]['mem_total']
                 server.Cpus = grains[i]['num_cpus']
                 server.Cpu_type = grains[i]['cpu_model']

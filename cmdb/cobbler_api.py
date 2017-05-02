@@ -3,7 +3,7 @@
 #
 
 import xmlrpclib
-import os 
+import os
 
 class CobblerAPI(object):
     def __init__(self,url,user,password):
@@ -39,15 +39,23 @@ class CobblerAPI(object):
             self.ret['comment'].append(str(e))
         return self.ret
 
+
+    def get_systems(self):
+        try:
+            systems = self.remote.get_systems()
+            return systems
+        except Exception as e:
+            self.ret['result'] = False
+            self.ret['comment'].append(str(e))
+            return self.ret
+
     def get_profile(self):
         """
 	get cobbler profile return
 	"""
         try:
             os = self.remote.get_profiles(self.token)
-            for i in os:
-                self.ret['comment'].append(i['name'])
-            return self.ret
+            return os
         except Exception as e:
             self.ret['result'] = False
             self.ret['comment'].append(str(e))
@@ -59,9 +67,7 @@ class CobblerAPI(object):
 	"""
         try:
             os = self.remote.get_distros(self.token)
-            for i in os:
-                self.ret['comment'].append(i['name'])
-            return self.ret
+            return os
         except Exception as e:
             self.ret['result'] = False
             self.ret['comment'].append(str(e))
@@ -94,49 +100,19 @@ class CobblerAPI(object):
             self.ret['comment'].append(str(e))
         return self.ret
 
-    def remove_system(self,name):
-        """
-            remove cobbler profile
-        """
-        try:
-            self.remote.remove_system(name,self.token)
-        except Exception as e:
-            self.ret['result'] = False
-            self.ret['comment'].append(str(e))
-        return self.ret
+    # def remove_system(self,name):
+    #     """
+    #         remove cobbler profile
+    #     """
+    #     try:
+    #         self.remote.remove_system(name,self.token)
+    #     except Exception as e:
+    #         self.ret['result'] = False
+    #         self.ret['comment'].append(str(e))
+    #     return self.ret
 	
 
-
-def system(url,user,password,hostname,ip_add,mac_add,profile,gateway,subnet):
-    cobbler = CobblerAPI(url,user,password)
-    ret = cobbler.add_system(hostname,ip_add,mac_add,profile,gateway,subnet)
-    return ret
-
-def get_profile(url,user,password):
-    cobbler = CobblerAPI(url,user,password)
-    ret = cobbler.get_profile()
-    return ret
-
-def get_distro(url,user,password):
-    cobbler = CobblerAPI(url,user,password)
-    ret = cobbler.get_distro()
-    return ret
-
-def profile_create(url,user,password,name,distro,ks): 
-    cobbler = CobblerAPI(url,user,password)
-    ret = cobbler.create_profile(name,distro,ks)
-    return ret
-
-def profile_remove(url,user,password,name):
-    cobbler = CobblerAPI(url,user,password)
-    ret = cobbler.remove_profile(name)
-    return ret
-
-def system_remove(url,user,password,name):
-    cobbler = CobblerAPI(url,user,password)
-    ret = cobbler.remove_system(name)
-    return ret
 if __name__ == '__main__':
-  #  main()
-    system =  CobblerAPI("http://192.168.52.128/cobbler_api","kbsonlong","kbsonlong")
-    print system.add_system("test",'192.168.63.102','00:50:54:2D:32:DE','centos-6.5-x86_64','192.168.10.254','255.255.255.0')
+    system =  CobblerAPI("http://192.168.62.110/cobbler_api","admin","kbsonlong")
+    print system.get_profile()
+

@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block title %}装机平台{% endblock %}
-
 {% block content %}
 <div id="page-wrapper">
     <div class="row">
@@ -8,33 +7,35 @@
             <h3 class="page-header">装机平台</h3>
         </div>
     </div>
-<div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
-			 <a id="modal-328430" href="#modal-container-328430" role="button" class="btn" data-toggle="modal">触发遮罩窗体</a>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li><a href="/cmdb/system/">装机列表</a>
+                </li>
+                <li><a href="/cmdb/add_system/">添加主机</a>
+                </li>
+                <li><a href="/cmdb/profile/">装机系统列表</a>
+                </li>
+                <li><a href="/cmdb/add_profile/">添加装机系统</a>
+                </li>
+            </ul>
+            {% if error %}
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    {{ error }}
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        {{ success }}
+                </div>
+            {% endif %}
+        {% block table %}
+        {% endblock %}
 
-			<div id="modal-container-328430" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-header">
-					 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-					<h3 id="myModalLabel">
-						标题栏
-					</h3>
-				</div>
-				<div class="modal-body">
-					<p>
-						显示信息
-					</p>
-				</div>
-				<div class="modal-footer">
-					 <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button> <button class="btn btn-primary">保存设置</button>
-				</div>
-			</div>
-		</div>
-	</div>
+
+        </div>
+    </div>
 </div>
-
-</div>
-
-
 {% endblock %}
-
