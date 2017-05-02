@@ -13,7 +13,26 @@ class CobblerAPI(object):
                 "result": True,
                 "comment": [],
             }
- 
+
+
+    def add_distro(self,name,url):
+        '''
+        添加镜像
+        '''
+        distro_id = self.remote.new_distro(self.token)
+        kernel = "%s/isolinux/vmlinuz" % url.strip('/')
+        initrd = "%s/isolinux/initrd.img" % url.strip('/')
+        self.remote.modify_distro(distro_id, 'name', name,self.token)
+        self.remote.modify_distro(distro_id, 'kernel', kernel,self.token)
+        self.remote.modify_distro(distro_id, 'initrd', initrd,self.token)
+        self.remote.save_distro(distro_id,self.token)
+        try:
+            self.remote.sync(self.token)
+        except Exception as e:
+            self.ret['result'] = False
+            self.ret['comment'].append(str(e))
+        return self.ret
+
     def add_system(self,hostname,ip_add,mac_add,profile,gateway,subnet):
         '''
         Add Cobbler System Infomation
@@ -30,7 +49,7 @@ class CobblerAPI(object):
             "name-servers-eth0"      : "114.114.114.114,8.8.8.8", 
             }, self.token) 
         self.remote.modify_system(system_id,"profile",profile,self.token) 
-        self.remote.save_system(system_id, self.token) 
+        self.remote.save_system(system_id, self.token)
         try:
             self.remote.sync(self.token)
             os.system("cobbler system edit --name=%s --gateway=%s"%(hostname,gateway))
@@ -83,7 +102,7 @@ class CobblerAPI(object):
         self.remote.modify_profile(profile_id,"kickstart",ks,self.token)
         self.remote.save_profile(profile_id, self.token)
         try:
-                self.remote.sync(self.token)
+            self.remote.sync(self.token)
         except Exception as e:
             self.ret['result'] = False
             self.ret['comment'].append(str(e))

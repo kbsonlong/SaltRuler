@@ -5,35 +5,24 @@
     <div class="tab-pane fade in active">
         <div class="row">
             <div class="panel-heading" style="background-color: white">
-                <B class="fa fa-th"> 添加装机系统</B>
+                <B class="fa fa-th"> 添加镜像</B>
                 <div style="float: right;">
-                    <a href="/cmdb/profile/" class="fa fa-hand-o-right">返回系统列表</a>
+                    <a href="/cmdb/distro/" class="fa fa-hand-o-right">返回镜像列表</a>
                 </div>
             </div>
             <div class="panel-body">
                 <div class="dataTable_wrapper">
-                    <form class="form-system" method="post" action="/cmdb/add_profile/" role="form">
+                    <form class="form-system" method="post" action="/cmdb/add_distro/" role="form">
                         <div class="form-group">
-                            <label  class="col-sm-2 control-label">系统名称</label>
+                            <label  class="col-sm-2 control-label">镜像名称</label>
                             <div class="col-sm-10">
                                 <input class="form-control" name="name" />
                             </div>
                         </div>
                         <div class="form-group">
-                             <label  class="col-sm-2 control-label" >镜像名称</label>
+                             <label  class="col-sm-2 control-label" >镜像URL</label>
                             <div class="col-sm-10">
-                                <select class="form-control"  name="distro">
-                                    {% for distro in distros %}
-                                    <option>{{ distro }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                             <label  class="col-sm-2 control-label">ks文件</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" name="ks" />
+                                <input class="form-control" name="url" value="http://<ip>/cobbler/ks_mirror/centos-6.6-x86_64"/>
                             </div>
                         </div>
                         <div class="form-group">

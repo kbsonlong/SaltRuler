@@ -8,8 +8,25 @@ from cmdb.cobbler_api import CobblerAPI
 import time
 
 
-capi=CobblerAPI("http://192.168.62.110/cobbler_api","admin","kbsonlong")
+capi=CobblerAPI("http://192.168.62.110/cobbler_api","cobbler","cobbler")
 
+def distros(request):
+    contexts = {"distros":[]}
+    distros = capi.get_distro()
+    for i in distros:
+        ctime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i['ctime']))
+        contexts["distros"].append({"name":i["name"],"kernel":i["kernel"],"ctime":ctime})
+    print contexts
+    return render(request,'cmdb/cobbler_distro.html',contexts)
+
+def add_distro(request):
+    contexts = {}
+    if request.method == "POST":
+        name = request.POST.get('name')
+        url = request.POST.get('url')
+        print url
+        capi.add_distro(name,url)
+    return render(request,'cmdb/cobbler_add_distro.html')
 
 @login_required
 def profile(request):
