@@ -45,9 +45,9 @@ INSERT INTO `saltruler`.`empauth_users` (`id`, `username`, `password`) VALUES ('
 
 5、配置uwsgi + nginx
 
-uwsgi配置参考（https://github.com/kbsonlong/SaltRuler/blob/master/uwsgi.ini）
+uwsgi配置参考（/uwsgi.ini）
 
-nginx配置参考（https://github.com/kbsonlong/SaltRuler/blob/master/uwsgi_nginx.conf）
+nginx配置参考（/uwsgi_nginx.conf）
 
 
 6、修改启动脚本uwsgi.sh
@@ -65,53 +65,53 @@ as
 
 
 login界面
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/login.jpg)
+![image](/screenshots/login.jpg)
 
 首页
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/home.png)
+![image](/screenshots/home.png)
 
 minion认证管理
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/minion_auth_man.png)
+![image](/screenshots/minion_auth_man.png)
 
 
 
 执行远程SHELL
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/command.png)
+![image](/screenshots/command.png)
 执行States 模块
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/STATES_Modules.png)
+![image](/screenshots/STATES_Modules.png)
 
 用户管理
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/userinfo.png)
+![image](/screenshots/userinfo.png)
 
 添加用户
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/useradd.png)
+![image](/screenshots/useradd.png)
 
 修改密码
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/userchange.png)
+![image](/screenshots/userchange.png)
 
 
 代码发布
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/svn.png)
+![image](/screenshots/svn.png)
 
 文件上传
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/uploadfile.png)
+![image](/screenshots/uploadfile.png)
 
 文件下载
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/downloadfile.png)
+![image](/screenshots/downloadfile.png)
 
 
 
 物理服务器信息
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/physical_server_info.png)
+![image](/screenshots/physical_server_info.png)
 
 物理服务器详细信息
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/physical_server_details_info.png)
+![image](/screenshots/physical_server_details_info.png)
 
 服务器信息新增
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/server_info_add.png)
+![image](/screenshots/server_info_add.png)
 
 
 操作审计
-![image](https://github.com/kbsonlong/SaltRuler/blob/master/screenshots/shenji.png)
+![image](/screenshots/shenji.png)
 
 
