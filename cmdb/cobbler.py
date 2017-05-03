@@ -6,9 +6,13 @@ from EmpAuth.decorators import login_required
 from django.shortcuts import render_to_response,render,HttpResponseRedirect
 from cmdb.cobbler_api import CobblerAPI
 import time
+from SaltRuler.glob_config import glob_config
 
+c_url = glob_config("cobbler_api","url")
+c_username = glob_config("cobbler_api","username")
+c_password = glob_config("cobbler_api","password")
 
-capi=CobblerAPI("http://192.168.62.110/cobbler_api","cobbler","cobbler")
+capi=CobblerAPI(c_url,c_username,c_password)
 
 def distros(request):
     contexts = {"distros":[]}

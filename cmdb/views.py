@@ -4,12 +4,9 @@ import os
 from django.shortcuts import render,HttpResponseRedirect
 from EmpAuth.decorators import login_required
 from SaltRuler.glob_config import glob_config
-from saltstack.saltapi import *
 from .models import Assetmanage, Servers
 from deploy.models import Upload
 from django import forms
-from cmdb.models import Servers
-from saltstack.models import SaltServer
 from saltstack.tasks import *
 
 class UpForm(forms.Form):

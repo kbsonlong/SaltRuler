@@ -4,7 +4,6 @@ from saltstack.models import SaltServer
 from cmdb.models import Servers
 from saltstack.saltapi import SaltAPI
 
-
 @task
 def add(x, y):
     return x + y
@@ -51,5 +50,6 @@ def server_collects(tgt='*',server_id=0):
     except Exception as e:
         contexts.update({'error': '%s %s' % (tgt, e)})
     return contexts
+
 
 
