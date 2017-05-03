@@ -20,9 +20,112 @@
                             </div>
                         </div>
                         <div class="form-group">
-                             <label  class="col-sm-2 control-label" >镜像URL</label>
+                             <label  class="col-sm-2 control-label" >镜像挂载路径</label>
                             <div class="col-sm-10">
-                                <input class="form-control" name="url" value="http://<ip>/cobbler/ks_mirror/centos-6.6-x86_64"/>
+                                <input class="form-control" name="path" value="/mnt"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <label  class="col-sm-2 control-label" >breed</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="breed" name="breed">
+                                    <option value="debian">debian</option>
+                                    <option value="freebsd">freebsd</option>
+                                    <option value="generic">generic</option>
+                                    <option value="nexenta">nexenta</option>
+                                    <option value="redhat" selected>redhat</option>
+                                    <option value="suse">suse</option>
+                                    <option value="ubuntu">ubuntu</option>
+                                    <option value="unix">unix</option>
+                                    <option value="vmware">vmware</option>
+                                    <option value="windows">windows</option>
+                                    <option value="xen">xen</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <label  class="col-sm-2 control-label" >arch</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="arch">
+                                    <option value="i386">i386</option>
+                                    <option value="x86_64" selected>x86_64</option>
+                                    <option value="ia64">ia64</option>
+                                    <option value="ppc">ppc</option>
+                                    <option value="ppc64">ppc64</option>
+                                    <option value="s390">s390</option>
+                                    <option value="arm">arm</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <label  class="col-sm-2 control-label" >os_version</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="os_version" name="os_version">
+                                    <option value="10.0">10.0</option>
+                                    <option value="10.1">10.1</option>
+                                    <option value="10.2">10.2</option>
+                                    <option value="4">4</option>
+                                    <option value="8.2">8.2</option>
+                                    <option value="8.3">8.3</option>
+                                    <option value="8.4">8.4</option>
+                                    <option value="9.0">9.0</option>
+                                    <option value="9.1">9.1</option>
+                                    <option value="9.2">9.2</option>
+                                    <option value="9.3">9.3</option>
+                                    <option value="cloudlinux6">cloudlinux6</option>
+                                    <option value="esx4">esx4</option>
+                                    <option value="esxi4">esxi4</option>
+                                    <option value="esxi5">esxi5</option>
+                                    <option value="esxi51">esxi51</option>
+                                    <option value="esxi55">esxi55</option>
+                                    <option value="esxi60">esxi60</option>
+                                    <option value="fedora16">fedora16</option>
+                                    <option value="fedora17">fedora17</option>
+                                    <option value="fedora18">fedora18</option>
+                                    <option value="fedora19">fedora19</option>
+                                    <option value="fedora20">fedora20</option>
+                                    <option value="fedora21">fedora21</option>
+                                    <option value="fedora22">fedora22</option>
+                                    <option value="fedora23">fedora23</option>
+                                    <option value="generic26">generic26</option>
+                                    <option value="jessie">jessie</option>
+                                    <option value="lucid">lucid</option>
+                                    <option value="oneiric">oneiric</option>
+                                    <option value="opensuse11.2">opensuse11.2</option>
+                                    <option value="opensuse11.3">opensuse11.3</option>
+                                    <option value="opensuse11.4">opensuse11.4</option>
+                                    <option value="opensuse12.1">opensuse12.1</option>
+                                    <option value="opensuse12.2">opensuse12.2</option>
+                                    <option value="opensuse12.3">opensuse12.3</option>
+                                    <option value="opensuse13.1">opensuse13.1</option>
+                                    <option value="opensuse13.2">opensuse13.2</option>
+                                    <option value="precise">precise</option>
+                                    <option value="quantal">quantal</option>
+                                    <option value="raring">raring</option>
+                                    <option value="rhel4">rhel4</option>
+                                    <option value="rhel5">rhel5</option>
+                                    <option value="rhel6" selected>rhel6</option>
+                                    <option value="rhel7">rhel7</option>
+                                    <option value="saucy">saucy</option>
+                                    <option value="sles10">sles10</option>
+                                    <option value="sles11">sles11</option>
+                                    <option value="sles11sp1">sles11sp1</option>
+                                    <option value="sles11sp2">sles11sp2</option>
+                                    <option value="sles11sp3">sles11sp3</option>
+                                    <option value="sles11sp4">sles11sp4</option>
+                                    <option value="sles12">sles12</option>
+                                    <option value="sles12sp1">sles12sp1</option>
+                                    <option value="squeeze">squeeze</option>
+                                    <option value="stretch">stretch</option>
+                                    <option value="trusty">trusty</option>
+                                    <option value="virtio26">virtio26</option>
+                                    <option value="vivid">vivid</option>
+                                    <option value="wheezy">wheezy</option>
+                                    <option value="wily">wily</option>
+                                    <option value="xcp16">xcp16</option>
+                                    <option value="xenserver620">xenserver620</option>
+                                    <option value="xenserver650">xenserver650</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">

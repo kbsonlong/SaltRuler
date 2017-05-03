@@ -15,16 +15,21 @@ class CobblerAPI(object):
             }
 
 
-    def add_distro(self,name,url):
+    def add_distro(self,name,url,arch,breed,os_version):
         '''
         添加镜像
         '''
         distro_id = self.remote.new_distro(self.token)
-        kernel = "%s/isolinux/vmlinuz" % url.strip('/')
-        initrd = "%s/isolinux/initrd.img" % url.strip('/')
+        kernel = "/%s/isolinux/vmlinuz" % url.strip('/')
+        initrd = "/%s/isolinux/initrd.img" % url.strip('/')
+        ks_meta = "tree=http://@@http_server@@/cblr/links/%s" % name
         self.remote.modify_distro(distro_id, 'name', name,self.token)
         self.remote.modify_distro(distro_id, 'kernel', kernel,self.token)
         self.remote.modify_distro(distro_id, 'initrd', initrd,self.token)
+        self.remote.modify_distro(distro_id, 'ks_meta', ks_meta,self.token)
+        self.remote.modify_distro(distro_id, 'arch', arch,self.token)
+        self.remote.modify_distro(distro_id, 'breed', breed,self.token)
+        self.remote.modify_distro(distro_id, 'os_version', os_version,self.token)
         self.remote.save_distro(distro_id,self.token)
         try:
             self.remote.sync(self.token)

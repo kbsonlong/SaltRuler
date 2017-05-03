@@ -7,35 +7,51 @@ from django.shortcuts import render_to_response,render,HttpResponseRedirect
 from cmdb.cobbler_api import CobblerAPI
 import time
 from SaltRuler.glob_config import glob_config
+from saltstack import saltapi
 
 c_url = glob_config("cobbler_api","url")
 c_username = glob_config("cobbler_api","username")
 c_password = glob_config("cobbler_api","password")
+
+s_url = glob_config("salt_api","url")
+s_username = glob_config("salt_api","username")
+s_password = glob_config("salt_api","password")
 
 capi=CobblerAPI(c_url,c_username,c_password)
 
 def distros(request):
     contexts = {"distros":[]}
     distros = capi.get_distro()
+    print distros[0].keys()
     for i in distros:
         ctime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i['ctime']))
         contexts["distros"].append({"name":i["name"],"kernel":i["kernel"],"ctime":ctime})
-    print contexts
     return render(request,'cmdb/cobbler_distro.html',contexts)
 
 def add_distro(request):
     contexts = {}
     if request.method == "POST":
         name = request.POST.get('name')
-        url = request.POST.get('url')
-        print url
-        capi.add_distro(name,url)
+        path = request.POST.get('path')
+        arch = request.POST.get('arch')
+        breed = request.POST.get('breed')
+        os_version = request.POST.get('os_version')
+        capi.add_distro(name,path,arch,breed,os_version)
+        '''添加link操作 ln -s {path} /var/www/cobbler/links/{name}
+        '''
+        sapi=saltapi.SaltAPI(s_url,s_username,s_password)
+        # sapi.SaltCmd()
     return render(request,'cmdb/cobbler_add_distro.html')
 
 @login_required
 def profile(request):
     contexts = {'profiles':[]}
+    name =   request.GET.get('profile_name')
     profiles =  capi.get_profile()
+    print profiles
+    if name:
+        pass
+
     for i in profiles:
         ctime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i['ctime']))
         contexts['profiles'].append({'name': i['name'], 'kickstart': i['kickstart'], 'distro': i['distro'], 'owners': i['owners'],'ctime': ctime})

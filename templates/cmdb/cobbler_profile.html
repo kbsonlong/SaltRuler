@@ -20,7 +20,7 @@
                                 <th>镜像名称</th>
                                 <th>修改时间</th>
                                 <th>备注</th>
-                                <th>管理</th>
+{#                                <th>管理</th>#}
                             </tr>
                         </thead>
                         <tbody>
@@ -31,13 +31,6 @@
                                 <td>{{ i.distro }}</td>
                                 <td>{{ i.ctime }}</td>
                                 <td class="center">{{ i.host_note }}</td>
-                                <td>
-                                    <a href="/cmdb/remove_profile/?profile_name={{ i.name }}">
-                                        <button class="btn btn-danger btn-xs" type="button">
-                                            删除
-                                        </button>
-                                    </a>
-                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
