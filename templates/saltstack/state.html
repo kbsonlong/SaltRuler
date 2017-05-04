@@ -15,7 +15,7 @@ document.getElementById("statev").value=document.getElementById("state").value;
                     <div class="row">
                     <br>
                         <div class="col-lg-4">
-                            <form action="/saltadmin/state_exec/{{ salt_server.id }}/" method="post" role="form">
+                            <form action="/saltstack/state_exec/{{ salt_server.id }}/" method="post" role="form">
 
                                 <div class="col-lg-12">
                                     <label for="minions_up">Minion组</label>
@@ -95,7 +95,7 @@ stdout:
 {#            $(document).ready(function(){#}
 {#            $('#envSelect').change(function(){#}
 {#            var p1=$(this).children('option:selected').val();#}
-{#            window.location.href="/saltadmin/state_fun/{{salt_server.id}}/?env="+p1;#}
+{#            window.location.href="/saltstack/state_fun/{{salt_server.id}}/?env="+p1;#}
 {#            })#}
 {#            })#}
 {#        </script>#}
@@ -103,7 +103,7 @@ stdout:
         <script>
               $("#envSelect").change(function(){
                 var env=$(this).children('option:selected').val();
-                $.get("/saltadmin/state_fun/{{salt_server.id}}",{'env':env}, function(data){
+                $.get("/saltstack/state_fun/{{salt_server.id}}",{'env':env}, function(data){
                     var array = eval(data);
                     var state = $("#state");
                     $("option",state).remove();
@@ -118,7 +118,7 @@ stdout:
         <script>
               $("#groupSelect2").change(function(){
                 var group=$(this).children('option:selected').val();
-                $.get("/saltadmin/get_minion/{{salt_server.id}}/",{'group':group}, function(data){
+                $.get("/saltstack/get_minion/{{salt_server.id}}/",{'group':group}, function(data){
                     var array = eval(data);
                     var minions_up = $("#minions_up");
                     $("option",minions_up).remove();

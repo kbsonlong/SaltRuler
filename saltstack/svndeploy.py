@@ -2,8 +2,8 @@
 from django.shortcuts import  render
 from django.http import JsonResponse
 from EmpAuth.decorators import login_required
-from saltadmin.models import *
-from saltadmin.saltapi import SaltAPI
+from saltstack.models import *
+from saltstack.saltapi import SaltAPI
 from deploy.models import files_history
 import time
 

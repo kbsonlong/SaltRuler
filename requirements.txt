@@ -35,3 +35,4 @@ django-celery
 ##celery可视化的方式展现:各个任务的执行情况、各个worker的健康状态进行监控
 flower
 redis
+django-bootstrap-form

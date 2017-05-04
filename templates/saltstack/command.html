@@ -7,7 +7,7 @@
                 <div class="tab-pane fade in active">
                     <div class="row">
                     <br>
-                        <form action="/saltadmin/cmd_exec/{{ salt_server.id }}/" method="post" role="form">
+                        <form action="/saltstack/cmd_exec/{{ salt_server.id }}/" method="post" role="form">
                         <div class="col-lg-4">
                             <ul>
                             <div class="row">
@@ -55,7 +55,7 @@
         <script>
               $("#groupSelect2").change(function(){
                 var group=$(this).children('option:selected').val();
-                $.get("/saltadmin/get_minion/{{salt_server.id}}/",{'group':group}, function(data){
+                $.get("/saltstack/get_minion/{{salt_server.id}}/",{'group':group}, function(data){
                     var array = eval(data);
                     var minions_up = $("#minions_up");
                     $("option",minions_up).remove();

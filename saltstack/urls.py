@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
-from saltadmin import views
-from saltadmin.svndeploy import *
+from saltstack import views
+from saltstack.svndeploy import *
 
 
 urlpatterns = [

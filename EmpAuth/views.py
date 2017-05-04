@@ -7,8 +7,8 @@ from .models import *
 from cmdb.models import Assetmanage
 import hashlib,json
 from .decorators import login_required
-from saltadmin.saltmaster import saltinfo
-from saltadmin.saltapi import SaltAPI
+from saltstack.saltmaster import saltinfo
+from saltstack.saltapi import SaltAPI
 from SaltRuler.glob_config import glob_config
 
 url = glob_config('salt_api','url')

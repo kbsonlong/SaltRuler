@@ -10,15 +10,15 @@
     代码发布
     <small style="color: red" class="text-danger">请先添加SaltServer API</small>
     <div class="btn-group pull-right">
-        <a class="btn btn-info" href="/admin/saltadmin/saltserver/add/" target="_blank" title="添加Saltmaster"><span class="glyphicon glyphicon-plus"></span> 添加API</a>
-        <a class="btn btn-info" href="/admin/saltadmin/svnproject/add/" target="_blank" title="新建项目"><span class="glyphicon glyphicon-plus"></span>新建项目</a>
+        <a class="btn btn-info" href="/admin/saltstack/saltserver/add/" target="_blank" title="添加Saltmaster"><span class="glyphicon glyphicon-plus"></span> 添加API</a>
+        <a class="btn btn-info" href="/admin/saltstack/svnproject/add/" target="_blank" title="新建项目"><span class="glyphicon glyphicon-plus"></span>新建项目</a>
 {#            Server选择#}
         <div class="btn-group pull-right dropdown">
             <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 &nbsp;SaltServer&nbsp;<span class="caret"></span></a>
             <ul class="dropdown-menu">
                 {% for s in server_list %}
-                    <li><a href="/saltadmin/deploy/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
+                    <li><a href="/saltstack/deploy/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
                 {% endfor %}
             </ul>
         </div>

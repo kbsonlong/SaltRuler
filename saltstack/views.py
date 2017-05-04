@@ -1,12 +1,12 @@
 #coding:utf-8
 from django.shortcuts import render,HttpResponse,render_to_response
 from EmpAuth.decorators import login_required
-from saltadmin.saltapi import SaltAPI
-from saltadmin.models import SaltServer
+from saltstack.saltapi import SaltAPI
+from saltstack.models import SaltServer
 import time,json
 from deploy.models import files_history
 from SaltRuler.glob_config import glob_config
-from saltadmin.models import *
+from saltstack.models import *
 # Create your views here.
 
 

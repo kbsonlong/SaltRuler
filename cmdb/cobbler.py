@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response,render,HttpResponseRedirect
 from cmdb.cobbler_api import CobblerAPI
 import time
 from SaltRuler.glob_config import glob_config
-from saltadmin import saltapi
+from saltstack import saltapi
 
 c_url = glob_config("cobbler_api","url")
 c_username = glob_config("cobbler_api","username")

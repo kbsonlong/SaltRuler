@@ -7,7 +7,7 @@ from SaltRuler.glob_config import glob_config
 from .models import Assetmanage, Servers
 from deploy.models import Upload
 from django import forms
-from saltadmin.tasks import *
+from saltstack.tasks import *
 
 class UpForm(forms.Form):
     headImg = forms.FileField(label='')

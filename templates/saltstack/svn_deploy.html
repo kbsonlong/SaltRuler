@@ -5,15 +5,15 @@
     <h2>代码发布
         <small class="text-danger">{{ salt_server.idc }} -- {{ salt_server.url }} -- {{ salt_server.role }}</small>
         <div class="btn-group pull-right">
-            <a class="btn btn-info" href="/admin/saltadmin/saltserver/add/" target="_blank" title="添加Saltmaster"><span class="glyphicon glyphicon-plus"></span>添加API</a>
-            <a class="btn btn-info" href="/admin/saltadmin/svnproject/add/" target="_blank" title="新建项目"><span class="glyphicon glyphicon-plus"></span>新建项目</a>
+            <a class="btn btn-info" href="/admin/saltstack/saltserver/add/" target="_blank" title="添加Saltmaster"><span class="glyphicon glyphicon-plus"></span>添加API</a>
+            <a class="btn btn-info" href="/admin/saltstack/svnproject/add/" target="_blank" title="新建项目"><span class="glyphicon glyphicon-plus"></span>新建项目</a>
     {#            Server选择#}
             <div class="btn-group pull-right dropdown">
                 <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     &nbsp;SaltServer&nbsp;<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     {% for s in server_list %}
-                        <li><a href="/saltadmin/deploy/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
+                        <li><a href="/saltstack/deploy/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -44,7 +44,7 @@
         $.getJSON("{% url 'saltstack:deploy_fun' salt_server.id %}", {active:active,project_id:project_id}, function (result) {
             alert(result['msg']);
             if(result['add']){
-                window.open("/admin/saltadmin/svnproject/add/");
+                window.open("/admin/saltstack/svnproject/add/");
             }
         });
     }
@@ -75,7 +75,7 @@
                                 <td>{{ project.script }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-info btn-xs" href="/admin/saltadmin/svnproject/{{ project.id }}/" target="_blank">
+                                        <a class="btn btn-info btn-xs" href="/admin/saltstack/svnproject/{{ project.id }}/" target="_blank">
                                             <span class="glyphicon glyphicon-edit">&nbsp;修改</span></a>
 
                                         <button class="btn btn-info btn-xs" type="button" onclick="checkout('checkout','{{ project.id }}')" >
