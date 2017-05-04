@@ -1,6 +1,6 @@
 #coding:utf-8
 
-from saltstack.saltapi import SaltAPI
+from saltadmin.saltapi import SaltAPI
 from SaltRuler.glob_config import glob_config
 
 url = glob_config('salt_api','url')

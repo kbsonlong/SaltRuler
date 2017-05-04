@@ -1,8 +1,8 @@
 #coding:utf-8
 from celery import task
-from saltstack.models import SaltServer
+from saltadmin.models import SaltServer
 from cmdb.models import Servers
-from saltstack.saltapi import SaltAPI
+from saltadmin.saltapi import SaltAPI
 
 @task
 def add(x, y):

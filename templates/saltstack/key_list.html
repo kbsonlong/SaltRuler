@@ -10,11 +10,11 @@
             			<div class="col-lg-4">
                 			<label style="color: black;font-size: 22px">认证管理：</label>
          	    			<ul>
-         	        			<form action="/saltstack/key_list/{{ salt_server.id }}/" method="post" role="form">
+         	        			<form action="/saltadmin/key_list/{{ salt_server.id }}/" method="post" role="form">
                         			<div class="form-group">
                             			<label style="color: green">已经认证：</label>
                             			<select size="15" class="form-control" multiple="" name="delete" style="background-color: black;color: green">
-                            			{% for i in minions.minions %}
+                            			{% for i in minions %}
                                 			<option>{{ i }}</option>
                             			{% empty %}
                                 			<option>null</option>
@@ -24,11 +24,11 @@
                         			<button class="btn btn-primary btn-xs" type="submit">删除</button>
                     			</form>
 
-                    			<form action="/saltstack/key_list/{{ salt_server.id }}/ " method="post" role="form">
+                    			<form action="/saltadmin/key_list/{{ salt_server.id }}/ " method="post" role="form">
                         			<div class="form-group">
                             			<label style="color: red">等待认证：</label>
                             			<select  class="form-control" multiple="" name="accept" style="background-color: black;color: red">
-                            			{% for i in minions.minions_pre %}
+                            			{% for i in minions_pre %}
                                 			<option>{{ i }}</option>
                             			{% empty %}
                                 			<option>null</option>

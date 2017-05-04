@@ -7,18 +7,24 @@
                 <div class="tab-pane fade in active">
                     <div class="row">
                     <br>
-                        <form action="/saltstack/cmd_exec/{{ salt_server.id }}/" method="post" role="form">
+                        <form action="/saltadmin/cmd_exec/{{ salt_server.id }}/" method="post" role="form">
                         <div class="col-lg-4">
                             <ul>
                             <div class="row">
                                     <div class="form-group">
                                         <h3 style="color:red">{{info}}</h3>
-                                         <label for="minions_up">Minions</label>
-                                        <input class="form-control" type="text" value="{{tgt}}" id="minions" name="minions" placeholder="多个IP以逗号分隔" >
-                                         <select style="background-color: black;color: green" name="minion" class="form-control" size="10"  id="minions_up" >
-                                             {% for u in minion_list %}
-                                            <option value="{{ u }}">{{ u }}</option>
+                                         <label for="minions_up">Minion组</label>
+                                        <select class="form-control" name="group" id="groupSelect">
+                                            <option  value="{{ group }}">--{{ group }}--</option>
+                                            {% for group in minion_group %}
+                                                <option>{{ group.groupname }}</option>
                                             {% endfor %}
+                                        </select>
+                                         <select style="background-color: black;color: green" name="minion" class="form-control" size="10"  id="minions_up" >
+                                             {% for minion in minions %}
+                                            <option value="{{ minion }}">{{ minion }}</option>
+                                            {% endfor %}
+                                            <option id="option"></option>
                                          </select>
 
                                         <label for="minions_up">Command</label>
@@ -44,4 +50,17 @@
                     </div>
                 </div>
             </div>
+
+    {% block scripts %}
+        <script src="/static/js/jquery-1.8.3.min.js"  type="text/javascript"></script>
+        <script language="javascript" type="text/javascript">
+            $(document).ready(function(){
+            $('#groupSelect').change(function(){
+            var p1=$(this).children('option:selected').val();
+            window.location.href="/saltadmin/get_minion/{{salt_server.id}}/?group="+p1;
+            })
+            })
+        </script>
+
+    {% endblock %}
 {% endblock %}

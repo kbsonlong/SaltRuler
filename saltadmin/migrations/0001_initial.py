@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('result', models.TextField(verbose_name='\u8fd4\u56de\u7ed3\u679c', blank=True)),
                 ('user', models.CharField(max_length=50, verbose_name='\u64cd\u4f5c\u7528\u6237')),
                 ('datetime', models.DateTimeField(auto_now_add=True, verbose_name='\u6267\u884c\u65f6\u95f4')),
-                ('server', models.ForeignKey(verbose_name='\u6240\u5c5eSalt\u670d\u52a1\u5668', to='saltstack.SaltServer')),
+                ('server', models.ForeignKey(verbose_name='\u6240\u5c5eSalt\u670d\u52a1\u5668', to='saltadmin.SaltServer')),
             ],
             options={
                 'verbose_name': '\u90e8\u7f72\u7ed3\u679c',
@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(default='\u65b0\u5efa', max_length=40, verbose_name='\u72b6\u6001')),
                 ('create_date', models.DateTimeField(auto_now_add=True, verbose_name='\u521b\u5efa\u65f6\u95f4')),
                 ('info', models.TextField(max_length=500, verbose_name='\u4fe1\u606f', blank=True)),
-                ('salt_server', models.ForeignKey(verbose_name='\u6240\u5c5eSalt\u670d\u52a1\u5668', to='saltstack.SaltServer')),
+                ('salt_server', models.ForeignKey(verbose_name='\u6240\u5c5eSalt\u670d\u52a1\u5668', to='saltadmin.SaltServer')),
             ],
             options={
                 'verbose_name': 'SVN\u9879\u76ee',

@@ -58,3 +58,40 @@ class SvnProject(models.Model):
         verbose_name_plural = u'SVN项目列表'
         unique_together = ("host", "path", "target")
 
+
+class Minions(models.Model):
+    Status = (
+    ('Accepted', 'Accepted'),
+    ('Unaccepted', 'Unaccepted'),
+    ('Rejected', 'Rejected'),
+    )
+    minion = models.CharField(max_length=50,verbose_name=u'客户端',unique=True)
+    saltserver = models.ForeignKey(SaltServer,verbose_name=u'所属Salt服务器')
+    status = models.CharField(choices=Status,max_length=20,default='Unknown',verbose_name=u'Key状态')
+    create_date=models.DateTimeField(auto_now_add=True,verbose_name=u'创建时间')
+
+    def __unicode__(self):
+        return self.minion
+
+    class Meta:
+        verbose_name = u'Salt客户端'
+        verbose_name_plural = u'Salt客户端列表'
+
+class MinionStatus(models.Model):
+    minion = models.OneToOneField(Minions)
+    minion_status = models.CharField(max_length=20,verbose_name=u'在线状态')
+    # 上次检测时间
+    alive_time_last = models.DateTimeField(auto_now=True,null=True)
+    # 当前检测时间
+    alive_time_now = models.DateTimeField(auto_now=True,null=True)
+
+class MinionGroup(models.Model):
+    groupname = models.CharField(u'Minion组',max_length=50,default='default')
+    minions = models.ManyToManyField(Minions,verbose_name=u'Minions',blank=True)
+
+    def __unicode__(self):
+        return self.groupname
+
+    class Meta:
+        verbose_name = u'Minion组'
+        verbose_name_plural = u'Minion组'

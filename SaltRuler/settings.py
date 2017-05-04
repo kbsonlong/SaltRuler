@@ -55,7 +55,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'saltstack',
+    'saltadmin',
     'deploy',
     'cmdb',
     'EmpAuth',

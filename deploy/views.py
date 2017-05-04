@@ -5,8 +5,8 @@ from django.shortcuts import render
 from EmpAuth.decorators import login_required
 from SaltRuler.glob_config import glob_config
 from deploy.models import files_history
-from saltstack.models import SaltServer
-from saltstack.saltapi import *
+from saltadmin.models import SaltServer
+from saltadmin.saltapi import *
 # Create your views here.
 
 

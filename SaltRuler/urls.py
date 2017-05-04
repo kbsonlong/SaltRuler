@@ -15,11 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-import saltstack,deploy,cmdb,EmpAuth
+import saltadmin,deploy,cmdb,EmpAuth
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^saltstack/', include('saltstack.urls', namespace="saltstack")),
+    url(r'^saltadmin/', include('saltadmin.urls', namespace="saltadmin")),
     url(r'^deploy/', include('deploy.urls', namespace="deploy")),
     url(r'^docker/', include('DockerWeb.urls', namespace="dockerweb")),
     url(r'^zabbix/', include('ZABBIX.urls', namespace="zabbix")),

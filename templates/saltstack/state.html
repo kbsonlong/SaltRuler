@@ -15,13 +15,13 @@ document.getElementById("statev").value=document.getElementById("state").value;
                     <div class="row">
                     <br>
                         <div class="col-lg-4">
-                            <form action="/saltstack/state_exec/{{ salt_server.id }}/" method="post" role="form">
+                            <form action="/saltadmin/state_exec/{{ salt_server.id }}/" method="post" role="form">
 
                                 <div class="col-lg-12">
-                                    <label style="color: green">目标主机：</label>
+                                    <label for="minions_up">目标主机</label>
 
                                     <select size="8"  class="form-control" multiple="" name="tgt">
-                                    {% for i in minion_list %}
+                                    {% for i in minions %}
                                         <option>{{ i }}</option>
                                     {% empty %}
                                         <option>null</option>
@@ -90,7 +90,16 @@ stdout:
             $(document).ready(function(){
             $('#envSelect').change(function(){
             var p1=$(this).children('option:selected').val();
-            window.location.href="/saltstack/state_fun/{{salt_server.id}}/?env="+p1;
+            window.location.href="/saltadmin/state_fun/{{salt_server.id}}/?env="+p1;
+            })
+            })
+        </script>
+
+        <script language="javascript" type="text/javascript">
+            $(document).ready(function(){
+            $('#groupSelect').change(function(){
+            var p1=$(this).children('option:selected').val();
+            window.location.href="/saltadmin/get_minion/{{salt_server.id}}/?group="+p1+"&state=True";
             })
             })
         </script>

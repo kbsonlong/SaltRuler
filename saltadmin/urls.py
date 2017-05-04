@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
-from saltstack import views
-from saltstack.svndeploy import *
+from saltadmin import views
+from saltadmin.svndeploy import *
 
 
 urlpatterns = [
@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^service_fun/(?P<server_id>[0-9]+)/$', service_fun, name='service_fun'),
     url(r'^checkout/(?P<server_id>[0-9]+)/$', checkout, name='checkout'),
     url(r'^state_fun/(?P<server_id>[0-9]+)/$', views.state_fun, name='state_fun'),
+    url(r'^get_minion/(?P<server_id>[0-9]+)/$', views.get_minion, name='get_minion'),
 ]

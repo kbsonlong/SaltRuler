@@ -7,8 +7,8 @@ from .models import *
 from cmdb.models import Assetmanage
 import hashlib,json
 from .decorators import login_required
-from saltstack.saltmaster import saltinfo
-from saltstack.saltapi import SaltAPI
+from saltadmin.saltmaster import saltinfo
+from saltadmin.saltapi import SaltAPI
 from SaltRuler.glob_config import glob_config
 
 url = glob_config('salt_api','url')
@@ -50,28 +50,29 @@ def login(request):
 def index(request):
     username = request.session.get('username')
     if username:
-        LocalData = saltinfo(salt_master)
-
-        ##统计数据中心主机
-        LocalData['gz'] = len(Assetmanage.objects.filter(data_center='广州市').values())
-        LocalData['sz'] = len(Assetmanage.objects.filter(data_center='深圳市').values())
-        LocalData['bj'] = len(Assetmanage.objects.filter(data_center='北京市').values())
-        LocalData['qt'] = len(Assetmanage.objects.all().values()) - LocalData['gz'] - LocalData['sz'] - LocalData['bj']
-
-        ##SaltStack状态
-        minions = sapi.key_list('manage.status', client='runner')['return'][0]
-        minion_down = minions['down']
-        minion_online = len(minions['up'])
-        if len(minion_down) > 0:
-            minion_down = minion_down
-        else:
-            minion_down = []
-        key_status, totle = sapi.minions_key_status()
-        saltdata = {'minion_online': minion_online, 'minion_offline': len(minion_down),'minion_down': minion_down}
-        LocalData['username'] = username
-        LocalData['minions_totle'] = totle
-        LocalData.update(saltdata)
-        LocalData.update(key_status)
+        LocalData={}
+        # LocalData = saltinfo(salt_master)
+        #
+        # ##统计数据中心主机
+        # LocalData['gz'] = len(Assetmanage.objects.filter(data_center='广州市').values())
+        # LocalData['sz'] = len(Assetmanage.objects.filter(data_center='深圳市').values())
+        # LocalData['bj'] = len(Assetmanage.objects.filter(data_center='北京市').values())
+        # LocalData['qt'] = len(Assetmanage.objects.all().values()) - LocalData['gz'] - LocalData['sz'] - LocalData['bj']
+        #
+        # ##SaltStack状态
+        # minions = sapi.key_list('manage.status', client='runner')['return'][0]
+        # minion_down = minions['down']
+        # minion_online = len(minions['up'])
+        # if len(minion_down) > 0:
+        #     minion_down = minion_down
+        # else:
+        #     minion_down = []
+        # key_status, totle = sapi.minions_key_status()
+        # saltdata = {'minion_online': minion_online, 'minion_offline': len(minion_down),'minion_down': minion_down}
+        # LocalData['username'] = username
+        # LocalData['minions_totle'] = totle
+        # LocalData.update(saltdata)
+        # LocalData.update(key_status)
         return render_to_response('EmpAuth/home.html', LocalData)
     else:
         return HttpResponseRedirect('EmpAuth/login')

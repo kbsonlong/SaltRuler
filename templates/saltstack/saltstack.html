@@ -9,13 +9,13 @@
                 <div class="col-lg-12">
                     <h3 class="page-header">SaltStack管理  <small style="color: red">{{ apiinfo }}</small> </h3><h4 style="color: #4BA508" >{{ salt_server.idc }} -- {{ salt_server.url }} -- {{ salt_server.role }}</h4>
                     <div class="btn-group pull-right">
-                        <a class="btn btn-info" href="/admin/saltstack/saltserver/add/" target="_blank" title="添加Saltmaster"><span class="glyphicon glyphicon-plus"></span>添加API</a>
+                        <a class="btn btn-info" href="/admin/saltadmin/saltserver/add/" target="_blank" title="添加Saltmaster"><span class="glyphicon glyphicon-plus"></span>添加API</a>
                         <div class="btn-group pull-right dropdown">
                             <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         &nbsp;SaltServer&nbsp;<span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 {% for s in server_list %}
-                                    <li><a href="/saltstack/{{ url }}/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
+                                    <li><a href="/saltadmin/{{ url }}/{{s.id}}/">{{ s.idc }} -- {{ s.url }}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>
