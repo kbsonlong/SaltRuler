@@ -20,16 +20,6 @@ class CobblerAPI(object):
         添加镜像
         '''
         distro_id = self.remote.new_distro(self.token)
-        kernel = "/%s/isolinux/vmlinuz" % path.strip('/')
-        initrd = "/%s/isolinux/initrd.img" % path.strip('/')
-        ks_meta = "tree=http://@@http_server@@/cblr/links/%s" % name
-        self.remote.modify_distro(distro_id, 'name', name,self.token)
-        self.remote.modify_distro(distro_id, 'kernel', kernel,self.token)
-        self.remote.modify_distro(distro_id, 'initrd', initrd,self.token)
-        self.remote.modify_distro(distro_id, 'ks_meta', ks_meta,self.token)
-        self.remote.modify_distro(distro_id, 'arch', arch,self.token)
-        self.remote.modify_distro(distro_id, 'breed', breed,self.token)
-        self.remote.modify_distro(distro_id, 'os_version', os_version,self.token)
         self.remote.save_distro(distro_id,self.token)
 
         ###将挂载的iso文件同步到/var/www/cobbler/ks_mirror/{name}-{arch}目录,
@@ -39,7 +29,8 @@ class CobblerAPI(object):
             "breed": breed,
             "arch": arch
         }
-        self.remote.background_import(options,self.token)
+        self.remote.background_import(options, self.token)
+
         try:
             self.remote.sync(self.token)
         except Exception as e:
@@ -47,32 +38,56 @@ class CobblerAPI(object):
             self.ret['comment'].append(str(e))
         return self.ret
 
-    def add_system(self,hostname,ip_add,mac_add,profile,gateway,subnet):
+    def get_distro(self):
+        """
+    get cobbler distro return
+    """
+        try:
+            os = self.remote.get_distros(self.token)
+            return os
+        except Exception as e:
+            self.ret['result'] = False
+            self.ret['comment'].append(str(e))
+            return self.ret
+
+    ###删除镜像
+    def remove_distro(self,name):
+        try:
+            os = self.remote.remove_distro(name,self.token)
+            return os
+        except Exception as e:
+            self.ret['result'] = False
+            self.ret['comment'].append(str(e))
+            return self.ret
+
+
+    ##添加主机
+    def add_system(self, hostname, ip_add, mac_add, profile, gateway, subnet):
         '''
         Add Cobbler System Infomation
         '''
-        system_id = self.remote.new_system(self.token) 
-        self.remote.modify_system(system_id,"name",hostname,self.token) 
-        self.remote.modify_system(system_id,"hostname",hostname,self.token) 
-        self.remote.modify_system(system_id,'modify_interface', { 
- 	    "macaddress-eth0"   : mac_add,
-            "ipaddress-eth0"    : ip_add,
-            "gateway-eth0"      : gateway,
-            "subnet-eth0"       : subnet,
-            "static-eth0"       : 1,
-            "name-servers-eth0"      : "114.114.114.114,8.8.8.8", 
-            }, self.token) 
-        self.remote.modify_system(system_id,"profile",profile,self.token) 
+        system_id = self.remote.new_system(self.token)
+        self.remote.modify_system(system_id, "name", hostname, self.token)
+        self.remote.modify_system(system_id, "hostname", hostname, self.token)
+        self.remote.modify_system(system_id, 'modify_interface', {
+            "macaddress-eth0": mac_add,
+            "ipaddress-eth0": ip_add,
+            "gateway-eth0": gateway,
+            "subnet-eth0": subnet,
+            "static-eth0": 1,
+            "name-servers-eth0": "114.114.114.114,8.8.8.8",
+        }, self.token)
+        self.remote.modify_system(system_id, "profile", profile, self.token)
         self.remote.save_system(system_id, self.token)
         try:
             self.remote.sync(self.token)
-            os.system("cobbler system edit --name=%s --gateway=%s"%(hostname,gateway))
+            os.system("cobbler system edit --name=%s --gateway=%s" % (hostname, gateway))
         except Exception as e:
             self.ret['result'] = False
             self.ret['comment'].append(str(e))
         return self.ret
 
-
+    ##获取主机列表
     def get_systems(self):
         try:
             systems = self.remote.get_systems()
@@ -82,6 +97,22 @@ class CobblerAPI(object):
             self.ret['comment'].append(str(e))
             return self.ret
 
+    ##删除列表主机
+    def remove_system(self,name):
+        """
+            remove cobbler profile
+        """
+        try:
+            info = self.remote.remove_system(name,self.token)
+            return info
+        except Exception as e:
+            self.ret['result'] = False
+            self.ret['comment'].append(str(e))
+            return self.ret
+
+
+
+    ##获取装机系统
     def get_profile(self):
         """
 	get cobbler profile return
@@ -94,18 +125,8 @@ class CobblerAPI(object):
             self.ret['comment'].append(str(e))
             return self.ret
 
-    def get_distro(self):
-        """
-	get cobbler distro return
-	"""
-        try:
-            os = self.remote.get_distros(self.token)
-            return os
-        except Exception as e:
-            self.ret['result'] = False
-            self.ret['comment'].append(str(e))
-            return self.ret
 
+    ##添加装机系统
     def create_profile(self,name,distro,ks):
         """
 	    create cobbler profile
@@ -122,6 +143,7 @@ class CobblerAPI(object):
             self.ret['comment'].append(str(e))
         return self.ret
 
+    ##删除装机系统
     def remove_profile(self,name):
         """
             remove cobbler profile
@@ -133,16 +155,7 @@ class CobblerAPI(object):
             self.ret['comment'].append(str(e))
         return self.ret
 
-    # def remove_system(self,name):
-    #     """
-    #         remove cobbler profile
-    #     """
-    #     try:
-    #         self.remote.remove_system(name,self.token)
-    #     except Exception as e:
-    #         self.ret['result'] = False
-    #         self.ret['comment'].append(str(e))
-    #     return self.ret
+
 	
 
 if __name__ == '__main__':

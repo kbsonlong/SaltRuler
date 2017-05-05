@@ -18,6 +18,8 @@ urlpatterns = [
     url(r'^remove_profile/$', cobbler.remove_profile, name='remove_profile'),
     url(r'^system/$', cobbler.system, name='system'),
     url(r'^add_system/$', cobbler.add_system, name='add_system'),
+    url(r'^remove_system/$', cobbler.remove_system, name='remove_system'),
     url(r'^distros/$', cobbler.distros, name='distros'),
     url(r'^add_distro/$', cobbler.add_distro, name='add_distro'),
+    url(r'^remove_distro/$', cobbler.remove_distro, name='remove_distro'),
 ]

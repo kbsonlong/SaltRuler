@@ -19,25 +19,41 @@ s_password = glob_config("salt_api","password")
 
 capi=CobblerAPI(c_url,c_username,c_password)
 
+@login_required
 def distros(request):
     contexts = {"distros":[]}
     distros = capi.get_distro()
-    print distros[0].keys()
     for i in distros:
         ctime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i['ctime']))
         contexts["distros"].append({"name":i["name"],"kernel":i["kernel"],"ctime":ctime})
     return render(request,'cmdb/cobbler_distro.html',contexts)
 
+@login_required
 def add_distro(request):
     contexts = {}
-    if request.method == "POST":
-        name = request.POST.get('name')
-        path = request.POST.get('path')
-        arch = request.POST.get('arch')
-        breed = request.POST.get('breed')
-        os_version = request.POST.get('os_version')
-        capi.add_distro(name,path,arch,breed,os_version)
-    return render(request,'cmdb/cobbler_add_distro.html')
+    try:
+        if request.method == "POST":
+            name = request.POST.get('name')
+            path = request.POST.get('path')
+            arch = request.POST.get('arch')
+            breed = request.POST.get('breed')
+            os_version = request.POST.get('os_version')
+            capi.add_distro(name,path,arch,breed,os_version)
+            return HttpResponseRedirect('/cmdb/distros/')
+    except Exception as e:
+        contexts.update({"error":e})
+    return render(request,'cmdb/cobbler_add_distro.html',contexts)
+
+@login_required
+def remove_distro(request):
+    contexts = {}
+    distro_name = request.GET.get('distro_name')
+    ret = capi.remove_distro(distro_name)
+    print ret
+    if ret:
+        return HttpResponseRedirect('/cmdb/distros/')
+    return render(request, 'cmdb/cobbler_distro.html')
+
 
 @login_required
 def profile(request):
@@ -104,4 +120,12 @@ def add_system(request):
         return HttpResponseRedirect('/cmdb/system')
     return render(request,'cmdb/cobbler_add_system.html',contexts)
 
+
+@login_required
+def remove_system(request):
+    contexts = {}
+    name = request.GET.get('system_name')
+    ret = capi.remove_system(name)
+    print ret
+    return HttpResponseRedirect('/cmdb/system/')
 

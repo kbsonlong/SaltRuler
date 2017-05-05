@@ -21,7 +21,7 @@
                                 <th>MAC地址</th>
                                 <th>子网掩码</th>
                                 <th>创建时间</th>
-{#                                <th>管理</th>#}
+                                <th>管理</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -33,13 +33,13 @@
                                 <td>{{ i.mac_address }}</td>
                                 <td>{{ i.netmask }}</td>
                                 <td class="center">{{ i.ctime }}</td>
-{#                                <td>#}
-{#                                    <a href="/cmdb/remove_system/?system_name={{ i.hostname }}">#}
-{#                                        <button class="btn btn-danger btn-xs" type="button">#}
-{#                                            删除#}
-{#                                        </button>#}
-{#                                    </a>#}
-{#                                </td>#}
+                                <td>
+                                    <a href="/cmdb/remove_system/?system_name={{ i.hostname }}">
+                                        <button class="btn btn-danger btn-xs" type="button">
+                                            删除
+                                        </button>
+                                    </a>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>

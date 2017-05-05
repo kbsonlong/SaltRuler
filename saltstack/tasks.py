@@ -50,6 +50,3 @@ def server_collects(tgt='*',server_id=0):
     except Exception as e:
         contexts.update({'error': '%s %s' % (tgt, e)})
     return contexts
-
-
-
