@@ -37,10 +37,6 @@ def add_distro(request):
         breed = request.POST.get('breed')
         os_version = request.POST.get('os_version')
         capi.add_distro(name,path,arch,breed,os_version)
-        '''添加link操作 ln -s {path} /var/www/cobbler/links/{name}
-        '''
-        sapi=saltapi.SaltAPI(s_url,s_username,s_password)
-        # sapi.SaltCmd()
     return render(request,'cmdb/cobbler_add_distro.html')
 
 @login_required

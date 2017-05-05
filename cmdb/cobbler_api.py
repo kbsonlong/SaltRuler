@@ -15,13 +15,13 @@ class CobblerAPI(object):
             }
 
 
-    def add_distro(self,name,url,arch,breed,os_version):
+    def add_distro(self,name,path,arch,breed,os_version):
         '''
         添加镜像
         '''
         distro_id = self.remote.new_distro(self.token)
-        kernel = "/%s/isolinux/vmlinuz" % url.strip('/')
-        initrd = "/%s/isolinux/initrd.img" % url.strip('/')
+        kernel = "/%s/isolinux/vmlinuz" % path.strip('/')
+        initrd = "/%s/isolinux/initrd.img" % path.strip('/')
         ks_meta = "tree=http://@@http_server@@/cblr/links/%s" % name
         self.remote.modify_distro(distro_id, 'name', name,self.token)
         self.remote.modify_distro(distro_id, 'kernel', kernel,self.token)
@@ -31,6 +31,15 @@ class CobblerAPI(object):
         self.remote.modify_distro(distro_id, 'breed', breed,self.token)
         self.remote.modify_distro(distro_id, 'os_version', os_version,self.token)
         self.remote.save_distro(distro_id,self.token)
+
+        ###将挂载的iso文件同步到/var/www/cobbler/ks_mirror/{name}-{arch}目录,
+        options = {
+            "name": name,
+            "path": path,
+            "breed": breed,
+            "arch": arch
+        }
+        self.remote.background_import(options,self.token)
         try:
             self.remote.sync(self.token)
         except Exception as e:
