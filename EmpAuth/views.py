@@ -144,7 +144,7 @@ def useradd(request):
                 info = '输入的两次密码不一致！'
         return render_to_response( 'EmpAuth/useradd.html', {'info':info})
     else:
-        return HttpResponseRedirect('/EmpAuth/usinfo')
+        return HttpResponseRedirect('/EmpAuth/useradd')
 
 @login_required
 def userdel(request):

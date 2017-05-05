@@ -80,8 +80,12 @@ def key_list(request,server_id):
 ##获取minion组的minion
 @login_required
 def get_minion(request,server_id):
-    group = request.GET.get("group")
-    minions =MinionGroup.objects.get(groupname=group).minions.all().values('minion')
+    try:
+        print 1
+        group = request.GET.get("group")
+        minions =MinionGroup.objects.get(groupname=group).minions.all().values('minion')
+    except:
+        minions = Minions.objects.all().values()
     minion_list=[]
     for minion in minions:
         minion_list.append(minion['minion'])
