@@ -38,6 +38,12 @@ def add_distro(request):
             arch = request.POST.get('arch')
             breed = request.POST.get('breed')
             os_version = request.POST.get('os_version')
+            distros =  capi.get_distro()
+            for i in distros:
+                distro_name = "%s-%s" %(name,arch)
+                if distro_name == i['name']:
+                    contexts.update({"error": "%s 已经存在" % distro_name})
+                    return render(request,'cmdb/cobbler_add_distro.html',contexts)
             capi.add_distro(name,path,arch,breed,os_version)
             return HttpResponseRedirect('/cmdb/distros/')
     except Exception as e:
