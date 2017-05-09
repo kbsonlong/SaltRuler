@@ -6,7 +6,7 @@ import urllib2
 class ZabbixAPI:
     def __init__(self):
         cf = ConfigParser.ConfigParser()
-        cf.read("SaltRuler/config.ini")
+        cf.read("../SaltRuler/config.ini")
         self.__url = cf.get("zabbix_server","url")
         self.__user= cf.get("zabbix_server","user")
         self.__password = cf.get("zabbix_server","password")
@@ -172,15 +172,30 @@ class ZabbixAPI:
             "id": 2
         }
         return self.PostRequest(data)
+
+
+    def Trigger(self,triggerid):
+        data = {
+            "jsonrpc": "2.0",
+            "method": "trigger.get",
+            "params": {
+                "triggerids": triggerid,
+                "output": "extend",
+                "selectFunctions": "extend"
+            },
+            "auth": self.__token_id,
+            "id": 1
+        }
+        return self.PostRequest(data)
+
+
 #测试：python manager.py shell ; from ZABBIX.ZabbixAPI import * ; main()，代码修改了要ctrl+Z退出重进
 def main():
     zapi=ZabbixAPI()
     token=zapi.UserLogin()
-    #39378ec03aa101c2b17d1d2bd6f4ef16
     hosts=zapi.HostGet()
-    #[{u'host': u'Zabbix server', u'hostid': u'10084', u'interfaces': [{u'interfaceid': u'1', u'ip': u'127.0.0.1'}]}]
     Template = zapi.TemplateGet()
-    print Template
+    print zapi.Trigger("13594")
 
 
 
