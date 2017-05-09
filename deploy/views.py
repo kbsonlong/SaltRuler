@@ -79,7 +79,8 @@ def upload_file(request,server_id):
                 ##备份文件
                 if mtime:
                     file_path =u'/%s/%s'  % (dest.strip('/'),myFile.name)
-                    file_result = sapi.SaltCmd(client='local', tgt=server, fun='file.file_exists',expr_form='list', arg=file_path)['return'][0][server]
+
+                    file_result = sapi.SaltCmd(client='local', tgt=server, fun='file.file_exists', arg=file_path,expr_form='list')['return'][0][server.split(',')[0]]
                     if file_result:
                         command = 'mv %s %s%s' % (file_path,file_path,time.strftime("%Y%m%d%H%M%S", time.localtime()))
                         sapi.SaltCmd(tgt=server, fun="cmd.run", expr_form='list', arg=command)
