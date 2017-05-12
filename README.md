@@ -100,6 +100,26 @@ minion认证管理
 ![image](/screenshots/downloadfile.png)
 
 
+Cobbler装机平台
+
+装机列表
+![image](/screenshots/装机列表.png)
+
+添加主机
+![image](/screenshots/装机列表.png)
+
+装机系统列表
+![image](/screenshots/cobbler_profile.png)
+
+添加装机系统
+![image](/screenshots/添加装机系统.png)
+
+系统镜像列表
+![image](/screenshots/系统镜像列表.png)
+
+添加系统镜像
+![image](/screenshots/添加系统镜像.png)
+
 
 物理服务器信息
 ![image](/screenshots/physical_server_info.png)

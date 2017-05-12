@@ -105,6 +105,7 @@ def cmd_exec(request,server_id):
     sapi = SaltAPI(url=salt_server.url, username=salt_server.username, password=salt_server.password)
     minion_group = MinionGroup.objects.all()
     minions = sapi.key_list('key.list_all')['return'][0]['data']['return']['minions']
+    # minions = MinionGroup.objects.minions.all()
     tgt = info  = cmd_exec_result =minion_list= ''
 
     context = {'salt_server':salt_server,'server_list':server_list,'minions':minions,'url':'cmd_exec'}
@@ -114,8 +115,10 @@ def cmd_exec(request,server_id):
             ip_list = request.POST.get('minion')
             cmd_args = request.POST.get('arg')
             group = request.POST.get('group')
-            minions = MinionGroup.objects.get(groupname=group).minions.all()
-
+            if group:
+                minions = MinionGroup.objects.get(groupname=group).minions.all()
+            else:
+                minions = MinionGroup.objects.get(groupname="All").minions.all()
             if not cmd_args:
                 info = '请输入执行命令！'
             elif ip_list:

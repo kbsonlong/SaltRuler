@@ -30,6 +30,8 @@ def server_collects(tgt='*',server_id=0):
                     server = Servers.objects.get(local_ip=i)
                 except:
                     server = Servers()
+
+                # if sapi.SaltCmd(tgt=i,fun='test.ping',client='local')['return'][0]:
                 if i in minions['up']:
                     minions_status = '0'
                 else:
