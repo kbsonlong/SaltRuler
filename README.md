@@ -106,7 +106,7 @@ Cobbler装机平台
 ![image](/screenshots/装机列表.png)
 
 添加主机
-![image](/screenshots/装机列表.png)
+![image](/screenshots/添加主机.png)
 
 装机系统列表
 ![image](/screenshots/cobbler_profile.png)
