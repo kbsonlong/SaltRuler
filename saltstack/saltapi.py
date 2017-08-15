@@ -18,30 +18,15 @@ class SaltAPI:
         self.__url = url.rstrip('/') #移除URL末尾的/
         self.__username = username
         self.__password = password
-        self.__token_id = self.SaltLogin()
+        self.__token_id = self.token_id()
     #登陆获取token
-    def SaltLogin(self):
-        params = {'eauth': 'pam', 'username': self.__username, 'password': self.__password}
-        encode = urllib.urlencode(params)
-        obj = urllib.unquote(encode)
-        headers = {'X-Auth-Token':''}
-        url = self.__url + '/login'
-        req = urllib2.Request(url, obj, headers)
-        opener = urllib2.urlopen(req)
-        content = json.loads(opener.read())
-        try:
-            token = content['return'][0]['token']
-            return token
-        except KeyError:
-            raise KeyError
-
-    # # 登陆获取token
-    # def token_id(self):
+    # def SaltLogin(self):
     #     params = {'eauth': 'pam', 'username': self.__username, 'password': self.__password}
     #     encode = urllib.urlencode(params)
     #     obj = urllib.unquote(encode)
-    #     headers = {'X-Auth-Token': ''}
+    #     headers = {'X-Auth-Token':''}
     #     url = self.__url + '/login'
+    #     print url,self.__username,self.__password
     #     req = urllib2.Request(url, obj, headers)
     #     opener = urllib2.urlopen(req)
     #     content = json.loads(opener.read())
@@ -50,6 +35,23 @@ class SaltAPI:
     #         return token
     #     except KeyError:
     #         raise KeyError
+
+    # 登陆获取token
+    def token_id(self):
+        params = {'eauth': 'pam', 'username': self.__username, 'password': self.__password}
+        encode = urllib.urlencode(params)
+        obj = urllib.unquote(encode)
+        headers = {'X-Auth-Token': ''}
+        url = self.__url + '/login'
+        req = urllib2.Request(url, obj, headers)
+        print req
+        opener = urllib2.urlopen(req)
+        content = json.loads(opener.read())
+        try:
+            token = content['return'][0]['token']
+            return token
+        except KeyError:
+            raise KeyError
 
     def postRequest(self, obj, prefix='/'):
         url = self.__url + prefix

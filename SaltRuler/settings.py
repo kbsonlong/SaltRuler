@@ -41,7 +41,7 @@ SECRET_KEY = 'f*^g$aox(7mpyaugqmal(hezq+a&5+^imdm4w7!-8v9*q242&_'
 DEBUG = True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.62.1']
+ALLOWED_HOSTS = ['192.168.62.1','127.0.0.1']
 
 
 # Application definition
@@ -62,20 +62,20 @@ INSTALLED_APPS = (
     'DockerWeb',
     'djcelery',    ##调用celery，djcelery是必须的. kombu.transport.django则是基于Django的broker
     'kombu.transport.django',
-    'pagination',
+    #'pagination',
     # 'DjangoUeditor',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'pagination.middleware.PaginationMiddleware',
+    #'pagination.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'SaltRuler.urls'

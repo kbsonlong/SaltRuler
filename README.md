@@ -27,6 +27,10 @@ git clone https://github.com/kbsonlong/SaltRuler.git
 pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple  --trusted-host mirrors.aliyun.com
 
 
+CREATE DATABASE IF NOT EXISTS saltruler DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+
+GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'kbsonlong';
+
 3、修改配置文件 SaltRuler/config.ini
 
 

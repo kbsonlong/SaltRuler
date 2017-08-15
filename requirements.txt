@@ -1,7 +1,7 @@
 bootstrap-admin
 CherryPy
 cryptography
-Django
+Django==1.11
 django-appconf
 django-bootstrap-toolkit
 django-grappelli
@@ -29,10 +29,7 @@ supervisor
 #uWSGI
 Pillow
 pyftpdlib
-
-###20170329 添加异步
 django-celery
-##celery可视化的方式展现:各个任务的执行情况、各个worker的健康状态进行监控
 flower
 redis
 django-bootstrap-form
