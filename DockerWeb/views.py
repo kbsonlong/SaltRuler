@@ -6,13 +6,15 @@ from EmpAuth.decorators import login_required
 
 from registry_api import BASE_REGISTRY_API
 from models import registry
+from remote_api import Dockerapi
 
 
-c = docker.Client(base_url='tcp://192.168.62.200:2375',version='1.14',timeout=10)
+
+
 url = 'http://192.168.62.200:5001/'   ##私有仓库地址
 
 b = BASE_REGISTRY_API()
-b.get_imageId_info(ImageId="sha256:9087edac75d18fbcaffbf6ed3f0fa34e726bd5e6abefe2d4cd0fdf4a493eb43b",url=url,version=2,tag="latest",ImageName="shipyard")
+
 
 ##查看镜像仓库
 @login_required
@@ -140,3 +142,12 @@ def tag_list(request,reg_id):
     contexts.update({'data':tag_info['data']})
     return render(request, 'DockerWeb/tag_info.html', contexts)
 
+
+
+
+@login_required
+def container_list(request,host,port):
+    client = Dockerapi(host,port)
+    images=client.AllImages()
+    contexts={'images':images}
+    return render(request,'DockerWeb/image.html',contexts)
