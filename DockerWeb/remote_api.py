@@ -118,15 +118,4 @@ if __name__ == '__main__':
     print type(test.AllImages())
 
     print test.SearchImage('mysql')
-    #a=test.DeleteImages('docker.io/centos/v1:latest')
-    #print a
 
-    # search=test.SearchContainers('simpletou')
-    # status=test.ContainerStatus('exited')
-    # version=test.Dockerversion()
-    # stop=test.StopContainer('nostalgic_albattani')
-    #tart=test.StartContainer('nostalgic_albattani')
-    #stopd=test.DelayedstopContainer('nostalgic_albattani',10)
-    #print stopd
-    #rename=test.RenameDocker('nostalgic_albattani','aaa')
-    #inspect = test.InspectContainer('aaa')
