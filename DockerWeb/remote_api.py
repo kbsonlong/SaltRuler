@@ -12,10 +12,11 @@ Docker 容器API公共模块，可进行容器及镜像管理
 
 class Dockerapi(object):
     def __init__(self, host, port):
+        ##由于导入的docker版本不同，所以调用接口函数不一致，据了解docker 2.5.1版本使用的是APIClient，1.10.6使用的是Client
         try:
-            self.dockerConnect = docker.APIClient(base_url='tcp://%s:%s' % (host, port), timeout=60, version='1.22')
+            self.dockerConnect = docker.APIClient(base_url='tcp://%s:%s' % (host, port), timeout=60)
         except:
-            self.dockerConnect = docker.Client(base_url='tcp://%s:%s' % (host, port), timeout=60, version='1.22')
+            self.dockerConnect = docker.Client(base_url='tcp://%s:%s' % (host, port), timeout=60)
 
     def GetallContainers(self):
         Containers = self.dockerConnect.containers(all=1)
@@ -107,15 +108,39 @@ class Dockerapi(object):
 
         return u"删除镜像成功!!"
 
+    def InitSwarm(self,host,port):
+        swarm_info  = self.dockerConnect.init_swarm(advertise_addr='%s:%s' % (host,port))
+        return swarm_info
+
+    def JoinSwarm(self,host,port,join_token):
+        join_info = self.dockerConnect.join_swarm(remote_addrs=["%s:%s" % (host,port)],join_token=join_token,listen_addr='0.0.0.0:%s' % port,advertise_addr='%s:%s' %(host,port))
+        return join_info
+
+    def ShowNodes(self,node_name=None):
+        if node_name:
+            nodes_info=self.dockerConnect.nodes(filters=node_name)
+        else:
+            nodes_info = self.dockerConnect.nodes()
+        return nodes_info
+
+    def test(self):
+        info = self.dockerConnect.inspect_swarm()
+        return info
+
 
 
 if __name__ == '__main__':
     test=Dockerapi('192.168.52.200','2375')
     # print test.GetallContainers()
     # print test.AllImages()[0].keys()
-    for Image in test.AllImages():
-        print Image
-    print type(test.AllImages())
-
-    print test.SearchImage('mysql')
-
+    # for Image in test.AllImages():
+    #     print Image
+    # print type(test.AllImages())
+    #
+    # print test.SearchImage('mysql')
+    # print test.InitSwarm('192.168.52.200',2377)
+    work_token = Dockerapi('192.168.52.200','2375').test()['JoinTokens']['Worker']
+    print work_token
+    print Dockerapi('192.168.52.201', '2375').JoinSwarm(join_token=work_token,host='192.168.52.201',port='2377')
+    # print test.JoinSwarm('192.168.52.200:2377',test.test()['JoinTokens']['Worker'])
+    # print test.ShowNodes()[0]['ID'], test.ShowNodes()[0]['Description']['Hostname'], test.ShowNodes()[0]['Status']['Addr'], test.ShowNodes()[0]['Status']['State'], test.ShowNodes()[0]['Spec']['Availability']
