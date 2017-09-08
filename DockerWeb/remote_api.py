@@ -123,9 +123,12 @@ class Dockerapi(object):
             nodes_info = self.dockerConnect.nodes()
         return nodes_info
 
-    def join_token(self):
+    def join_token(self,role='Worker'):
         info = self.dockerConnect.inspect_swarm()
-        return info
+        if role == 'Worker':
+            return info['JoinTokens']['Worker']
+        elif role == 'Manager':
+            return info['JoinTokens']['Manager']
 
 
 
@@ -140,9 +143,9 @@ if __name__ == '__main__':
     # print test.SearchImage('mysql')
     # print test.InitSwarm('192.168.52.200',2377)
     ##获取swarm集群token
-    work_token = Dockerapi('192.168.52.200','2375').join_token()['JoinTokens']['Worker']
-    manager_token = Dockerapi('192.168.52.200','2375').join_token()['JoinTokens']['Manager']
+    work_token = test.join_token('Worker')
+    manager_token = test.join_token('Manager')
     print work_token,manager_token
-    print Dockerapi('192.168.52.201', '2375').JoinSwarm(join_token=work_token,host='192.168.52.201',port='2377')
+    # print Dockerapi('192.168.52.201', '2375').JoinSwarm(join_token=work_token,host='192.168.52.201',port='2377')
     # print test.JoinSwarm('192.168.52.200:2377',test.test()['JoinTokens']['Worker'])
     # print test.ShowNodes()[0]['ID'], test.ShowNodes()[0]['Description']['Hostname'], test.ShowNodes()[0]['Status']['Addr'], test.ShowNodes()[0]['Status']['State'], test.ShowNodes()[0]['Spec']['Availability']
