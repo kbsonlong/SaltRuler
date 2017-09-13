@@ -112,18 +112,18 @@ WSGI_APPLICATION = 'SaltRuler.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': glob_config('db','name'),
-        'USER': glob_config('db','user'),
-        'PASSWORD': glob_config('db','pass'),
-        'HOST': glob_config('db','host'),
-        'PORT': glob_config('db','port'),
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+   }
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': glob_config('db','name'),
+#         'USER': glob_config('db','user'),
+#         'PASSWORD': glob_config('db','pass'),
+#         'HOST': glob_config('db','host'),
+#         'PORT': glob_config('db','port'),
+#     }
 }
 
 

@@ -10,66 +10,61 @@
     </div>
  {% endblock %}
 {% block main %}
+    <script src="/static/js/judge.js"></script>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <p></p>
+                    {% if form.errors %}
+                     <div class="alert alert-block alert-danger">
+                                请确认帐号是否存在或其它选项是否已添写
+                     </div>
+                    {% endif %}
+                    {% if info %}
+                       <div class="alert alert-block alert-danger">
+                               {{ info }}
+                     </div>
+                    {% endif %}
+                    <form class="form-horizontal" method="post" action="/EmpAuth/change/{{ id }}/" role="form" onsubmit="return check()">
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="username" name="username" value="{{ username }}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <label for="inputPassword3" class="col-sm-2 control-label" >当前密码</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="id_old_password" name="id_old_password"  type="password"/>
+                            </div>
+                        </div>
 
-<div class="wrapper">
-    <div class="row">
-        <div class="ibox float-e-margins col-sm-6">
-            <form class="form-horizontal" method="post" action="/EmpAuth/change/" role="form" autocomplete="off">
-                <div class="form-group">
-                     <label for="inputPassword3" class="col-sm-2 control-label">用户名</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" id="id_old_password"  name="username" value="{{ request.session.username }}" />
-                    </div>
+                        <div class="form-group">
+                             <label for="inputPassword3" class="col-sm-2 control-label">新密码</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="password01" name="password01" type="password" />
+                                {{ form.new_password2.errors }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                             <label for="inputPassword3" class="col-sm-2 control-label">确认密码</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="password02" name="password02" type="password"/>
+                                {{ form.new_password2.errors }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                           <div class="col-sm-4 col-sm-offset-5">
+                               <button class="btn btn-white" type="submit"> 重置 </button>
+                               <button class="btn btn-primary" type="submit"> 提交 </button>
+                           </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                     <label for="inputPassword3" class="col-sm-2 control-label">旧密码</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" id="id_old_password" type="password" name="oldpass" data-rule="原密码: required;password;"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                     <label for="inputPassword3" class="col-sm-2 control-label">新密码</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" id="id_new_password1" type="password" name="newpass" data-rule="密码: required;password;" />
-                    </div>
-                </div>
-                <div class="form-group">
-                     <label for="inputPassword3" class="col-sm-2 control-label">确认密码</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" id="id_new_password2" type="password" data-rule="确认密码: required;match(new_password1);" name="confpass" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                         <button type="submit" class="btn btn-success btn-default btn-block">提交</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
-
-<style>
-    .float-e-margins{margin-top:10px;}
-    .col-sm-10 ul{list-style-type:none;line-height:33px;}
-    .col-sm-10 li{float:left;margin-right:12px;text-align: left;}
-    .col-sm-10 select  {
-    background-color: #FFFFFF;
-    background-image: none;
-    border: 1px solid #CCCCCC;
-    border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-    color: #555555;
-    display: block;
-    font-size: 14px;
-    height: 34px;
-    line-height: 1.42857;
-    padding: 6px 12px;
-    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    vertical-align: middle;
-    width: 100%;
-}
-</style>
-
-
 {% endblock %}
+
+

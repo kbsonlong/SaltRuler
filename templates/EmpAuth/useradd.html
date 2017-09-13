@@ -3,28 +3,29 @@
 {% block title1 %}
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
-            <h2>添加用户 | Add CustomUser.</h2>
+            <h2>添加用户 | Add User.</h2>
         </div>
         <div class="col-lg-2">
         </div>
     </div>
 {% endblock %}
 {% block main %}
+    <script src="/static/js/judge.js"></script>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="ibox float-e-margins">
                 <div class="ibox-content">
-                    <p></p>
+                    <p class="red-fonts">{% if info %} {{ info }} {% endif %}</p>
                     {% if form.errors %}
                      <div class="alert alert-block alert-danger">
                                 请确认帐号是否存在或其它选项是否已添写
                      </div>
                     {% endif %}
-                    <form class="form-horizontal" method="post" action="/accounts/adduser/" role="form">
+                    <form class="form-horizontal" method="post" action="/EmpAuth/useradd/" role="form" onsubmit="return check()">
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-2 control-label">用户名</label>
                             <div class="col-sm-10">
-                                <input class="form-control" name="username" />
+                                <input class="form-control" id="username" name="username" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -37,14 +38,14 @@
                         <div class="form-group">
                              <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
                             <div class="col-sm-10">
-                                <input class="form-control" name="password1" />
+                                <input class="form-control" id="password01" name="password1" type="password" />
                                 {{ form.new_password2.errors }}
                             </div>
                         </div>
                         <div class="form-group">
                              <label for="inputPassword3" class="col-sm-2 control-label">确认密码</label>
                             <div class="col-sm-10">
-                                <input class="form-control"  name="password2"/>
+                                <input class="form-control" id="password02" name="password2" type="password"/>
                                 {{ form.new_password2.errors }}
                             </div>
                         </div>
@@ -63,7 +64,7 @@
                         </div>
                         <div class="form-group">
                            <div class="col-sm-4 col-sm-offset-5">
-                               <button class="btn btn-white" type="submit"> 重置 </button>
+                               <button class="btn btn-white">重置</button>
                                <button class="btn btn-primary" type="submit"> 提交 </button>
                            </div>
                         </div>

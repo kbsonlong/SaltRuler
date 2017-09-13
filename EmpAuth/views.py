@@ -11,12 +11,12 @@ from saltstack.saltmaster import saltinfo
 from saltstack.saltapi import SaltAPI
 from SaltRuler.glob_config import glob_config
 
-url = glob_config('salt_api','url')
-username = glob_config('salt_api','username')
-password = glob_config('salt_api','password')
-device0 = glob_config('server','dervice0')
-salt_master = glob_config('salt_api','master')
-
+# url = glob_config('salt_api','url')
+# username = glob_config('salt_api','username')
+# password = glob_config('salt_api','password')
+# device0 = glob_config('server','dervice0')
+# salt_master = glob_config('salt_api','master')
+# sapi = SaltAPI(url,username,password)
 
 # Create your views here.
 class UserForm(forms.Form):
@@ -24,7 +24,7 @@ class UserForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput())
 
 
-sapi = SaltAPI(url,username,password)
+
 
 def login(request):
     form = UserForm()
@@ -94,28 +94,35 @@ def userinfo(request):
     return render(request, 'EmpAuth/show_user.html', {'user_list':user_list})
 
 @login_required
-def change(request):
+def change(request,id):
+    if int(id) == 0:
+        username = request.session.get('username')
+    else:
+        username = Users.objects.get(id=id)
     try:
         info=''
-        username = request.session.get('username')
         if request.method == 'POST':
             username = request.POST.get('username')
-            oldpass  = request.POST.get('oldpass')
+            oldpass  = request.POST.get('id_old_password')
             password = hashlib.sha1(oldpass + username + 'kbson').hexdigest()
-            newpass  = request.POST.get('newpass')
-            confpass = request.POST.get('confpass')
+            newpass  = request.POST.get('password01')
+            confpass = request.POST.get('password02')
             if confpass == newpass:
                 user=Users.objects.filter(username=username,password=password)
                 if user:
                     newpasshs = hashlib.sha1(newpass + username + 'kbson').hexdigest()
-                    Users.objects.update(password=newpasshs).filter(username=username)
+                    print newpass,newpasshs
+                    # user.password=newpasshs
+                    Users.objects.filter(username=username,password=password).update(password=newpasshs)
                     info = u"密码修改成功"
+                else:
+                    info = u'当前密码不正确'
             else:
-                info = '输入的两次新密码不一致！'
+                info = u'输入的两次新密码不一致！'
     except Exception as e:
         info = e
-    print info
-    return render(request, 'EmpAuth/change.html', {'info':info})
+    contexts={'info':info,'username':username,'id':id}
+    return render(request, 'EmpAuth/change.html', contexts)
 
 
 
@@ -129,30 +136,26 @@ def useradd(request):
         if request.method == 'POST':
             newuser=request.POST.get('username')
             password1=request.POST.get('password1')
-            password2=request.POST.get('password2')
-            if password1 == password2:
-                user = Users.objects.filter(username=newuser)
-                if user:
-                    info ="Users %s is Exist!!" % newuser
-                else:
-                    user=Users()
-                    user.username=newuser
-                    user.password=password1
-                    user.save()
-                    info = 'Users %s Add Success!!' % newuser
+            user = Users.objects.filter(username=newuser)
+            if user:
+                info ="Users %s is Exist!!" % newuser
             else:
-                info = '输入的两次密码不一致！'
+                user=Users()
+                user.username=newuser
+                user.password=password1
+                user.save()
+                info = 'Users %s Add Success!!' % newuser
         return render_to_response( 'EmpAuth/useradd.html', {'info':info})
     else:
         return HttpResponseRedirect('/EmpAuth/useradd')
 
 @login_required
-def userdel(request):
+def userdel(request,id):
     username = request.session.get('username')
     if username == 'kbson'or username == 'admin':
         if request.method == 'GET':
             username = request.GET.get('username')
-            Users.objects.filter(username=username).delete()
+            Users.objects.filter(id=id).delete()
             return HttpResponseRedirect('/EmpAuth/userinfo')
     else:
         return HttpResponseRedirect('/EmpAuth/usinfo')

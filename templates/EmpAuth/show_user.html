@@ -2,7 +2,7 @@
 {% block title1 %}
     <div class="row wrapper border-bottom white-bg page-heading">
         <div class="col-lg-10">
-            <h2>用户管理 | Assets List.</h2>
+            <h2>用户管理 | User List.</h2>
         </div>
         <div class="col-lg-2">
         </div>
@@ -45,13 +45,13 @@
                                     {% endif %}</td>
                                 <td>
                                     {% if request.user.is_superuser or request.session.fun_auth.edit_user %}
-                                    <a href="/accounts/user_edit/{{ i.id }}/" class="btn btn-xs btn-info">修改</a>
+                                    <a href="/EmpAuth/change/{{ i.id }}/"  class="btn btn-xs btn-info">修改密码</a>
                                     {% if not i.is_staff and i.is_active %}
-                                        <a href="/accounts/status/{{ i.id }}/" class="btn btn-success btn-xs status"></i>恢复</a>
+                                        <a href="#" class="btn btn-success btn-xs status"></i>恢复</a>
                                     {% else %}
-                                         <a href="/accounts/status/{{ i.id }}/" class="btn btn-xs btn-warning status"></i>禁用</a>
+                                         <a href="#" class="btn btn-xs btn-warning status"></i>禁用</a>
                                         {% endif %}
-                                    <a href="/accounts/delete/{{ i.id }}/" class="btn btn-xs btn-danger status">删除</a>
+                                    <a href="/EmpAuth/userdel/{{ i.id }}/" class="btn btn-xs btn-danger status">删除</a>
                                     {% endif %}
                                 </td>
                             </tr>

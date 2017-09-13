@@ -15,5 +15,5 @@ class registry(models.Model):
 
 class docker_server(models.Model):
     name = models.CharField(max_length=30,unique=True)
-    address = models.IPAddressField()
-    port = models.IntegerField(max_length=10)
+    address = models.GenericIPAddressField()
+    port = models.IntegerField()

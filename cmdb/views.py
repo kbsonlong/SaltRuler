@@ -12,11 +12,11 @@ from saltstack.tasks import *
 class UpForm(forms.Form):
     headImg = forms.FileField(label='')
 
-url = glob_config('salt_api','url')
-username = glob_config('salt_api','username')
-password = glob_config('salt_api','password')
-device0 = glob_config('server','dervice0')
-sapi=SaltAPI(url,username,password)
+# url = glob_config('salt_api','url')
+# username = glob_config('salt_api','username')
+# password = glob_config('salt_api','password')
+# device0 = glob_config('server','dervice0')
+# sapi=SaltAPI(url,username,password)
 
 @login_required
 def asset_table(request):
