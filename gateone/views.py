@@ -42,6 +42,7 @@ def get_auth_obj(request):
     # 之前生成的api_key 和secret
     secret = "YjJhNDUzZDA4NmU5NGY5MGEwMTdkMDM5NzhkNGY3NGExM"
     api_key = "YTgyYjAxMmViMTYyNDBhMmFhMjFjZTI2NTgwMGJiMjI0O"
+    print type(secret)
 
     authobj = {
         'api_key': api_key,
@@ -50,7 +51,7 @@ def get_auth_obj(request):
         'signature_method': 'HMAC-SHA1',
         'api_version': '1.0'
     }
-    my_hash = hmac.new(secret, digestmod=hashlib.sha1)
+    my_hash = hmac.new(str(secret), digestmod=hashlib.sha1)
     my_hash.update(authobj['api_key'] + authobj['upn'] + authobj['timestamp'])
 
     authobj['signature'] = my_hash.hexdigest()
