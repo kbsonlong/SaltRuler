@@ -10,6 +10,4 @@ urlpatterns = [
     url(r'^change/(?P<id>[0-9]+)/$', views.change, name='change'),
     url(r'^useradd', views.useradd, name='useradd'),
     url(r'^userdel/(?P<id>[0-9]+)/$', views.userdel, name='userdel'),
-    url(r'^gateone/$', views.gateone, name='gateone'),
-    url(r'^get_auth_obj/$', views.get_auth_obj, name='get_auth_obj'),
 ]

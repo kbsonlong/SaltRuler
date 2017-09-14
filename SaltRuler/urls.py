@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^docker/', include('DockerWeb.urls', namespace="dockerweb")),
     url(r'^zabbix/', include('ZABBIX.urls', namespace="zabbix")),
     url(r'^cmdb/', include('cmdb.urls', namespace="cmdb")),
-    url(r'^EmpAuth/', include('EmpAuth.urls', namespace="empAuth")),
+    url(r'^EmpAuth/', include('EmpAuth.urls', namespace="empauth")),
+    url(r'^EmpAuth/', include('gateone.urls', namespace="gateone")),
     url(r'^$', include('EmpAuth.urls')),
 ]

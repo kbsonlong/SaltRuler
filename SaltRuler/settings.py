@@ -60,6 +60,7 @@ INSTALLED_APPS = (
     'cmdb',
     'EmpAuth',
     'DockerWeb',
+    'gateone',
     'djcelery',    ##调用celery，djcelery是必须的. kombu.transport.django则是基于Django的broker
     'kombu.transport.django',
     #'pagination',
