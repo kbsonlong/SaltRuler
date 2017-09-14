@@ -7,7 +7,7 @@ from SaltRuler.glob_config import glob_config
 # Create your views here.
 
 @login_required
-def gateone(request):
+def gateone_service(request):
     host_ip = request.GET.get('host',None)
     host_user = request.GET.get('user','root')
     host_port = request.GET.get('port',22)
@@ -35,7 +35,7 @@ def get_auth_obj(request):
     gateone_server = glob_config('gateone','gateone_server')
     # 之前生成的api_key 和secret
     secret  = glob_config('gateone','secret')
-    api_key = glob_config('gateone',api_key)
+    api_key = glob_config('gateone','api_key')
 
     authobj = {
         'api_key': api_key,
