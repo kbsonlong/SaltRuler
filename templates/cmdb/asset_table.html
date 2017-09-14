@@ -63,11 +63,11 @@
                                                 <a href="/cmdb/asset_update/?asset_num={{ i.asset_num }}"><button class="btn btn-warning btn-xs" type="button">更改</button></a>
                                                 <a href="/cmdb/asset_del/?asset_num={{ i.asset_num }}"><button class="btn btn-danger btn-xs" type="button">删除</button></a>
 {#                                                <a href="{% url 'gateone:gateone_service' %}?host={{ i.server_ip }}&&user={{ request.session.username }}&&port=22" target="_blank" class="btn btn-xs btn-info">连接</a>#}
-                                                <form name='connect' action='{% url 'gateone:gateone_service' %}' method='post'>
+                                                <form name='connect' action='{% url 'gateone:gateone_service' %}' method='post'  target="_blank">
                                                     <input type='hidden' name='host' value='{{ i.server_ip }}'/>
                                                     <input type='hidden' name='user' value='{{ request.session.username }}'/>
                                                     <input type='hidden' name='port' value='22'/>
-                                                    <a href='javascript:document.connect.submit();' target="_blank" class="btn btn-xs btn-info">连接</a>
+                                                    <a href='javascript:document.connect.submit();' class="btn btn-xs btn-info">连接</a>
 </form>
                                             </td>
                                         </tr>
