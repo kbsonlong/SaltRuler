@@ -15,6 +15,14 @@
     e、SVN           ##利用saltstack svn模块发布代码
     
     f、jenkins       ##可持续迭代工具
+    
+    g、cobbler       ##自动装机系统，  
+
+使用框架：python Django 
+
+### 1.1、利用django-celery模块实现定时调用saltstack采集主机信息录入至CMDB
+[配置参考](http://kbsonlong.blog.51cto.com/5359697/1917744)
+
 
 
 ##  2、安装步骤
@@ -86,6 +94,26 @@ as
 ### 2.8、配置gateone
 [配置gateone](/gateone)
 
+
+### 2.9、Cobbler安装配置
+
+[Cobbler安装](http://kbsonlong.blog.51cto.com/5359697/1965371)
+
+### 2.10、Saltapi配置
+
+[saltapi配置](http://blog.csdn.net/qq942477618/article/details/53437004)
+
+
+### 2.11、Docker配置
+[Docker 私有仓库配置](http://blog.csdn.net/qq942477618/article/details/70059384)
+
+[Docker Swarm集群配置](http://blog.csdn.net/qq942477618/article/details/77427602)
+
+
+### 2.12、 Jenkins配置
+[Jenkins配置](http://blog.csdn.net/qq942477618/article/details/55194282)
+
+[Docker+Jenkins+Saltstack](http://blog.csdn.net/qq942477618/article/details/75675688)
 
 
 #截图

@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^host_del_html/$', views.host_del_html, name='host_del_html'),
     url(r'^host_list/(?P<server_ip>[^/]+)/$', views.host_list, name='host_list'),
     url(r'^server_collect/(?P<server_id>[^/]+)/$', views.server_collect, name='server_collect'),
+
+    ##cobbler_url
     # url(r'^profile/$', cobbler.profile, name='profile'),
     # url(r'^add_profile/$', cobbler.add_profile, name='add_profile'),
     # url(r'^remove_profile/$', cobbler.remove_profile, name='remove_profile'),
