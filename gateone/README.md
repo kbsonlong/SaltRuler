@@ -1,8 +1,21 @@
 #集成gateone配置
 
-1、配置gateone认证方式，
 
-    cd gateone
+
+## 1、安装gateone
+
+[官方文档](http://liftoff.github.io/GateOne/About/installation.html)
+
+    git clone https://github.com/kbsonlong/GateOne.git
+    
+    cd Gateone
+    
+    python setup.py install
+
+
+## 2、配置gateone认证方式，
+
+    cd Gateone
     python run_gateone.py --new_api_key
     # 生成一个api的key
     cd conf.d
@@ -31,10 +44,10 @@
     # key1:secret1,key2:secret2,
     # 左边的是key，右边的是secret 后面调用的时候要用到
     
-#2、将生成的新的配置文件复制到/etc/gateone/conf.d/目录替换原来
+## 3、将生成的新的配置文件复制到/etc/gateone/conf.d/目录替换原来
 
     cp 10server.conf /etc/gateone/conf.d/
     cp 20authentication.conf /etc/gateone/conf.d/
     cp 30api_keys.conf /etc/gateone/conf.d/
     
-#3、记得重启gateone服务
+## 4、记得重启gateone服务
