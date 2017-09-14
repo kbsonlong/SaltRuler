@@ -36,3 +36,5 @@
     cp 10server.conf /etc/gateone/conf.d/
     cp 20authentication.conf /etc/gateone/conf.d/
     cp 30api_keys.conf /etc/gateone/conf.d/
+    
+#3、记得重启gateone服务
