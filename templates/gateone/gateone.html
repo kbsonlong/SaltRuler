@@ -27,7 +27,7 @@
 
         var request = $.ajax({
 
-            url:"/gateone/get_auth_obj/,   // api认证方式， 参考gateone文档
+            url:"{% url 'gateone:get_auth_obj' %}",
 
             type:"GET",
 
