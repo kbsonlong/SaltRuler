@@ -31,11 +31,17 @@ def create_signature(secret, *parts):
 def get_auth_obj(request):
     import time, hmac, hashlib, json
     user = request.user.username
+    # # 安装gateone的服务器以及端口.
+    # gateone_server = glob_config('gateone','gateone_server')
+    # # 之前生成的api_key 和secret
+    # secret  = glob_config('gateone','secret')
+    # api_key = glob_config('gateone','api_key')
+
     # 安装gateone的服务器以及端口.
-    gateone_server = glob_config('gateone','gateone_server')
+    gateone_server = 'https://39.108.6.88/'
     # 之前生成的api_key 和secret
-    secret  = glob_config('gateone','secret')
-    api_key = glob_config('gateone','api_key')
+    secret = "YjJhNDUzZDA4NmU5NGY5MGEwMTdkMDM5NzhkNGY3NGExM"
+    api_key = "YTgyYjAxMmViMTYyNDBhMmFhMjFjZTI2NTgwMGJiMjI0O"
 
     authobj = {
         'api_key': api_key,
@@ -51,5 +57,4 @@ def get_auth_obj(request):
     auth_info_and_server = {"url": gateone_server, "auth": authobj}
     valid_json_auth_info = json.dumps(auth_info_and_server)
     print valid_json_auth_info
-    #   print valid_json_auth_info
     return HttpResponse(valid_json_auth_info)
