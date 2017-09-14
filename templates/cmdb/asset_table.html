@@ -33,15 +33,7 @@
                                             <th>机房编号</th>
                                             <th>机柜编号</th>
                                             <th>系统类型</th>
-                            <!--<th>CPU型号、数目</th>
-                            <th>磁盘大小、数目</th>
-                            <th>内存大小、数目</th>
-                            <th>磁盘阵列</th>
-                            <th>网卡类型、数目</th>
-                            <th>电源数目</th>-->
                                             <th>服务编号</th>
-                            <!--<th>购买时间</th>
-                            <th>过期时间</th>-->
                                             <th>备注</th>
                                             <th>管理</th>
                                         </tr>
@@ -51,7 +43,7 @@
                                         <tr class="gradeA">
                                             <td>{{ i.asset_num }}</td>
                                             <td>{{ i.type }}</td>
-                                            <td><a href="{{ i.assetget_url.get_host_url }}" >{{ i.server_ip }}</a></td>
+{#                                            <td><a href="{{ i.assetget_url.get_host_url }}" >{{ i.server_ip }}</a></td>#}
                                             <td>{{ i.remote_ip }}</td>
                                             <td>{{ i.data_center }}</td>
                                             <td>{{ i.room_num }}</td>
@@ -67,7 +59,11 @@
                             <!--<td>{{ i.buy_time }}</td>
                             <td>{{ i.expiration_time }}</td>-->
                                             <td class="center">{{ i.note }}</td>
-                                            <td><a href="/cmdb/asset_update/?asset_num={{ i.asset_num }}"><button class="btn btn-warning btn-xs" type="button">更改</button></a> <a href="/cmdb/asset_del/?asset_num={{ i.asset_num }}"><button class="btn btn-danger btn-xs" type="button">删除</button></a></td>
+                                            <td>
+                                                <a href="/cmdb/asset_update/?asset_num={{ i.asset_num }}"><button class="btn btn-warning btn-xs" type="button">更改</button></a>
+                                                <a href="/cmdb/asset_del/?asset_num={{ i.asset_num }}"><button class="btn btn-danger btn-xs" type="button">删除</button></a>
+                                                <a href="/EmpAuth/gateone/?host={{ i.server_ip }}&&user=root&&port=22" target="_blank" class="btn btn-xs btn-info">连接</a>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

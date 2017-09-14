@@ -33,3 +33,4 @@ django-celery
 flower
 redis
 django-bootstrap-form
+docker

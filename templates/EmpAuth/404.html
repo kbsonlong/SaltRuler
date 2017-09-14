@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Basic Embedding Gate One</title>
+    <script src="/static/js/gateone.js"></script>
+    <script>
+      window.onload = function() {
+          // Initialize Gate One:
+          //GateOne.init({url: 'https://39.108.6.88/'});
+          GateOne.init({
+              url: 'https://39.108.6.88/',
+              embedded: true,
+              // Let's apply some custom styles while we're at it ...
+              style: {'background-color': 'yellowgreen', 'box-shadow': '0 0 40px blueViolet'}
+          });
+      }
+
+
+      var newTerminal = function() {
+    // Introducing the superSandbox()!  Use it to wrap any code that you don't want to load until dependencies are met.
+    // In this example we won't call newTerminal() until GateOne.Terminal and GateOne.Terminal.Input are loaded.
+    GateOne.Base.superSandbox("NewExternalTerm", ["GateOne.Terminal", "GateOne.Terminal.Input"], function(window, undefined) {
+        "use strict";
+        var existingContainer = GateOne.Utils.getNode('#'+GateOne.prefs.prefix+'container');
+    var container = GateOne.Utils.createElement('div', {
+            'id': 'container', 'class': 'terminal', 'style': {'height': '100%', 'width': '100%'}
+    });
+    var gateone = GateOne.Utils.getNode('#gateone');
+    // Don't actually submit the form
+    if (!existingContainer) {
+            gateone.appendChild(container);
+    } else {
+            container = existingContainer;
+    }
+    // Create the new terminal
+    termNum = GateOne.Terminal.newTerminal(null, null, container);
+    });
+};
+
+// Uses newExternalTerminal as GateOne.init()'s callback.
+// The callback will be called after Gate One is initialized.
+window.onload = function() {
+    // Initialize Gate One:
+    GateOne.init({
+        url: 'https://39.108.6.88/',
+        embedded: true,
+        style: {'background-color': 'yellowgreen', 'box-shadow': '0 0 40px blueViolet'}
+    }, newTerminal);
+};
+
+callbackInit.js
+
+    </script>
+  </head>
+  <body>
+<div>Hello {{ request.session.username }}!!</div>
+<!-- Decide where you want to put Gate One -->
+    <div id="gateone_container" style="position: relative; width: 100%; height: 36em;">
+        <div id="gateone"></div>
+    </div>
+
+
+  <form id="add_terminal">
+     <input type="submit" value="Add a Terminal" style="margin-left: .Sem;">
+</form>
+<script>
+      document.querySelector('#add_terminal').onsubmit = function(e) {
+          // Don't actually submit the form
+          e.preventDefault();
+          var existingContainer = GateOne.Utils.getNode('#'+GateOne.prefs.prefix+'container');
+          var container = GateOne.Utils.createElement('div', {
+                 'id': 'container', 'class': 'terminal', 'style': {'height': '100%', 'width': '100%'}
+          });
+          var gateone = GateOne.Utils.getNode('#gateone');
+          if (!existingContainer) {
+             gateone.appendChild(container);
+          } else {
+             container = existingContainer;
+          }
+          // Create the new terminal
+          termNum = GateOne.Terminal.newTerminal(null, null, container);
+      }
+</script>
+
+
+
+  </body>
+</html>
