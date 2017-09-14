@@ -84,7 +84,9 @@ NAME="SaltRuler"             ##如果重命名项目名称，需要修改
 as
 
 ### 2.8、配置gateone
-[配置gateone](/gateone/README.md)
+[配置gateone](/gateone)
+
+
 
 #截图
 
