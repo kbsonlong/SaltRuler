@@ -25,7 +25,7 @@ class UserForm(forms.Form):
 
 
 
-@login_required
+
 def login(request):
     form = UserForm()
     info=''
