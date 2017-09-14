@@ -42,7 +42,7 @@ def get_auth_obj(request):
     # 之前生成的api_key 和secret
     secret = "YjJhNDUzZDA4NmU5NGY5MGEwMTdkMDM5NzhkNGY3NGExM"
     api_key = "YTgyYjAxMmViMTYyNDBhMmFhMjFjZTI2NTgwMGJiMjI0O"
-    print type(secret)
+
 
     authobj = {
         'api_key': api_key,
@@ -57,5 +57,5 @@ def get_auth_obj(request):
     authobj['signature'] = my_hash.hexdigest()
     auth_info_and_server = {"url": gateone_server, "auth": authobj}
     valid_json_auth_info = json.dumps(auth_info_and_server)
-    print valid_json_auth_info
+
     return HttpResponse(valid_json_auth_info)
