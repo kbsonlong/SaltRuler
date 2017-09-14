@@ -62,7 +62,7 @@
                                             <td>
                                                 <a href="/cmdb/asset_update/?asset_num={{ i.asset_num }}"><button class="btn btn-warning btn-xs" type="button">更改</button></a>
                                                 <a href="/cmdb/asset_del/?asset_num={{ i.asset_num }}"><button class="btn btn-danger btn-xs" type="button">删除</button></a>
-                                                <a href="/EmpAuth/gateone/?host={{ i.server_ip }}&&user=root&&port=22" target="_blank" class="btn btn-xs btn-info">连接</a>
+                                                <a href="/EmpAuth/gateone/?host={{ i.server_ip }}&&user={{ request.session.username }}&&port=22" target="_blank" class="btn btn-xs btn-info">连接</a>
                                             </td>
                                         </tr>
                                     {% endfor %}
