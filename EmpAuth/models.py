@@ -10,10 +10,35 @@ from django.contrib.auth.models import BaseUserManager
 import random, time
 import hashlib
 # Create your models here.
+
+
+manager_demo = [(i, i) for i in (u"经理", u"主管", u"项目责任人", u"管理员", u"BOOS")]
+Department = [(u"ops", u"plat", u'dev')]
+auth_id = [(u"普通用户", u"普通用户"), (u"管理员", u"管理员")]
+auth_gid = [(1001, u"运维部"), (1002, u"架构"), (1003, u"研发"), (1004, u"测试")]
+
+
+class department(models.Model):
+    department_name = models.CharField(max_length=64, blank=True, null=True, verbose_name=u'部门名称')
+    description = models.TextField(verbose_name=u"介绍", blank=True, null=True, )
+    desc_gid = models.IntegerField(verbose_name=u"部门组", choices=auth_gid, blank=True, null=True, )
+
+    def __unicode__(self):
+        return self.department_name
+
+    class Meta:
+        verbose_name = u"部门"
+        verbose_name_plural = verbose_name
+
+
 class Users(models.Model):
-    username = models.CharField(max_length=50)
+    username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=50)
-    # status = models.IntegerField()
+    status = models.IntegerField(default=0)
+    name = models.CharField(max_length=50)
+    email = models.EmailField(_(u'邮箱'), max_length=254)
+    department = models.ForeignKey(department, blank=True, null=True, verbose_name=u"部门", related_name="users")
+
 
     def save(self,*args,**kwargs):
         self.password = hashlib.sha1(self.password+self.username+'kbson').hexdigest()
@@ -21,15 +46,10 @@ class Users(models.Model):
 
     def __unicode__(self):
         return self.username
+    class Meta:
+        verbose_name = u"用户"
+        verbose_name_plural = verbose_name
 
-
-
-
-
-manager_demo = [(i, i) for i in (u"经理", u"主管", u"项目责任人", u"管理员", u"BOOS")]
-Department = [(u"ops", u"plat", u'dev')]
-auth_id = [(u"普通用户", u"普通用户"), (u"管理员", u"管理员")]
-auth_gid = [(1001, u"运维部"), (1002, u"架构"), (1003, u"研发"), (1004, u"测试")]
 #
 #
 def cmdb_uuid():

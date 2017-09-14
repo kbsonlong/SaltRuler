@@ -49,30 +49,9 @@ def login(request):
 @login_required
 def index(request):
     username = request.session.get('username')
+    print username
     if username:
         LocalData={}
-        # LocalData = saltinfo(salt_master)
-        #
-        # ##统计数据中心主机
-        # LocalData['gz'] = len(Assetmanage.objects.filter(data_center='广州市').values())
-        # LocalData['sz'] = len(Assetmanage.objects.filter(data_center='深圳市').values())
-        # LocalData['bj'] = len(Assetmanage.objects.filter(data_center='北京市').values())
-        # LocalData['qt'] = len(Assetmanage.objects.all().values()) - LocalData['gz'] - LocalData['sz'] - LocalData['bj']
-        #
-        # ##SaltStack状态
-        # minions = sapi.key_list('manage.status', client='runner')['return'][0]
-        # minion_down = minions['down']
-        # minion_online = len(minions['up'])
-        # if len(minion_down) > 0:
-        #     minion_down = minion_down
-        # else:
-        #     minion_down = []
-        # key_status, totle = sapi.minions_key_status()
-        # saltdata = {'minion_online': minion_online, 'minion_offline': len(minion_down),'minion_down': minion_down}
-        # LocalData['username'] = username
-        # LocalData['minions_totle'] = totle
-        # LocalData.update(saltdata)
-        # LocalData.update(key_status)
         return render_to_response('EmpAuth/home.html', LocalData)
     else:
         return HttpResponseRedirect('EmpAuth/login')
@@ -132,20 +111,28 @@ def change(request,id):
 def useradd(request):
     username = request.session.get('username')
     if username == 'kbson'or username == 'admin':
+        deps = department.objects.all()
         info=''
         if request.method == 'POST':
             newuser=request.POST.get('username')
+            name=request.POST.get('name')
             password1=request.POST.get('password1')
+            email=request.POST.get('email')
+            dep=request.POST.get('dep')
             user = Users.objects.filter(username=newuser)
+            depid=department.objects.filter(department_name=dep).values('id')[0]['id']
             if user:
                 info ="Users %s is Exist!!" % newuser
             else:
                 user=Users()
                 user.username=newuser
+                user.name=name
                 user.password=password1
+                user.email=email
+                user.department_id=depid
                 user.save()
                 info = 'Users %s Add Success!!' % newuser
-        return render_to_response( 'EmpAuth/useradd.html', {'info':info})
+        return render_to_response( 'EmpAuth/useradd.html', {'info':info,'deps':deps})
     else:
         return HttpResponseRedirect('/EmpAuth/useradd')
 
@@ -160,3 +147,9 @@ def userdel(request,id):
     else:
         return HttpResponseRedirect('/EmpAuth/usinfo')
 
+
+
+@login_required
+def gateone(request):
+    username = request.session.get('username')
+    return render_to_response('EmpAuth/gateone.html',{})

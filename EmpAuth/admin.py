@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Users
+from .models import Users,department
 
 # Register your models here.
 class UserAdmin(admin.ModelAdmin):
@@ -18,7 +18,7 @@ class FlatPageAdmin(admin.ModelAdmin):
     )
 
 # admin.site.register(Author,FlatPageAdmin)
-admin.site.register(Users)
+admin.site.register([Users,department])
 
 
 
