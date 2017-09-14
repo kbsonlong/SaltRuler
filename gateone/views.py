@@ -8,9 +8,9 @@ from SaltRuler.glob_config import glob_config
 
 @login_required
 def gateone_service(request):
-    host_ip = request.GET.get('host',None)
-    host_user = request.GET.get('user','root')
-    host_port = request.GET.get('port',22)
+    host_ip = request.POST.get('host',None)
+    host_user = request.POST.get('user','root')
+    host_port = request.POST.get('port',22)
 
     if host_port =="":
         host_port=22
