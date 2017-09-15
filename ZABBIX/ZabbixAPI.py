@@ -3,15 +3,17 @@ import ConfigParser
 import json
 import urllib2
 
+
 class ZabbixAPI:
     def __init__(self):
         cf = ConfigParser.ConfigParser()
-        cf.read("../SaltRuler/config.ini")
-        self.__url = cf.get("zabbix_server","url")
-        self.__user= cf.get("zabbix_server","user")
-        self.__password = cf.get("zabbix_server","password")
+        cf.read("SaltRuler/config.ini")
+        self.__url = cf.get("zabbix_server", "url")
+        self.__user = cf.get("zabbix_server", "user")
+        self.__password = cf.get("zabbix_server", "password")
         self.__header = {"Content-Type": "application/json-rpc"}
         self.__token_id = self.UserLogin()
+
 
     #登陆获取token
     def UserLogin(self):

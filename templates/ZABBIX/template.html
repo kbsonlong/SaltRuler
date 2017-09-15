@@ -4,11 +4,32 @@
    Zabbix主机
 {% endblock %}
 {% block content %}
-    <div class="container">
-        <h2>
-            Zabbix主机列表
-        </h2>
-        {% if error %}<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ error }}</div>{% endif %}
-        {% if success %}<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ success }}</div>{% endif %}
+    <div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">Zabbix 模板<small style="color: red">{{ apiinfo }}</small> </h3>
+                {% if error %}
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        {{ error }}
+                    </div>
+                {% endif %}
+                {% if success %}
+                    <div class="alert alert-success">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                            {{ success }}
+                    </div>
+                {% endif %}
+                </div>
+
+            </div>
+            {% block main %}
+
+            {% endblock %}
+        </div>
+    </div>
+    </div>
 
 {% endblock %}

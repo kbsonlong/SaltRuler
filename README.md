@@ -94,6 +94,10 @@ NAME="SaltRuler"             ##如果重命名项目名称，需要修改
 ### 2.8、配置gateone
 [配置gateone](/gateone)
 
+![img](/screenshots/gateone01.png)
+
+![img](/screenshots/gateone02.png)
+
 
 ### 2.9、Cobbler安装配置
 
