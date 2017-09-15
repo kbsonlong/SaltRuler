@@ -115,7 +115,7 @@
                         <li>
                             <a href="tables.html"><i class="fa fa-sitemap fa-fw"></i> 自动化管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="/saltstack/deploy/0/">代码发布</a></li>
+                                <li><a href="{% url 'saltstack:deploy' 0 %}">代码发布</a></li>
                                 <li><a href="{% url 'dockerweb:registry_list' %}">Docker私有仓库</a></li>
                                 <li><a href="{% url 'cobbler:system' %}">Cobbler自动化装机</a></li>
                                 <li>

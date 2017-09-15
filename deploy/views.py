@@ -213,8 +213,11 @@ def download_fun(request,server_id):
 
 @login_required
 def files_his(request):
-    his_list = files_history.objects.all().order_by('-id')     ##id倒序
-    contexts = {'his_list': his_list}
+    try:
+        his_list = files_history.objects.all().order_by('-id')     ##id倒序
+        contexts = {'his_list': his_list}
+    except TabError as error:
+        contexts = {'error':error}
     return render(request, 'deploy/history.html', contexts)
 
 
