@@ -18,7 +18,10 @@ s_url = glob_config("salt_api","url")
 s_username = glob_config("salt_api","username")
 s_password = glob_config("salt_api","password")
 
-# capi=CobblerAPI(c_url,c_username,c_password)
+# try:
+#     capi = CobblerAPI(c_url, c_username, c_password)
+# except:
+#     capi=''
 
 @login_required
 def distros(request):
