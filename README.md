@@ -80,7 +80,7 @@
 [nginx配置参考](/uwsgi_nginx.conf)
 
 
-### 2.7、修改启动脚本uwsgi.sh
+### 2.7、修改启动脚本[uwsgi.sh](/uwsgi.sh)
 
 BASE_DIR="/data/PRG"         ##项目所在上级目录
 
