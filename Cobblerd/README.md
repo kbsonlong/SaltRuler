@@ -1,5 +1,11 @@
 #Cobbler安装
 
+配置epel源及安装PyYAML
+
+    # wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
+    # wget http://vault.centos.org/6.6/updates/x86_64/Packages/PyYAML-3.10-3.1.el6.x86_64.rpm
+    # yum install PyYAML-3.10-3.1.el6.x86_64.rpm –y
+
 ## 1、Cobbler一键安装脚本
 
     #!/bin/sh
