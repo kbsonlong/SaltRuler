@@ -10,7 +10,7 @@
                     Docker私有仓库
                     {% endblock %}
                         <div class="btn-group pull-right">
-                            <a class="btn btn-info" href="/docker/registry_add/" target="_blank" title="添加仓库"><span class="glyphicon glyphicon-plus"></span> 添加仓库</a>
+                            <a class="btn btn-info" href="{% url 'dockerweb:registry_add' %}" target="_blank" title="添加仓库"><span class="glyphicon glyphicon-plus"></span> 添加仓库</a>
                         </div>
                     </h2>
                     {% if error %}<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a>{{ error }}</div>{% endif %}
@@ -34,7 +34,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td>{{ reg.name }}</td>
-                                                    <td><a href="/docker/registry_image/{{ reg.id }}/" title="/docker/registry_image/{{ reg.id }}/">{{ reg.address }}</a></td>
+                                                    <td><a href="/dockerweb/registry_image/{{ reg.id }}/" title="/docker/registry_image/{{ reg.id }}/">{{ reg.address }}</a></td>
                                                     <td><small class="navbar-btn" >V{{ reg.version }}</small></td>
                                                     <td>{% if reg.status  == 0 %}
                                                             <small style="color: green" > Healthy</small>
@@ -43,7 +43,7 @@
                                                         {% endif %}</td>
                                                     <td>
                                                         <div class="btn-group">
-                                                            <a class="btn btn-info btn-xs" href="/docker/registry_del/?reg_id={{ reg.id }}">
+                                                            <a class="btn btn-info btn-xs" href="{% url 'dockerweb:registry_del'  %}"?reg_id={{ reg.id }}>
                                                                 <span class="glyphicon glyphicon-edit ">&nbsp;删除</span></a>
                                                         </div>
                                                     </td>
