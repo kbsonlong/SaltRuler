@@ -7,7 +7,7 @@
             <div class="panel-heading" style="background-color: white">
                 <B class="fa fa-th"> 装机列表</B>
                 <div style="float: right;">
-                    <a href="/cmdb/system/" class="fa fa-hand-o-right">返回列表</a>
+                    <a href="{% url 'cobbler:system' %}" class="fa fa-hand-o-right">返回列表</a>
                 </div>
             </div>
             <div class="panel-body">
@@ -34,7 +34,7 @@
                                 <td>{{ i.netmask }}</td>
                                 <td class="center">{{ i.ctime }}</td>
                                 <td>
-                                    <a href="/cmdb/remove_system/?system_name={{ i.hostname }}">
+                                    <a href="/cobbler/remove_system/?system_name={{ i.hostname }}">
                                         <button class="btn btn-danger btn-xs" type="button">
                                             删除
                                         </button>

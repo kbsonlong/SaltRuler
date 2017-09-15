@@ -14,14 +14,5 @@ urlpatterns = [
     url(r'^host_list/(?P<server_ip>[^/]+)/$', views.host_list, name='host_list'),
     url(r'^server_collect/(?P<server_id>[^/]+)/$', views.server_collect, name='server_collect'),
 
-    ##cobbler_url
-    # url(r'^profile/$', cobbler.profile, name='profile'),
-    # url(r'^add_profile/$', cobbler.add_profile, name='add_profile'),
-    # url(r'^remove_profile/$', cobbler.remove_profile, name='remove_profile'),
-    # url(r'^system/$', cobbler.system, name='system'),
-    # url(r'^add_system/$', cobbler.add_system, name='add_system'),
-    # url(r'^remove_system/$', cobbler.remove_system, name='remove_system'),
-    # url(r'^distros/$', cobbler.distros, name='distros'),
-    # url(r'^add_distro/$', cobbler.add_distro, name='add_distro'),
-    # url(r'^remove_distro/$', cobbler.remove_distro, name='remove_distro'),
+
 ]

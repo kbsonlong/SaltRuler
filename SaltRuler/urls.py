@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-import saltstack,deploy,cmdb,EmpAuth
+
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^cmdb/', include('cmdb.urls', namespace="cmdb")),
     url(r'^EmpAuth/', include('EmpAuth.urls', namespace="empauth")),
     url(r'^gateone/', include('gateone.urls', namespace="gateone")),
+    url(r'^cobbler/', include('Cobblerd.urls', namespace="cobbler")),
     url(r'^$', include('EmpAuth.urls')),
 ]

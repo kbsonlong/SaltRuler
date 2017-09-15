@@ -10,17 +10,17 @@
     <div class="row">
         <div class="col-lg-12">
             <ul class="nav nav-tabs">
-                <li><a href="/cmdb/system/">装机列表</a>
+                <li><a href="{% url 'cobbler:system' %}">装机列表</a>
                 </li>
-                <li><a href="/cmdb/add_system/">添加主机</a>
+                <li><a href="{% url 'cobbler:add_system' %}">添加主机</a>
                 </li>
-                <li><a href="/cmdb/profile/">装机系统列表</a>
+                <li><a href="{% url 'cobbler:profile' %}">装机系统列表</a>
                 </li>
-                <li><a href="/cmdb/add_profile/">添加装机系统</a>
+                <li><a href="{% url 'cobbler:add_profile' %}">添加装机系统</a>
                 </li>
-                <li><a href="/cmdb/distros/">镜像列表</a>
+                <li><a href="{% url 'cobbler:distros' %}">镜像列表</a>
                 </li>
-                <li><a href="/cmdb/add_distro/">添加镜像</a>
+                <li><a href="{% url 'cobbler:add_distro' %}">添加镜像</a>
                 </li>
             </ul>
             {% if error %}
