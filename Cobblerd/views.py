@@ -18,14 +18,13 @@ s_url = glob_config("salt_api","url")
 s_username = glob_config("salt_api","username")
 s_password = glob_config("salt_api","password")
 
-# try:
-#     capi = CobblerAPI(c_url, c_username, c_password)
-# except:
-#     capi=''
+#capi = CobblerAPI(c_url, c_username, c_password)
+
 
 @login_required
 def distros(request):
     try:
+        
         contexts = {"distros":[]}
         distros = capi.get_distro()
         for i in distros:
@@ -39,6 +38,7 @@ def distros(request):
 def add_distro(request):
     contexts = {}
     try:
+
         if request.method == "POST":
             name = request.POST.get('name')
             path = request.POST.get('path')
@@ -60,6 +60,7 @@ def add_distro(request):
 @login_required
 def remove_distro(request):
     try:
+
         contexts = {}
         distro_name = request.GET.get('distro_name')
         ret = capi.remove_distro(distro_name)
@@ -74,6 +75,7 @@ def remove_distro(request):
 @login_required
 def profile(request):
     try:
+
         contexts = {'profiles':[]}
         name =   request.GET.get('profile_name')
         profiles =  capi.get_profile()
@@ -91,6 +93,7 @@ def profile(request):
 @login_required
 def add_profile(request):
     try:
+
         contexts = {'distros':[]}
         distro = capi.get_distro()
         for i in distro:
@@ -106,11 +109,16 @@ def add_profile(request):
 
 @login_required
 def remove_profile(request):
-    name = request.GET.get('profile_name')
-    ret = capi.remove_profile(name)
-    if ret['result']:
-        return HttpResponseRedirect('/cmdb/profile/')
-    return render(request, 'cmdb/cobbler_profile.html')
+    try:
+        contexts={}
+
+        name = request.GET.get('profile_name')
+        ret = capi.remove_profile(name)
+        if ret['result']:
+            return HttpResponseRedirect('/cmdb/profile/')
+    except Exception as error:
+        contexts = {'error': error}
+    return render(request, 'cmdb/cobbler_profile.html', contexts)
 
 @login_required
 def system(request):

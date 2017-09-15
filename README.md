@@ -89,7 +89,7 @@ NAME="SaltRuler"             ##如果重命名项目名称，需要修改
 登录http://{ip}:{port}/
 账号密码：saltruler/saltruler
 
-as
+
 
 ### 2.8、配置gateone
 [配置gateone](/gateone)
@@ -98,6 +98,8 @@ as
 ### 2.9、Cobbler安装配置
 
 [Cobbler安装](http://kbsonlong.blog.51cto.com/5359697/1965371)
+
+[Cobbler配置](/Cobblerd)
 
 ### 2.10、Saltapi配置
 
