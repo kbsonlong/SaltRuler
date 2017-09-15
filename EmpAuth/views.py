@@ -51,7 +51,7 @@ def index(request):
     username = request.session.get('username')
     print username
     if username:
-        LocalData={}
+        LocalData={'gz':128,'bj':2,'sz':10,'qt':4}
         return render_to_response('EmpAuth/home.html', LocalData)
     else:
         return HttpResponseRedirect('EmpAuth/login')
