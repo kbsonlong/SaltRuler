@@ -113,6 +113,9 @@ NAME="SaltRuler"             ##如果重命名项目名称，需要修改
 ### 2.11、Docker配置
 [Docker 私有仓库配置](http://blog.csdn.net/qq942477618/article/details/70059384)
 
+![img](/screenshots/docker_registry.png)
+![img](/screenshots/docker_registry_image.png)
+
 [Docker Swarm集群配置](http://blog.csdn.net/qq942477618/article/details/77427602)
 
 
