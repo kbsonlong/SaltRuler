@@ -4,19 +4,11 @@ from django.shortcuts import render_to_response,render,HttpResponse
 from django.http import HttpResponseRedirect
 from django import forms
 from .models import *
-from cmdb.models import Assetmanage
 import hashlib,json
 from .decorators import login_required
-from saltstack.saltmaster import saltinfo
-from saltstack.saltapi import SaltAPI
-from SaltRuler.glob_config import glob_config
 
-# url = glob_config('salt_api','url')
-# username = glob_config('salt_api','username')
-# password = glob_config('salt_api','password')
-# device0 = glob_config('server','dervice0')
-# salt_master = glob_config('salt_api','master')
-# sapi = SaltAPI(url,username,password)
+
+
 
 # Create your views here.
 class UserForm(forms.Form):

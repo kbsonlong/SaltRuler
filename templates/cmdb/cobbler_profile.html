@@ -7,7 +7,7 @@
             <div class="panel-heading" style="background-color: white">
                 <B class="fa fa-th"> 装机系统配置</B>
                 <div style="float: right;">
-                    <a href="/cmdb/profile/" class="fa fa-hand-o-right">返回列表</a>
+                    <a href="{% url 'cobbler:profile' %}" class="fa fa-hand-o-right">返回列表</a>
                 </div>
             </div>
             <div class="panel-body">
@@ -32,7 +32,7 @@
                                 <td>{{ i.ctime }}</td>
                                 <td class="center">{{ i.host_note }}</td>
                                 <td>
-                                    <a href="/cmdb/remove_profile/?profile_name={{ i.name }}">
+                                    <a href="{% url 'cobbler:remove_profile' %}/?profile_name={{ i.name }}">
                                         <button class="btn btn-danger btn-xs" type="button">
                                             删除
                                         </button>

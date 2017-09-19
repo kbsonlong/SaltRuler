@@ -7,12 +7,12 @@
             <div class="panel-heading" style="background-color: white">
                 <B class="fa fa-th"> 添加镜像</B>
                 <div style="float: right;">
-                    <a href="/cmdb/distro/" class="fa fa-hand-o-right">返回镜像列表</a>
+                    <a href="{% url 'cobbler:distros' %}" class="fa fa-hand-o-right">返回镜像列表</a>
                 </div>
             </div>
             <div class="panel-body">
                 <div class="dataTable_wrapper">
-                    <form class="form-system" method="post" action="/cmdb/add_distro/" role="form">
+                    <form class="form-system" method="post" action="{% url 'cobbler:add_distro' %}" role="form">
                         <div class="form-group">
                             <label  class="col-sm-2 control-label">镜像名称</label>
                             <div class="col-sm-10">

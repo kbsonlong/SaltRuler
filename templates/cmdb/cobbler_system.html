@@ -34,7 +34,7 @@
                                 <td>{{ i.netmask }}</td>
                                 <td class="center">{{ i.ctime }}</td>
                                 <td>
-                                    <a href="/cobbler/remove_system/?system_name={{ i.hostname }}">
+                                    <a href="{% url 'cobbler:remove_system' %}/?system_name={{ i.hostname }}">
                                         <button class="btn btn-danger btn-xs" type="button">
                                             删除
                                         </button>
