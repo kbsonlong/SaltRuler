@@ -32,13 +32,12 @@ def distros(request):
             contexts["distros"].append({"name":i["name"],"kernel":i["kernel"],"ctime":ctime})
     except Exception as error:
         contexts = {'error':error}
-    return render(request, 'cmdb/cobbler_distro.html', contexts)
+    return render(request, 'Cobblerd/cobbler_distro.html', contexts)
 
 @login_required
 def add_distro(request):
     contexts = {}
     try:
-
         if request.method == "POST":
             name = request.POST.get('name')
             path = request.POST.get('path')
@@ -50,12 +49,12 @@ def add_distro(request):
                 distro_name = "%s-%s" %(name,arch)
                 if distro_name == i['name']:
                     contexts.update({"error": "%s 已经存在" % distro_name})
-                    return render(request, 'cmdb/cobbler_add_distro.html', contexts)
+                    return render(request, 'Cobblerd/cobbler_add_distro.html', contexts)
             capi.add_distro(name,path,arch,breed,os_version)
             return HttpResponseRedirect('/cmdb/distros/')
     except Exception as e:
         contexts.update({"error":e})
-    return render(request, 'cmdb/cobbler_add_distro.html', contexts)
+    return render(request, 'Cobblerd/cobbler_add_distro.html', contexts)
 
 @login_required
 def remove_distro(request):
@@ -69,7 +68,7 @@ def remove_distro(request):
             return HttpResponseRedirect('/cmdb/distros/')
     except Exception as error:
         contexts = {'error':error}
-    return render(request, 'cmdb/cobbler_distro.html')
+    return render(request, 'Cobblerd/cobbler_distro.html')
 
 
 @login_required
@@ -88,7 +87,7 @@ def profile(request):
             contexts['profiles'].append({'name': i['name'], 'kickstart': i['kickstart'], 'distro': i['distro'], 'owners': i['owners'],'ctime': ctime})
     except Exception as error:
         contexts = {'error':error}
-    return render(request, 'cmdb/cobbler_profile.html', contexts)
+    return render(request, 'Cobblerd/cobbler_profile.html', contexts)
 
 @login_required
 def add_profile(request):
@@ -105,7 +104,7 @@ def add_profile(request):
             profiles =  capi.create_profile(name,distro,ks)
     except Exception as error:
         contexts = {'error':error}
-    return render(request, 'cmdb/cobbler_add_profile.html', contexts)
+    return render(request, 'Cobblerd/cobbler_add_profile.html', contexts)
 
 @login_required
 def remove_profile(request):
@@ -118,7 +117,7 @@ def remove_profile(request):
             return HttpResponseRedirect('/cmdb/profile/')
     except Exception as error:
         contexts = {'error': error}
-    return render(request, 'cmdb/cobbler_profile.html', contexts)
+    return render(request, 'Cobblerd/cobbler_profile.html', contexts)
 
 @login_required
 def system(request):
@@ -130,7 +129,7 @@ def system(request):
             contexts['systems'].append({'hostname':i['hostname'],'profile':i['profile'],'ctime':ctime,'ip_address':i['interfaces']['eth0']['ip_address'],'mac_address':i['interfaces']['eth0']['mac_address'],'netmask':i['interfaces']['eth0']['netmask']})
     except Exception as error:
         contexts = {'error':error}
-    return render(request, 'cmdb/cobbler_system.html', contexts)
+    return render(request, 'Cobblerd/cobbler_system.html', contexts)
 
 
 @login_required
@@ -154,7 +153,7 @@ def add_system(request):
             return HttpResponseRedirect('/cmdb/system')
     except Exception as error:
         contexts = {'error':error}
-    return render(request, 'cmdb/cobbler_add_system.html', contexts)
+    return render(request, 'Cobblerd/cobbler_add_system.html', contexts)
 
 
 @login_required
