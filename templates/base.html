@@ -69,12 +69,12 @@
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="/EmpAuth/userinfo/"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a href="{% url 'empauth:userinfo' %}"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="/EmpAuth/logout/"><i class="fa fa-sign-out fa-fw"></i> 注销</a>
+                        <li><a href="{% url 'empauth:logout' %}"><i class="fa fa-sign-out fa-fw"></i> 注销</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -93,13 +93,13 @@
                             <a  href=""><i class="fa fa-cubes fa-fw"></i> SaltStack管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                             	<li>
-                                    <a href="/saltstack/key_list/0/"></i>minion认证管理</a>
+                                    <a href="{% url 'saltstack:key_list' %}/0/"></i>minion认证管理</a>
                                 </li>
                                 <li>
-                                    <a href="/saltstack/cmd_exec/0/"></i>执行系统命令</a>
+                                    <a href="{% url 'saltstack:cmd_exec' %}/0/"></i>执行系统命令</a>
                                 </li>
                                 <li>
-                                    <a href="/saltstack/state_exec/0/"></i>States模块编排</a>
+                                    <a href="{% url 'saltstack:state_exec' %}/0/"></i>States模块编排</a>
                                 </li>
                             </ul>
 
@@ -109,10 +109,10 @@
                             <a  href=""><i class="fa fa-cubes fa-fw"></i> ZABBIX监控<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                             	<li>
-                                    <a href="/zabbix/host/"></i>主机列表</a>
+                                    <a href="{% url 'zabbix:host' %}"></i>主机列表</a>
                                 </li>
                                 <li>
-                                    <a href="/zabbix/graph/"></i>图形</a>
+                                    <a href="{% url 'zabbix:graph' %}"></i>图形</a>
                                 </li>
                             </ul>
 
@@ -137,10 +137,10 @@
                             <a href="#"><i class="fa fa-archive fa-fw"></i> 资产管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a class="active" href="/cmdb/asset_table/">物理服务器</a>
+                                    <a class="active" href="{% url 'cmdb:asset_table' %}">物理服务器</a>
                                 </li>
                                 <li>
-                                    <a class="active" href="/cmdb/host_table/">虚拟主机</a>
+                                    <a class="active" href="{% url 'cmdb:host_table' %}">虚拟主机</a>
                                 </li>
                             </ul>
                         </li>
@@ -148,10 +148,10 @@
                             <a><i class="fa fa-gears fa-fw"></i> 系统管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="/EmpAuth/userinfo">用户配置</a>
+                                    <a href="{% url 'empauth:userinfo' %}">用户配置</a>
                                 </li>
                                 <li>
-                                    <a href="/deploy/history/"></i>操作审计</a>
+                                    <a href="{% url 'deploy:history' %}"></i>操作审计</a>
                                 </li>
                             </ul>
 
