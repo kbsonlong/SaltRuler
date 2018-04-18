@@ -27,11 +27,14 @@ def login(request):
             if form.is_valid():
                 username = form.cleaned_data['username']
                 password = form.cleaned_data['password']
+                print password
                 passwdhash = hashlib.sha1(password + username + 'kbson').hexdigest()
+                print passwdhash
                 user = Users.objects.filter(username__exact=username, password__exact=passwdhash)
+                print user
                 if user:
                     request.session['username'] = username
-                    return HttpResponseRedirect('/EmpAuth')
+                    return HttpResponseRedirect('/EmpAuth/userinfo')
                 else:
                     info = 'Please check username and password!!'
     except Exception as info:
